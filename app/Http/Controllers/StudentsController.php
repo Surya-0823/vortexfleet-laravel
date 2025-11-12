@@ -30,8 +30,6 @@ class StudentsController extends Controller
      */
     public function __construct()
     {
-        parent::__construct();
-        
         // Initialize the service
         $this->studentService = new StudentService(); 
 

@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Traits\FileUploadTrait; // Import trait
 
 // Import Laravel Facades
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File; // For deleting files
 
@@ -50,16 +48,7 @@ class DriverService
             return ['success' => false, 'message' => 'File upload failed: ' . $e->getMessage(), 'data' => null, 'status_code' => 500];
         }
 
-        // 2. Hash Password
-        try {
-            // Use Laravel's Hash facade
-            $data['app_password'] = Hash::make($data['app_password']);
-        } catch (\Exception $e) {
-            Log::error('Driver password hashing failed', ['error' => $e->getMessage()]);
-            return ['success' => false, 'message' => 'Password processing failed.', 'data' => null, 'status_code' => 500];
-        }
-
-        // 3. Create Driver
+        // 2. Create Driver
         try {
             Driver::create($data); // Assumes 'photo_path' is fillable in Model
             return ['success' => true, 'message' => 'Driver created successfully.', 'data' => null, 'status_code' => 201];
@@ -106,6 +95,10 @@ class DriverService
 
         // 2. Update Driver
         try {
+            if (array_key_exists('app_password', $data) && $data['app_password'] === '') {
+                unset($data['app_password']);
+            }
+
             $driver->update($data); // Assumes fields are fillable
             return ['success' => true, 'message' => 'Driver updated successfully.', 'data' => null, 'status_code' => 200];
         } catch (\Exception $e) {

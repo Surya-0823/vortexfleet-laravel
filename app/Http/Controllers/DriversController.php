@@ -11,8 +11,8 @@ use App\Http\Traits\EmailDispatchTrait; // Import the email trait
 
 // Import Laravel Facades
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 
 /**
  * Handles all logic for the Drivers Management page (CRUD, OTP, Status).
@@ -241,7 +241,11 @@ class DriversController extends Controller
             return response()->json(['success' => false, 'message' => 'Account locked. Try again after 24 hours.'], 429);
         }
 
-        if (strtotime($driver->otp_expires_at) < time()) {
+        if (!$driver->otp_code || !$driver->otp_expires_at) {
+            return response()->json(['success' => false, 'message' => 'OTP has not been generated. Please request a new code.'], 400);
+        }
+
+        if (Carbon::parse($driver->otp_expires_at)->isPast()) {
             return response()->json(['success' => false, 'message' => 'OTP has expired. Please resend.'], 400);
         }
 
@@ -292,10 +296,8 @@ class DriversController extends Controller
 
         try {
             $new_password_plain = substr(bin2hex(random_bytes(3)), 0, 6);
-            // Use Laravel's Hash facade
-            $hashed_password = Hash::make($new_password_plain);
             
-            $driver->app_password = $hashed_password;
+            $driver->app_password = $new_password_plain;
             $driver->otp_locked_until = null;
             $driver->otp_attempt_count = 0;
             $driver->save();

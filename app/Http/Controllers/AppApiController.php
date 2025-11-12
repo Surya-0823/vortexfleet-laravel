@@ -9,6 +9,8 @@ use App\Models\Route;
 use App\Models\Bus;
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\DB; // Use Laravel's DB Facade
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Handles all API calls for the mobile applications (Driver & Student).
@@ -117,12 +119,22 @@ class AppApiController extends Controller
         }
 
         // 2. Validate inputs
-        $latitude = $request->input('latitude');
-        $longitude = $request->input('longitude');
-        
-        if (!$latitude || !$longitude) {
-            return response()->json(['success' => false, 'message' => 'Missing location data (latitude & longitude are required).'], 400);
+        $validator = Validator::make($request->all(), [
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid location data.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
+
+        $validated = $validator->validated();
+        $latitude = (float) $validated['latitude'];
+        $longitude = (float) $validated['longitude'];
 
         // 3. Get authenticated driver
         $driver = $authenticatedUser;
@@ -133,12 +145,19 @@ class AppApiController extends Controller
 
         // 4. Update the bus table
         try {
-            DB::table('buses')
+            $updated = DB::table('buses')
                 ->where('plate', $driver->bus_plate)
                 ->update([
                     'current_lat' => $latitude,
                     'current_lon' => $longitude,
                 ]);
+
+            if ($updated === 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Assigned bus not found for location update.',
+                ], 404);
+            }
 
             return response()->json([
                 'success' => true,

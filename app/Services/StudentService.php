@@ -10,10 +10,9 @@ use App\Http\Traits\EmailDispatchTrait; // Import trait
 use PHPMailer\PHPMailer\Exception; // For catching email errors
 
 // Import Laravel Facades
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File; // For deleting files
+use Illuminate\Support\Carbon;
 
 /**
  * Handles all business logic related to Students.
@@ -53,16 +52,7 @@ class StudentService
             return ['success' => false, 'message' => 'File upload failed: ' . $e->getMessage(), 'data' => null, 'status_code' => 500];
         }
 
-        // 2. Hash Password
-        try {
-            // Use Laravel's Hash facade
-            $data['app_password'] = Hash::make($data['app_password']);
-        } catch (\Exception $e) {
-            Log::error('Student password hashing failed', ['error' => $e->getMessage()]);
-            return ['success' => false, 'message' => 'Password processing failed.', 'data' => null, 'status_code' => 500];
-        }
-
-        // 3. Create Student
+        // 2. Create Student
         try {
             Student::create($data); // Assumes 'photo_path' is fillable in Model
             return ['success' => true, 'message' => 'Student created successfully.', 'data' => null, 'status_code' => 201];
@@ -109,6 +99,10 @@ class StudentService
 
         // 2. Update Student
         try {
+            if (array_key_exists('app_password', $data) && $data['app_password'] === '') {
+                unset($data['app_password']);
+            }
+
             $student->update($data); // Assumes fields are fillable
             return ['success' => true, 'message' => 'Student updated successfully.', 'data' => null, 'status_code' => 200];
         } catch (\Exception $e) {
@@ -238,7 +232,11 @@ class StudentService
             return ['success' => false, 'message' => 'Account locked. Try again after 24 hours.', 'status_code' => 429];
         }
 
-        if (strtotime($student->otp_expires_at) < time()) {
+        if (!$student->otp_code || !$student->otp_expires_at) {
+            return ['success' => false, 'message' => 'OTP has not been generated. Please request a new code.', 'status_code' => 400];
+        }
+
+        if (Carbon::parse($student->otp_expires_at)->isPast()) {
             return ['success' => false, 'message' => 'OTP has expired. Please resend.', 'status_code' => 400];
         }
 
@@ -257,7 +255,7 @@ class StudentService
                 $locked_until = now()->addHours(24)->toDateTimeString();
                 $student->otp_attempt_count = $attempts;
                 $student->otp_locked_until = $locked_until;
-                $driver->save();
+                $student->save();
                 return ['success' => false, 'message' => 'Invalid OTP. Account locked for 24 hours.', 'status_code' => 429];
             } else {
                 $student->otp_attempt_count = $attempts;
@@ -285,10 +283,8 @@ class StudentService
 
         try {
             $new_password_plain = substr(bin2hex(random_bytes(3)), 0, 6);
-            // Use Laravel's Hash facade
-            $hashed_password = Hash::make($new_password_plain);
             
-            $student->app_password = $hashed_password;
+            $student->app_password = $new_password_plain;
             $student->otp_locked_until = null;
             $student->otp_attempt_count = 0;
             $student->save();

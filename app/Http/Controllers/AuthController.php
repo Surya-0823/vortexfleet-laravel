@@ -373,8 +373,10 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        // Clear the session
-        Session::flush();
-        return Redirect::to('/');
+        // Clear the session securely
+        Session::invalidate();
+        Session::regenerateToken();
+
+        return Redirect::to('/login');
     }
 }

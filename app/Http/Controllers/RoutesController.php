@@ -28,8 +28,6 @@ class RoutesController extends Controller
      */
     public function __construct()
     {
-        parent::__construct();
-        
         // Initialize the service
         $this->routeService = new RouteService(); 
 
