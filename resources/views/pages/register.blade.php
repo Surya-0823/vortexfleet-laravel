@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $page_title ?? 'Register - VortexFleet'; ?></title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <?php if (isset($page_css)): ?>
-        <link rel="stylesheet" href="<?php echo $page_css; ?>">
-    <?php endif; ?>
+    <title>{{ $page_title ?? 'Register - VortexFleet' }}</title>
+    
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    
+    @if (isset($page_css))
+        <link rel="stylesheet" href="{{ asset($page_css) }}">
+    @endif
 </head>
 <body class="auth-page">
     <div class="auth-container">
@@ -22,21 +24,16 @@
                 <p class="auth-subtitle">Choose your plan and get started</p>
             </div>
 
-            <?php if (isset($_GET['error'])): ?>
+            @if (session('error'))
                 <div class="alert alert-error">
-                    <?php echo htmlspecialchars($_GET['error']); ?>
+                    {{ session('error') }}
                 </div>
-            <?php endif; ?>
+            @endif
 
-            <form action="/register" method="POST" class="auth-form" id="registerForm">
-                <?php 
-                // Secure CSRF token access
-                $csrfToken = '';
-                if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION['csrf_token'])) {
-                    $csrfToken = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8');
-                }
-                ?>
-                <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+            <form action="{{ url('/register') }}" method="POST" class="auth-form" id="registerForm">
+                
+                @csrf
+                
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required placeholder="Enter your full name">
@@ -117,7 +114,7 @@
                 <button type="submit" class="btn-auth">Continue to Payment</button>
 
                 <p class="auth-footer">
-                    Already have an account? <a href="/login">Login here</a>
+                    Already have an account? <a href="{{ url('/login') }}">Login here</a>
                 </p>
             </form>
         </div>
@@ -153,7 +150,9 @@
                 return false;
             }
         });
+
+        // Call it once on load
+        calculatePrice();
     </script>
 </body>
 </html>
-

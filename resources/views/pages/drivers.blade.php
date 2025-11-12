@@ -1,9 +1,6 @@
-<?php 
-// PUTHU MAATRAM: 'header.php'-ah remove pannittom
-?>
+@extends('layouts.master')
 
-<?php // Namma content inga thaan start aaguthu nu solrom ?>
-<?php $__env->startSection('content'); ?>
+@section('content')
 
 <div id="alert-container" class="alert-container-global"></div>
 
@@ -35,55 +32,27 @@
             </tr>
         </thead>
         <tbody>
-            <?php 
-                // Ensure $drivers is an array/collection
-                $drivers = $drivers ?? [];
-                // Handle both arrays and collections
-                $isEmpty = false;
-                if (empty($drivers)) {
-                    $isEmpty = true;
-                } elseif (is_object($drivers) && method_exists($drivers, 'isEmpty')) {
-                    $isEmpty = $drivers->isEmpty();
-                } elseif (is_object($drivers) && method_exists($drivers, 'count')) {
-                    $isEmpty = $drivers->count() === 0;
-                }
-                
-                if ($isEmpty):
-            ?>
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 3rem; color: hsl(var(--muted-foreground));">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;">
-                                <path d="M19 17h2l.64-2.54A6 6 0 0 0 16.9 9h-1.8a6 6 0 0 0-4.74 5.46L9 17h10z"/><circle cx="7" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M12 17v4"/><path d="M8 21h8"/>
-                            </svg>
-                            <div style="font-size: 1.125rem; font-weight: 600;">No drivers found</div>
-                            <div style="font-size: 0.875rem;">Click "Add Driver" to register your first driver.</div>
-                        </div>
-                    </td>
-                </tr>
-            <?php else: ?>
-                <?php foreach ($drivers as $driver): ?>
+            @forelse ($drivers as $driver)
                 <tr>
                     <td>
-                        <?php if (!empty($driver->photo_path)): ?>
-                            <img src="<?php echo htmlspecialchars($driver->photo_path); ?>" 
-                                 alt="<?php echo htmlspecialchars($driver->name); ?>" 
+                        @if (!empty($driver->photo_path))
+                            <img src="{{ asset(htmlspecialchars($driver->photo_path)) }}" 
+                                 alt="{{ htmlspecialchars($driver->name) }}" 
                                  class="avatar" style="object-fit: cover;">
-                        <?php else: ?>
-                            <img src="https://api.dicebear.com/7.x/initials/svg?seed=<?php echo htmlspecialchars($driver->name); ?>&backgroundColor=282c34&fontColor=86efac" 
-                                 alt="<?php echo htmlspecialchars($driver->name); ?>" 
+                        @else
+                            <img src="https://api.dicebear.com/7.x/initials/svg?seed={{ htmlspecialchars($driver->name) }}&backgroundColor=282c34&fontColor=86efac" 
+                                 alt="{{ htmlspecialchars($driver->name) }}" 
                                  class="avatar">
-                        <?php endif; ?>
+                        @endif
                     </td>
-                    <td><?php echo htmlspecialchars($driver->name); ?></td>
+                    <td>{{ htmlspecialchars($driver->name) }}</td>
                     <td>
-                        <div><?php echo htmlspecialchars($driver->phone); ?></div>
-                        <div class="text-muted"><?php echo htmlspecialchars($driver->email); ?></div>
+                        <div>{{ htmlspecialchars($driver->phone) }}</div>
+                        <div class="text-muted">{{ htmlspecialchars($driver->email) }}</div>
                     </td>
                     <td>
-                        <div class="text-muted"><?php echo htmlspecialchars($driver->app_username ?? 'N/A'); ?></div>
+                        <div class="text-muted">{{ htmlspecialchars($driver->app_username ?? 'N/A') }}</div>
                         <div class="password-cell">
-                            <?php // PUTHU MAATRAM: Password reveal logic-ah remove pannitom ?>
                             <span class="password-text">
                                 ••••••••
                             </span>
@@ -96,8 +65,8 @@
                     </td>
                     <td style="width: 150px;"> 
                         <div class="status-cell-wrapper">
-                            <?php
-                                // is_verified check panrom
+                            @php
+                                // PUTHU MAATRAM: Blade @php block
                                 if ($driver->is_verified == 1) { 
                                     $btn_class = 'btn-verify-verified';
                                     $btn_text = 'Verified';
@@ -109,21 +78,21 @@
                                     $js_class = 'js-send-otp';
                                     $email_attr = 'data-user-email="' . htmlspecialchars($driver->email) . '"';
                                 }
-                            ?>
-                            <button class="btn-verify <?php echo $btn_class; ?> <?php echo $js_class; ?>"
-                                    data-user-id="<?php echo $driver->id; ?>"
-                                    data-user-name="<?php echo htmlspecialchars($driver->name); ?>"
-                                    <?php echo $email_attr; ?>>
+                            @endphp
+                            <button class="btn-verify {{ $btn_class }} {{ $js_class }}"
+                                    data-user-id="{{ $driver->id }}"
+                                    data-user-name="{{ htmlspecialchars($driver->name) }}"
+                                    {!! $email_attr !!}>
                                 
-                                <?php if ($driver->is_verified == 1): ?>
+                                @if ($driver->is_verified == 1)
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                                <?php endif; ?>
+                                @endif
                                 
-                                <span><?php echo $btn_text; ?></span>
+                                <span>{{ $btn_text }}</span>
 
-                                <?php if ($driver->is_verified != 1): ?>
+                                @if ($driver->is_verified != 1)
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                                <?php endif; ?>
+                                @endif
                             </button>
                         </div>
                     </td>
@@ -131,43 +100,53 @@
                         <div class="action-buttons-wrapper">
                              <a href="javascript:void(0);" 
                                class="btn-action-edit js-edit-driver"
-                               data-id="<?php echo $driver->id; ?>"
-                               data-name="<?php echo htmlspecialchars($driver->name); ?>"
-                               data-email="<?php echo htmlspecialchars($driver->email); ?>"
-                               data-phone="<?php echo htmlspecialchars($driver->phone); ?>"
-                               data-photo="<?php echo htmlspecialchars($driver->photo_path ?? ''); ?>">
+                               data-id="{{ $driver->id }}"
+                               data-name="{{ htmlspecialchars($driver->name) }}"
+                               data-email="{{ htmlspecialchars($driver->email) }}"
+                               data-phone="{{ htmlspecialchars($driver->phone) }}"
+                               data-photo="{{ htmlspecialchars($driver->photo_path ?? '') }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                                 <span>Edit</span>
                             </a>
                             
                             <a href="javascript:void(0);" 
                                class="btn-action-reset js-reset-password"
-                               data-id="<?php echo $driver->id; ?>"
-                               data-name="<?php echo htmlspecialchars($driver->name); ?>"
+                               data-id="{{ $driver->id }}"
+                               data-name="{{ htmlspecialchars($driver->name) }}"
                                title="Reset Password">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r="2.5"/></svg>
                                 <span>Reset</span>
                             </a>
                             <a href="javascript:void(0);" 
                                class="btn-action-delete js-delete-driver" 
-                               data-delete-id="<?php echo $driver->id; ?>"
-                               data-delete-url="/drivers/delete"> <?php // PUTHU MAATRAM: DELETE ID-AH SEPARATE PANNITOM ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                               data-delete-id="{{ $driver->id }}"
+                               data-delete-url="{{ url('/drivers/delete') }}"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                                 <span>Delete</span>
                             </a>
                         </div>
                     </td>
                 </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            @empty
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 3rem; color: hsl(var(--muted-foreground));">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;">
+                                <path d="M19 17h2l.64-2.54A6 6 0 0 0 16.9 9h-1.8a6 6 0 0 0-4.74 5.46L9 17h10z"/><circle cx="7" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M12 17v4"/><path d="M8 21h8"/>
+                            </svg>
+                            <div style="font-size: 1.125rem; font-weight: 600;">No drivers found</div>
+                            <div style="font-size: 0.875rem;">Click "Add Driver" to register your first driver.</div>
+                        </div>
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
 
 <div id="addDriverModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
-        <form id="driverForm" action="/drivers/create" method="POST" enctype="multipart/form-data">
-            <div class="modal-header">
+        <form id="driverForm" action="{{ url('/drivers/create') }}" method="POST" enctype="multipart/form-data">
+            @csrf <div class="modal-header">
                 <h2 class="modal-title" id="driverModalTitle">Add New Driver</h2>
                 <button type="button" id="closeAddDriverModal" class="modal-close-btn">&times;</button>
             </div>
@@ -188,7 +167,7 @@
 
                 <div class="formbold-input-flex">
                     <div>
-                        <label for="email" class="formbold-form-label">Email (This will be App Username)</label>
+                        <label for="email" class="formbold-form-label">Email</label>
                         <input type="email" name="email" id="email" class="formbold-form-input" required />
                         <small id="emailError" class="text-danger-inline"></small>
                     </div>
@@ -198,6 +177,22 @@
                         <small id="phoneError" class="text-danger-inline"></small>
                     </div>
                 </div>
+                
+                <div id="app-credentials-fields">
+                    <div class="formbold-input-flex">
+                        <div>
+                            <label for="app_username" class="formbold-form-label">App Username</label>
+                            <input type="text" name="app_username" id="app_username" class="formbold-form-input" required />
+                            <small id="app_usernameError" class="text-danger-inline"></small>
+                        </div>
+                        <div>
+                            <label for="app_password" class="formbold-form-label">App Password</label>
+                            <input type="password" name="app_password" id="app_password" class="formbold-form-input" required minlength="6" />
+                            <small id="app_passwordError" class="text-danger-inline"></small>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
             <div class="modal-footer">
                 <button type="button" id="cancelAddDriverModal" class="btn btn-outline">Cancel</button>
@@ -225,7 +220,7 @@
         </div>
         <div class="modal-footer modal-footer-alert">
             <button type="button" id="cancelDeleteModal" class="btn btn-outline">Cancel</button>
-            <button type="button" id="confirmDeleteBtn" class="btn btn-destructive" data-id=""> <?php // PUTHU MAATRAM: data-url-ku pathila data-id use panrom ?>
+            <button type="button" id="confirmDeleteBtn" class="btn btn-destructive" data-id="">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                 <span>Delete</span>
             </button>
@@ -279,6 +274,7 @@
 <div id="otpModal" class="modal-overlay" style="display: none;">
     <div class="modal-content modal-content-alert" style="max-width: 480px;">
         <form id="otpForm">
+            @csrf
             <div class="modal-header-alert">
                 <div class="alert-icon-wrapper" style="background-color: hsla(var(--primary), 0.15); border-color: hsla(var(--primary), 0.2);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round">
@@ -336,7 +332,6 @@
     </div>
 </div>
 
-
 <div id="showNewPasswordModal" class="modal-overlay" style="display: none;">
     <div class="modal-content modal-content-alert">
         <div class="modal-header-alert">
@@ -348,7 +343,7 @@
         <div class="modal-body">
             <p class="alert-text-secondary" style="margin-top: 0;">Please copy the new password and share it with the driver.</p>
             <div class="form-group" style="margin-top: 1.5rem; text-align: left;">
-                <label for="otp_code" class="formbold-form-label" style="text-align: left;">New Generated Password:</label>
+                <label for="newPasswordText" class="formbold-form-label" style="text-align: left;">New Generated Password:</label>
                 <input type="text" id="newPasswordText" class="formbold-form-input" 
                        style="font-size: 1.5rem; text-align: center; letter-spacing: 0.5rem; background-color: hsl(var(--background));" 
                        readonly>
@@ -359,10 +354,5 @@
         </div>
     </div>
 </div>
-<?php $__env->stopSection(); ?>
 
-<?php 
-// PUTHU MAATRAM: Namma 'master.php' layout-ah inga render panrom
-// 'footer.php'-ah remove pannittom
-echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); 
-?>
+@endsection

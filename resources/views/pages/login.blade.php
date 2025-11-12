@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $page_title ?? 'Login - VortexFleet'; ?></title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <?php if (isset($page_css)): ?>
-        <link rel="stylesheet" href="<?php echo $page_css; ?>">
-    <?php endif; ?>
+    <title>{{ $page_title ?? 'Login - VortexFleet' }}</title>
+    
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    
+    @if (isset($page_css))
+        <link rel="stylesheet" href="{{ asset($page_css) }}">
+    @endif
 </head>
 <body class="auth-page">
     <div class="auth-container">
@@ -22,21 +24,16 @@
                 <p class="auth-subtitle">Login to access your dashboard</p>
             </div>
 
-            <?php if (isset($_GET['error'])): ?>
+            @if (session('error'))
                 <div class="alert alert-error">
-                    <?php echo htmlspecialchars($_GET['error']); ?>
+                    {{ session('error') }}
                 </div>
-            <?php endif; ?>
-
-            <form action="/login" method="POST" class="auth-form">
-            <?php 
-            // Secure CSRF token access
-            $csrfToken = '';
-            if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION['csrf_token'])) {
-                $csrfToken = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8');
-            }
-            ?>
-            <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+            @endif
+            
+            <form action="{{ url('/login') }}" method="POST" class="auth-form">
+            
+            @csrf
+            
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="email" required placeholder="your.email@example.com">
@@ -50,11 +47,10 @@
                 <button type="submit" class="btn-auth">Login</button>
 
                 <p class="auth-footer">
-                    Don't have an account? <a href="/register">Register here</a>
+                    Don't have an account? <a href="{{ url('/register') }}">Register here</a>
                 </p>
             </form>
         </div>
     </div>
 </body>
 </html>
-

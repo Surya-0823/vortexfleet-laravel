@@ -1,259 +1,142 @@
-// public.zip/assets/js/tracking.js
-// =======================================================
-// Top-Right Corner la Alert kaatrathukku function
-// (Common helper function)
-// =======================================================
-function showAlert(message, type = 'success') {
-    const refreshButton = document.getElementById('map-refresh-btn');
-    if (!refreshButton) return;
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', () => {
     
-    const originalText = 'Refresh Map';
-    const originalSvg = refreshButton.querySelector('svg:not(.spinner-svg)');
-    let spinner = refreshButton.querySelector('.spinner-svg');
+    // Global variables for the map and markers
+    let map;
+    let busMarkers = {}; // Stores all bus markers { plate: marker }
 
-    // Button-oda original styles
-    const originalBg = 'hsl(var(--secondary))';
-    const originalColor = 'hsl(var(--secondary-foreground))';
-    
-    let newBg = originalBg;
-    let newColor = originalColor;
-    let revertTime = 3000; 
+    /**
+     * Creates a custom SVG bus icon for Leaflet.
+     */
+    function createBusIcon() {
+        // Simple SVG bus icon
+        const svgIcon = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 style="background-color: #2563eb; border-radius: 50%; padding: 4px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+                <path d="M8 6v6"></path><path d="M15 6v6"></path><path d="M2 12h19.6"></path>
+                <path d="M18 18h3s-1-1.5-1.5-2.5S19 14 19 14"></path><path d="M6 18H3s1-1.5 1.5-2.5S5 14 5 14"></path>
+                <rect width="20" height="10" x="2" y="8" rx="2"></rect>
+            </svg>
+        `;
 
-    // 1. Loading/Alert Logic
-    if (type === 'loading') {
-        // Loading state
-        revertTime = 500000; // Long time, fetch success/fail aana thaan stop aagum
-        message = 'Refreshing...';
-        newBg = 'hsl(var(--primary))'; // Default primary blue for loading
-        newColor = 'hsl(var(--primary-foreground))';
-        if (originalSvg) originalSvg.style.display = 'none';
-        
-        // Spinner illana, create pannu
-        if (!spinner) {
-            spinner = document.createElement('svg');
-            spinner.className = 'spinner-svg lucide lucide-loader-2';
-            spinner.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-            spinner.setAttribute('width', '16');
-            spinner.setAttribute('height', '16');
-            spinner.setAttribute('viewBox', '0 0 24 24');
-            spinner.setAttribute('fill', 'none');
-            spinner.setAttribute('stroke', 'currentColor');
-            spinner.setAttribute('stroke-width', '2');
-            spinner.setAttribute('stroke-linecap', 'round');
-            spinner.setAttribute('stroke-linejoin', 'round');
-            spinner.style.animation = 'spin 1s linear infinite';
-            spinner.innerHTML = '<path d="M21 12a9 9 0 1 1-9-9c2.3 3.1 3.9 3.9 3.9 3.9"/>';
-            refreshButton.prepend(spinner);
-            
-            // CSS animation-ku style tag-a add panrom (if not exists)
-            if (!document.getElementById('animate-spin-style')) {
-                const style = document.createElement('style');
-                style.id = 'animate-spin-style';
-                style.innerHTML = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
-                document.head.appendChild(style);
-            }
-        } else {
-             spinner.style.display = 'inline-block';
-        }
-    
-    } else if (type === 'danger') {
-        // Error state (Red)
-        newBg = 'hsl(var(--destructive))';
-        newColor = 'hsl(var(--destructive-foreground))';
-        if (spinner) spinner.style.display = 'none';
-        if (originalSvg) originalSvg.style.display = 'inline-block';
-    
-    } else if (type === 'success') {
-        // Success state (Green)
-        newBg = 'hsl(var(--success))';
-        newColor = 'hsl(var(--destructive-foreground))'; 
-        if (spinner) spinner.style.display = 'none';
-        if (originalSvg) originalSvg.style.display = 'inline-block';
+        return L.divIcon({
+            html: svgIcon,
+            className: 'custom-leaflet-bus-icon', // No extra CSS needed for this
+            iconSize: [32, 32],
+            iconAnchor: [16, 16], // Point of the icon which will correspond to marker's location
+            popupAnchor: [0, -16] // Point from which the popup should open
+        });
     }
-    
-    // 2. Apply new style & message
-    refreshButton.style.transition = 'all 0.3s ease';
-    refreshButton.style.backgroundColor = newBg;
-    refreshButton.querySelector('span').style.color = newColor;
-    refreshButton.querySelector('span').textContent = message;
 
-    // 3. Revert after set time (if not loading)
-    if (type !== 'loading') {
-        setTimeout(() => {
-            // Reset color and message to original state (Cyan)
-            refreshButton.style.backgroundColor = originalBg;
-            refreshButton.querySelector('span').style.color = originalColor;
-            refreshButton.querySelector('span').textContent = originalText;
-            if (originalSvg) originalSvg.style.display = 'inline-block';
-            if (spinner) spinner.style.display = 'none';
-        }, revertTime);
-    }
-}
-
-// =======================================================
-// Main Map Tracking Logic (OSM + Leaflet)
-// =======================================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    
-    const mapContainer = document.getElementById('map-container');
-    if (!mapContainer) return;
-
-    // --- 1. Map Initialization (Leaflet) ---
-    // Default location: Chennai (13.0827, 80.2707)
-    let map = L.map('map-container').setView([13.0827, 80.2707], 13);
-    let busMarkers = {}; // Active markers-ah track panna oru object
-    let markersLayer = L.layerGroup().addTo(map); // Markers-ah oru layer-la vekkalaam
-
-    // OpenStreetMap Tiles-ah add panrom
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    
-    // PUTHU MAATRAM: Leaflet Default Icon thaan ippo namma use panrom
-    const defaultIcon = new L.Icon.Default();
-
-    // --- 2. Data Fetching Function (UPDATED) ---
-    function fetchBusLocations() {
-        
-        // PUTHU: List containers-ah select pannurom
-        const listContainer = document.getElementById('bus-list-content');
-        const countBadge = document.getElementById('bus-count-badge');
-        
-        // Manual refresh panna mattum 'loading' alert kaattu
-        if (!this.auto) {
-            showAlert('Refreshing...', 'loading');
+    /**
+     * Initialize the Leaflet map.
+     */
+    function initMap() {
+        // Check if map element exists
+        const mapElement = document.getElementById('map');
+        if (!mapElement) {
+            console.error('Map element #map not found!');
+            return;
         }
 
-        fetch('/ajax/admin/bus-locations')
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
-                return response.json();
-            })
-            .then(data => {
-                
-                if (data.success && data.buses && data.buses.length > 0) {
-                    
-                    const newBusPlates = data.buses.map(b => b.plate);
-                    let boundsArray = [];
-                    let listHtml = ''; // PUTHU: List HTML kaga oru variable
+        // 1. Initialize the map
+        // Centered on a generic location (e.g., India)
+        map = L.map('map').setView([20.5937, 78.9629], 5);
 
-                    // 2a. New/Update Markers & Build List
-                    data.buses.forEach(bus => {
-                        const lat = parseFloat(bus.current_lat);
-                        const lon = parseFloat(bus.current_lon);
-                        
-                        if (lat === 0 && lon === 0) return;
+        // 2. Add the OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-                        const driverName = bus.driver_name ?? 'No Driver';
-                        const popupContent = `
-                            <strong>Bus: ${bus.bus_name}</strong> (${bus.plate})<br>
-                            Driver: ${driverName}<br>
-                            Location: ${lat.toFixed(5)}, ${lon.toFixed(5)}
-                        `;
+        // 3. Fetch bus locations for the first time
+        fetchBusLocations();
 
-                        // Marker logic (ithu pazhasu)
-                        if (bus.plate in busMarkers) {
-                            busMarkers[bus.plate].setLatLng([lat, lon]);
-                            busMarkers[bus.plate].setPopupContent(popupContent);
-                        } else {
-                            const marker = L.marker([lat, lon], {icon: defaultIcon}).addTo(markersLayer);
-                            marker.bindPopup(popupContent);
-                            busMarkers[bus.plate] = marker;
-                        }
-                        boundsArray.push([lat, lon]);
-                        
-                        // PUTHU: List HTML-ah build pannu
-                        listHtml += `
-                            <div class="bus-list-item" data-plate="${bus.plate}" data-lat="${lat}" data-lon="${lon}">
-                                <div class="bus-item-header">
-                                    <span>${bus.bus_name}</span>
-                                    <span class="bus-item-plate">${bus.plate}</span>
-                                </div>
-                                <div class="bus-item-driver">
-                                    Driver: ${driverName}
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    // PUTHU: List-ah update pannu
-                    if(listContainer) listContainer.innerHTML = listHtml;
-                    if(countBadge) countBadge.textContent = `${data.buses.length} Buses`;
+        // 4. Set an interval to refresh locations every 10 seconds
+        setInterval(fetchBusLocations, 10000); // 10,000 ms = 10 seconds
+    }
 
-                    // 2b. Remove Stale Markers
-                    Object.keys(busMarkers).forEach(plate => {
-                        if (!newBusPlates.includes(plate)) {
-                            markersLayer.removeLayer(busMarkers[plate]);
-                            delete busMarkers[plate];
-                        }
-                    });
-
-                    // 2c. Map-ah fit pannu (First time load-la mattum)
-                    if (this.auto !== true) { // 'auto' property-ah use pannurom
-                         if (boundsArray.length > 0) {
-                            map.fitBounds(boundsArray, {padding: [50, 50]});
-                        }
-                    }
-                    
-                    if (this.auto !== true) { 
-                        showAlert(`Updated ${data.buses.length} buses.`, 'success');
-                    }
-                    
-                } else if (data.buses && data.buses.length === 0) {
-                    if (this.auto !== true) showAlert('No active buses.', 'warning');
-                    markersLayer.clearLayers();
-                    busMarkers = {};
-                    if(listContainer) listContainer.innerHTML = '<div class="bus-list-empty"><span>No active buses found.</span></div>';
-                    if(countBadge) countBadge.textContent = '0 Buses';
+    /**
+     * Fetch bus locations from the server.
+     */
+    async function fetchBusLocations() {
+        try {
+            // Namma TrackingController-la create panna AJAX route
+            const response = await fetch('/ajax/admin/bus-locations', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                    // GET requests do not need CSRF
                 }
-            })
-            .catch(error => {
-                console.error('Map Data Fetch Error:', error);
-                if (this.auto !== true) showAlert('Update failed!', 'danger');
-                if(listContainer) listContainer.innerHTML = '<div class="bus-list-empty" style="color: hsl(var(--destructive));"><span>Data fetch failed.</span></div>';
-            })
-            .finally(() => {
-                // Ithu auto-refresh nu mark pannu
-                this.auto = true;
             });
+
+            if (!response.ok) {
+                console.error('Failed to fetch bus locations. Status:', response.status);
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.success && data.buses) {
+                // Send data to the marker update function
+                updateMapMarkers(data.buses);
+            }
+
+        } catch (error) {
+            console.error('Error fetching bus locations:', error);
+        }
     }
 
-    // --- 3. Initial Load & Auto Refresh ---
-    fetchBusLocations.call({ auto: false }); // First time load panna 'auto' false nu sollu
-    setInterval(fetchBusLocations.bind({ auto: true }), 5000); // Auto refresh kaga 'auto' true nu sollu
+    /**
+     * Update map markers with new data.
+     * @param {Array} buses - Array of bus objects from the API
+     */
+    function updateMapMarkers(buses) {
+        const busIcon = createBusIcon();
+        const activePlates = new Set(); // Keep track of buses in the new data
 
-    // Refresh button click event
-    const refreshButton = document.getElementById('map-refresh-btn');
-    if (refreshButton) {
-        refreshButton.addEventListener('click', function() {
-            fetchBusLocations.call({ auto: false }); // Manual refresh
-        });
-    }
-    
-    // =======================================================
-    // --- PUTHU LOGIC: List Click Event Listener ---
-    // =======================================================
-    const listSidebar = document.getElementById('bus-list-sidebar');
-    if (listSidebar) {
-        listSidebar.addEventListener('click', function(e) {
-            const item = e.target.closest('.bus-list-item');
-            if (item) {
-                const lat = parseFloat(item.dataset.lat);
-                const lon = parseFloat(item.dataset.lon);
-                const plate = item.dataset.plate;
+        buses.forEach(bus => {
+            const { plate, current_lat, current_lon, bus_name, driver_name } = bus;
+            activePlates.add(plate);
 
-                if (!lat || !lon || !plate) return;
+            const newPosition = [current_lat, current_lon];
+            const popupContent = `
+                <b>${bus_name || 'Unknown Bus'}</b><br>
+                Plate: ${plate}<br>
+                Driver: ${driver_name || 'N/A'}
+            `;
 
-                // 1. Map-ah antha location-ku fly pannu
-                map.flyTo([lat, lon], 16); // 16 = Zoom level
-
-                // 2. Antha marker-oda popup-ah open pannu
-                if (busMarkers[plate]) {
-                    busMarkers[plate].openPopup();
-                }
+            if (busMarkers[plate]) {
+                // 1. If marker already exists, just move it
+                busMarkers[plate].setLatLng(newPosition);
+                busMarkers[plate].getPopup().setContent(popupContent);
+            
+            } else {
+                // 2. If marker is new, create it
+                const newMarker = L.marker(newPosition, { icon: busIcon })
+                    .addTo(map)
+                    .bindPopup(popupContent);
+                
+                // Store it in our tracking object
+                busMarkers[plate] = newMarker;
             }
         });
+
+        // 3. Remove old markers (for buses that are no longer active)
+        for (const plate in busMarkers) {
+            if (!activePlates.has(plate)) {
+                // This bus is not in the new data, remove its marker
+                map.removeLayer(busMarkers[plate]);
+                delete busMarkers[plate];
+            }
+        }
+        
+        // 4. (Optional) Fit map to show all markers if it's the first load
+        // This is complex, so we'll skip it for baby steps.
+        // The map will just stay centered.
     }
-    
+
+    // Start the map initialization process
+    initMap();
+
 });
