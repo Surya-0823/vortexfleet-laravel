@@ -1,0 +1,159 @@
+/* public.zip/assets/css/pages/tracking.css */
+/* ===== TRACKING PAGE STYLES (ISOLATED) ===== */
+
+/* ======================================================= */
+/* ISOLATED HEADER STYLE: Fixed position-a copy panrom */
+/* ======================================================= */
+.tracking-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  /* Fixed Positioning from drivers.css */
+  position: fixed;
+  top: 4rem; 
+  left: 16rem; 
+  width: calc(100% - 16rem); 
+  z-index: 998; 
+  margin: 0; 
+  transition: left 0.3s ease, width 0.3s ease;
+  
+  /* Shared Appearance Styles */
+  padding: 1.5rem 2.5rem; 
+  background-color: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+  gap: 2rem;
+}
+
+/* Sidebar collapse adjust */
+.main-content.collapsed  .tracking-page-header {
+    left: 5.5rem; 
+    width: calc(100% - 5.5rem);
+    padding: 1.5rem 2.5rem; 
+}
+
+/* Leaflet Map styles (Optional: Dark theme for tiles) */
+.leaflet-container {
+  background-color: hsl(var(--card)); 
+}
+
+
+/* ===== PUTHU TRACKING LAYOUT (Map + List) ===== */
+
+/* Ithu map-ayum list-ayum wrap pannum */
+.tracking-body-container {
+  display: flex;
+  position: fixed;
+  top: 18rem; 
+  left: 16rem; /* MAATRAM 1: Left position ah exact-ah sidebar mudiyura (16rem) edathukku maathinom */
+  width: calc(100% - 16rem); /* MAATRAM 2: Total width, right-la margin illama. */
+  height: calc(90vh - 9.5rem - 3.5rem); 
+  transition: left 0.3s ease, width 0.3s ease;
+  padding: 0 0 1.5rem 0; /* MAATRAM 3: Left and Right, endha padding-um illa. */
+}
+
+/* Sidebar collapse aana */
+.main-content.collapsed .tracking-body-container {
+  left: 5.5rem; /* MAATRAM 4: Collapse sidebar (5.5rem) edathukku maathinom */
+  width: calc(100% - 5.5rem); /* MAATRAM 5: Total width, right-la margin illama. */
+  padding: 0 0 1.5rem 0; /* MAATRAM 6: Collapse-layum padding-ah zero-vukku maathinom. */
+}
+
+/* Map container-oda puthu style (fixed position remove pannitom) */
+#map-container {
+  flex: 1; 
+  height: 100%;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Puthu Bus List Sidebar */
+#bus-list-sidebar {
+  width: 25rem; /* MAATRAM 7: Right gap-ah fill panna width-ah 25rem-ku maathinom. */
+  height: 100%;
+  flex-shrink: 0;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+}
+
+.bus-list-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid hsl(var(--border));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bus-list-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  color: hsl(var(--foreground));
+}
+#bus-count-badge {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+}
+
+#bus-list-content {
+  overflow-y: auto;
+  padding: 0.75rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* List-la ovvoru item-um */
+.bus-list-item {
+  padding: 1rem 1.25rem;
+  background-color: hsla(var(--background), 0.5);
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.bus-list-item:hover {
+  background-color: hsl(var(--muted));
+  border-color: hsl(var(--primary));
+}
+
+.bus-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+.bus-item-plate {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+}
+
+.bus-item-driver {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* List empty-ah iruntha style */
+.bus-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+  padding: 2rem;
+  height: 100%;
+}
+.bus-list-empty svg {
+  animation: spin 1.5s linear infinite;
+}

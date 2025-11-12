@@ -1,0 +1,217 @@
+/* ===== PRICING PAGE STYLES ===== */
+
+.pricing-page {
+    background: hsl(var(--background));
+    min-height: 100vh;
+}
+
+.pricing-hero {
+    padding: 8rem 2rem 4rem;
+    text-align: center;
+    background: hsl(var(--card));
+    border-bottom: 1px solid hsl(var(--border));
+}
+
+.pricing-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: hsl(var(--foreground));
+}
+
+.pricing-subtitle {
+    font-size: 1.25rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.pricing-section {
+    padding: 6rem 2rem;
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pricing-card {
+    background: hsl(var(--card));
+    border: 2px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px hsl(222 47% 5% / 0.4);
+}
+
+.pricing-card.featured {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 8px 32px hsl(var(--primary) / 0.2);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.pricing-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.plan-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    margin-bottom: 0.5rem;
+}
+
+.plan-description {
+    color: hsl(var(--muted-foreground));
+    font-size: 1rem;
+}
+
+.pricing-amount {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: hsl(var(--background));
+    border-radius: 0.5rem;
+}
+
+.currency {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: hsl(var(--muted-foreground));
+    vertical-align: top;
+}
+
+.amount {
+    font-size: 3rem;
+    font-weight: 800;
+    color: hsl(var(--primary));
+    line-height: 1;
+}
+
+.period {
+    font-size: 1rem;
+    color: hsl(var(--muted-foreground));
+    display: block;
+    margin-top: 0.5rem;
+}
+
+.pricing-details {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: hsl(var(--background));
+    border-radius: 0.5rem;
+}
+
+.calculation-info {
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 0.5rem;
+}
+
+.monthly-total {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+}
+
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+}
+
+.plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    color: hsl(var(--muted-foreground));
+}
+
+.plan-features li svg {
+    color: hsl(var(--primary));
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
+.btn-pricing {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-pricing:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px hsl(var(--primary) / 0.4);
+}
+
+.btn-pricing-featured {
+    background: hsl(var(--primary));
+    box-shadow: 0 4px 20px hsl(var(--primary) / 0.3);
+}
+
+.pricing-footer {
+    text-align: center;
+    margin-top: 4rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.pricing-footer p {
+    margin: 0.5rem 0;
+}
+
+.pricing-footer a {
+    color: hsl(var(--primary));
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.pricing-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pricing-hero {
+        padding: 6rem 1rem 3rem;
+    }
+    
+    .pricing-section {
+        padding: 4rem 1rem;
+    }
+}
+
