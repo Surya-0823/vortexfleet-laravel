@@ -1,149 +1,128 @@
-/* public.zip/assets/css/pages/tracking.css */
-/* ===== TRACKING PAGE STYLES (ISOLATED) ===== */
-
-/* ======================================================= */
-/* ISOLATED HEADER STYLE: Fixed position-a copy panrom */
-/* ======================================================= */
-.tracking-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  /* Fixed Positioning from drivers.css */
-  position: fixed;
-  top: 4rem; 
-  left: 16rem; 
-  width: calc(100% - 16rem); 
-  z-index: 998; 
-  margin: 0; 
-  transition: left 0.3s ease, width 0.3s ease;
-  
-  /* Shared Appearance Styles */
-  padding: 1.5rem 2.5rem; 
-  background-color: hsl(var(--card));
-  border-bottom: 1px solid hsl(var(--border));
-  gap: 2rem;
+/* ===== Tracking Page Layout ===== */
+.tracking-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 380px);
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
-/* Sidebar collapse adjust */
-.main-content.collapsed  .tracking-page-header {
-    left: 5.5rem; 
-    width: calc(100% - 5.5rem);
-    padding: 1.5rem 2.5rem; 
-}
-
-/* Leaflet Map styles (Optional: Dark theme for tiles) */
-.leaflet-container {
-  background-color: hsl(var(--card)); 
-}
-
-
-/* ===== PUTHU TRACKING LAYOUT (Map + List) ===== */
-
-/* Ithu map-ayum list-ayum wrap pannum */
-.tracking-body-container {
-  display: flex;
-  position: fixed;
-  top: 18rem; 
-  left: 16rem; /* MAATRAM 1: Left position ah exact-ah sidebar mudiyura (16rem) edathukku maathinom */
-  width: calc(100% - 16rem); /* MAATRAM 2: Total width, right-la margin illama. */
-  height: calc(90vh - 9.5rem - 3.5rem); 
-  transition: left 0.3s ease, width 0.3s ease;
-  padding: 0 0 1.5rem 0; /* MAATRAM 3: Left and Right, endha padding-um illa. */
-}
-
-/* Sidebar collapse aana */
-.main-content.collapsed .tracking-body-container {
-  left: 5.5rem; /* MAATRAM 4: Collapse sidebar (5.5rem) edathukku maathinom */
-  width: calc(100% - 5.5rem); /* MAATRAM 5: Total width, right-la margin illama. */
-  padding: 0 0 1.5rem 0; /* MAATRAM 6: Collapse-layum padding-ah zero-vukku maathinom. */
-}
-
-/* Map container-oda puthu style (fixed position remove pannitom) */
-#map-container {
-  flex: 1; 
-  height: 100%;
+.tracking-map-card {
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
+  background: hsl(var(--card));
   overflow: hidden;
-  z-index: 1;
+  box-shadow: var(--shadow-card);
 }
 
-/* Puthu Bus List Sidebar */
-#bus-list-sidebar {
-  width: 25rem; /* MAATRAM 7: Right gap-ah fill panna width-ah 25rem-ku maathinom. */
-  height: 100%;
-  flex-shrink: 0;
-  background-color: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--radius);
+#map {
+  width: 100%;
+  height: clamp(360px, 70vh, 620px);
+}
+
+.leaflet-container {
+  background: hsl(var(--background));
+}
+
+.tracking-sidebar {
   display: flex;
   flex-direction: column;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
-.bus-list-header {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid hsl(var(--border));
+.tracking-sidebar__header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid hsl(var(--border));
 }
-.bus-list-header h3 {
+
+.tracking-sidebar__header h2 {
   margin: 0;
   font-size: 1.125rem;
   color: hsl(var(--foreground));
 }
-#bus-count-badge {
-  font-size: 0.875rem;
+
+.tracking-sidebar__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
   font-weight: 600;
+  border-radius: 999px;
+  background: hsl(var(--primary) / 0.15);
   color: hsl(var(--primary));
 }
 
-#bus-list-content {
+.tracking-sidebar__list {
+  flex: 1;
   overflow-y: auto;
-  padding: 0.75rem;
-  flex-grow: 1;
+  padding: 1rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
-/* List-la ovvoru item-um */
-.bus-list-item {
-  padding: 1rem 1.25rem;
-  background-color: hsla(var(--background), 0.5);
+.tracking-sidebar__item {
+  background: hsl(var(--background) / 0.6);
   border: 1px solid hsl(var(--border));
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
+  padding: 1rem 1.2rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.bus-list-item:hover {
-  background-color: hsl(var(--muted));
+
+.tracking-sidebar__item:hover,
+.tracking-sidebar__item:focus {
   border-color: hsl(var(--primary));
+  box-shadow: 0 10px 20px hsl(var(--primary) / 0.15);
+  outline: none;
 }
 
-.bus-item-header {
+.tracking-sidebar__item-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.35rem;
   font-size: 1rem;
   font-weight: 600;
   color: hsl(var(--foreground));
 }
+
 .bus-item-plate {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: hsl(var(--primary) / 0.18);
+  color: hsl(var(--primary));
   font-size: 0.75rem;
   font-weight: 700;
-  color: hsl(var(--primary));
 }
 
-.bus-item-driver {
-  margin-top: 0.5rem;
+.tracking-sidebar__item-meta {
   font-size: 0.875rem;
   color: hsl(var(--muted-foreground));
+  margin: 0.15rem 0;
 }
 
-/* List empty-ah iruntha style */
-.bus-list-empty {
+.tracking-sidebar__item-location {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.tracking-sidebar__empty {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -151,9 +130,22 @@
   gap: 1rem;
   color: hsl(var(--muted-foreground));
   text-align: center;
-  padding: 2rem;
-  height: 100%;
+  padding: 2.5rem 1.5rem;
 }
-.bus-list-empty svg {
-  animation: spin 1.5s linear infinite;
+
+.tracking-sidebar__empty svg {
+  width: 2rem;
+  height: 2rem;
+  color: hsl(var(--muted-foreground));
+  opacity: 0.65;
+}
+
+@media (max-width: 1024px) {
+  .tracking-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-sidebar {
+    max-height: 360px;
+  }
 }

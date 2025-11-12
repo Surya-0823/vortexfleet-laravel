@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let map;
     let busMarkers = {}; // Stores all bus markers { plate: marker }
 
+    const driverListEl = document.getElementById('live-driver-list');
+    const driverCountEl = document.getElementById('live-driver-count');
+    const emptyStateEl = document.getElementById('live-driver-empty-state');
+
     /**
      * Creates a custom SVG bus icon for Leaflet.
      */
@@ -80,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.success && data.buses) {
                 // Send data to the marker update function
                 updateMapMarkers(data.buses);
+                updateDriverList(data.buses);
             }
 
         } catch (error) {
@@ -134,6 +139,83 @@ document.addEventListener('DOMContentLoaded', () => {
         // 4. (Optional) Fit map to show all markers if it's the first load
         // This is complex, so we'll skip it for baby steps.
         // The map will just stay centered.
+    }
+
+    /**
+     * Update the live driver list sidebar.
+     * @param {Array} buses
+     */
+    function updateDriverList(buses) {
+        if (!driverListEl) {
+            return;
+        }
+
+        // Remove previous list items but keep the empty state element
+        driverListEl
+            .querySelectorAll('.tracking-sidebar__item')
+            .forEach((node) => node.remove());
+
+        if (driverCountEl) {
+            driverCountEl.textContent = buses.length;
+        }
+
+        if (!buses.length) {
+            if (emptyStateEl) {
+                emptyStateEl.style.display = 'flex';
+            }
+            return;
+        }
+
+        if (emptyStateEl) {
+            emptyStateEl.style.display = 'none';
+        }
+
+        buses.forEach((bus) => {
+            const { plate, current_lat, current_lon, bus_name, driver_name } = bus;
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'tracking-sidebar__item';
+            item.innerHTML = `
+                <div class="tracking-sidebar__item-title">
+                    <span>${bus_name || 'Unnamed Bus'}</span>
+                    <span class="bus-item-plate">${plate}</span>
+                </div>
+                <div class="tracking-sidebar__item-meta">
+                    Driver: ${driver_name || 'Not assigned'}
+                </div>
+                <div class="tracking-sidebar__item-location">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-navigation">
+                        <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                    </svg>
+                    ${formatCoordinate(current_lat)}, ${formatCoordinate(current_lon)}
+                </div>
+            `;
+
+            item.addEventListener('click', () => {
+                focusOnBus(plate, current_lat, current_lon);
+            });
+
+            driverListEl.appendChild(item);
+        });
+    }
+
+    function formatCoordinate(value) {
+        if (value === null || value === undefined) {
+            return '0.0000';
+        }
+        return Number.parseFloat(value).toFixed(4);
+    }
+
+    function focusOnBus(plate, lat, lon) {
+        if (!map || !lat || !lon) {
+            return;
+        }
+        map.setView([lat, lon], Math.max(map.getZoom(), 14), { animate: true });
+
+        const marker = busMarkers[plate];
+        if (marker) {
+            marker.openPopup();
+        }
     }
 
     // Start the map initialization process

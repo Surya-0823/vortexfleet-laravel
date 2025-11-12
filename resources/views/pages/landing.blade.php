@@ -13,7 +13,7 @@
 </head>
 <body class="landing-page">
     <header class="landing-header">
-        <div class="container">
+        <div class="container landing-header__content">
             <div class="logo">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bus">
                     <path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s-1-1.5-1.5-2.5S19 14 19 14"/><path d="M6 18H3s1-1.5 1.5-2.5S5 14 5 14"/><rect width="20" height="10" x="2" y="8" rx="2"/>
@@ -69,20 +69,20 @@
 
         @if (isset($stats))
         <section id="stats" class="stats-section">
-            <div class="container">
-                <div class="stat-item">
+            <div class="container stats-grid">
+                <div class="stat-card">
                     <span class="stat-value">{{ $stats['drivers'] ?? 0 }}</span>
                     <span class="stat-label">Drivers Managed</span>
                 </div>
-                <div class="stat-item">
+                <div class="stat-card">
                     <span class="stat-value">{{ $stats['buses'] ?? 0 }}</span>
                     <span class="stat-label">Buses Tracked</span>
                 </div>
-                <div class="stat-item">
+                <div class="stat-card">
                     <span class="stat-value">{{ $stats['students'] ?? 0 }}</span>
                     <span class="stat-label">Students Secured</span>
                 </div>
-                <div class="stat-item">
+                <div class="stat-card">
                     <span class="stat-value">{{ $stats['routes'] ?? 0 }}</span>
                     <span class="stat-label">Routes Optimized</span>
                 </div>
@@ -92,7 +92,7 @@
     </main>
 
     <footer class="landing-footer">
-        <div class="container">
+        <div class="container footer-content">
             <p>&copy; {{ date('Y') }} VortexFleet. All rights reserved.</p>
         </div>
     </footer>
