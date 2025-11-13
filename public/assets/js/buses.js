@@ -1,64 +1,64 @@
+/**
+ * Initializes all event listeners and logic for the Buses page.
+ * Handles modal controls, form validation, photo preview, AJAX form submission, and delete operations.
+ */
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- Modal Controls ---
     const modal = document.getElementById('addBusModal');
     const openBtn = document.getElementById('openAddBusModal');
     const closeBtn = document.getElementById('closeAddBusModal');
     const cancelBtn = document.getElementById('cancelAddBusModal');
 
-    // --- Delete Modal ---
     const deleteModal = document.getElementById('deleteBusModal');
     const cancelDeleteBtn = document.getElementById('cancelDeleteBusModal');
     const confirmDeleteBtn = document.getElementById('confirmDeleteBusBtn');
     
-    // =======================================================
-    // Validation kaga namma select panra elements
-    // =======================================================
     const busForm = document.getElementById('busForm');
     const busIdInput = document.getElementById('bus_id');
     const modalTitle = document.getElementById('busModalTitle');
     const modalSubmitBtn = document.getElementById('busModalSubmitBtn');
 
-    // Form inputs
     const nameInput = document.getElementById('name');
     const plateInput = document.getElementById('plate');
     const capacityInput = document.getElementById('capacity');
-    const driverInput = document.getElementById('driver'); // <-- PUTHU INPUT
+    const driverInput = document.getElementById('driver_id'); 
     const photoInput = document.getElementById('photo');
     const photoPreview = document.getElementById('photo-preview');
     const uploadButton = document.getElementById('upload-button');
 
-    // Error message-ah kaatra <small> tags
     const nameError = document.getElementById('nameError');
     const plateError = document.getElementById('plateError');
     const capacityError = document.getElementById('capacityError');
-    const driverError = document.getElementById('driverError'); // <-- PUTHU ERROR ELEMENT
+    const driverError = document.getElementById('driver_idError'); 
     const photoError = document.getElementById('photoError');
     
-    // Validation patterns (Regex)
-    const nameRegex = /.{3,}/; // Minimum 3 characters
-    const plateRegex = /^[A-Z]{2}[\s-]?[0-9]{1,2}[\s-]?[A-Z]{1,2}[\s-]?[0-9]{1,4}$/i; // TN-01-AB-1234
-    const capacityRegex = /^[1-9][0-9]*$/; // 1-99+
+    const nameRegex = /.{3,}/; 
+    const plateRegex = /^[A-Z]{2}[\s-]?[0-9]{1,2}[\s-]?[A-Z]{1,2}[\s-]?[0-9]{1,4}$/i; 
+    const capacityRegex = /^[1-9][0-9]*$/; 
     const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
-    // =======================================================
-    // Validation Helper Functions
-    // =======================================================
-
-    /** Input field-la error kaatrum */
+    /**
+     * Displays a validation error message for a specific input field.
+     * @param {HTMLElement} input - The input element that failed validation.
+     * @param {HTMLElement} errorElement - The <small> element to display the error message in.
+     * @param {string} message - The error message to display.
+     */
     function showError(input, errorElement, message) {
         if (input.classList) {
             input.classList.add('is-invalid');
         }
         errorElement.innerText = message; 
 
-        // 3 second-la antha error-ah clear pannidrom
         setTimeout(() => {
             clearError(input, errorElement);
         }, 3000);
     }
 
-    /** Input field-la irunthu error-ah neekkum */
+    /**
+     * Clears a validation error message from an input field.
+     * @param {HTMLElement} input - The input element.
+     * @param {HTMLElement} errorElement - The <small> element displaying the error.
+     */
     function clearError(input, errorElement) {
         if (input.classList) {
             input.classList.remove('is-invalid');
@@ -66,17 +66,21 @@ document.addEventListener('DOMContentLoaded', function() {
         errorElement.innerText = '';
     }
 
-    // Ella client/server error-ayum clear panna oru function
+    /**
+     * Clears all validation error messages from the form.
+     */
     function clearAllErrors() {
         clearError(nameInput, nameError);
         clearError(plateInput, plateError);
         clearError(capacityInput, capacityError);
-        clearError(driverInput, driverError); // <-- PUTHU ERROR CLEAR
+        clearError(driverInput, driverError); 
         clearError(uploadButton, photoError);
     }
 
-    // --- Ovvoru input-kum thani validation function ---
-
+    /**
+     * Validates the bus name input field.
+     * @returns {boolean} True if valid, false otherwise.
+     */
     function validateName() {
         if (nameInput.value.trim() === '') {
             showError(nameInput, nameError, 'Bus name is required.');
@@ -89,6 +93,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    /**
+     * Validates the license plate input field.
+     * @returns {boolean} True if valid, false otherwise.
+     */
     function validatePlate() {
         if (plateInput.value.trim() === '') {
             showError(plateInput, plateError, 'Number plate is required.');
@@ -101,6 +109,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    /**
+     * Validates the bus capacity input field.
+     * @returns {boolean} True if valid, false otherwise.
+     */
     function validateCapacity() {
         if (capacityInput.value.trim() === '') {
             showError(capacityInput, capacityError, 'Capacity is required.');
@@ -113,6 +125,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    /**
+     * Validates the photo upload field.
+     * @returns {boolean} True if valid, false otherwise.
+     */
     function validatePhoto() {
         const file = photoInput.files[0];
         const isEditMode = busIdInput.value !== '';
@@ -133,10 +149,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Ellame valid-ah-nu check panni, submit button-ah enable/disable pannum
+     * Checks the validity of all form inputs and enables/disables the submit button.
      */
     function checkFormValidity() {
-        // Clear panrathu kaga itha call panrom, error-ah kaatarthukku illa
         clearError(nameInput, nameError);
         clearError(plateInput, plateError);
         clearError(capacityInput, capacityError);
@@ -151,14 +166,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const isEditMode = busIdInput.value !== '';
         let isPhotoValid = true;
         
-        if (!file && !isEditMode) { // Add mode-la file illa
+        if (!file && !isEditMode) { 
             isPhotoValid = false;
         }
-        if (file && file.size > MAX_FILE_SIZE) { // File irukku, aana size perusu
+        if (file && file.size > MAX_FILE_SIZE) { 
             isPhotoValid = false;
         }
 
-        // Ellame valid-ah iruntha mattum button enable aagum
         if (isNameValid && isPlateValid && isCapacityValid && isPhotoValid) {
             modalSubmitBtn.disabled = false;
         } else {
@@ -166,7 +180,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- Modal Reset Function ---
+    /**
+     * Resets the bus modal form to its default state for adding a new bus.
+     */
     const resetModal = () => {
         if (modalTitle) modalTitle.innerText = 'Add New Bus';
         if (modalSubmitBtn) modalSubmitBtn.innerText = 'Submit Bus';
@@ -175,10 +191,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (busForm) busForm.action = '/buses/create';
         if (busIdInput) busIdInput.value = '';
 
-        // PUTHU MAATRAM: Driver dropdown reset panrom
         if (driverInput) driverInput.value = '';
-        if (driverInput) driverInput.disabled = true;
-        if (driverInput) driverInput.parentElement.querySelector('label').innerText = 'Assigned Driver (Edit Only)';
+        if (driverInput) driverInput.disabled = false;
+        if (driverInput) driverInput.parentElement.querySelector('label').innerText = 'Assign Driver (Optional)';
 
         if (photoPreview) {
             photoPreview.style.backgroundImage = 'none';
@@ -189,21 +204,25 @@ document.addEventListener('DOMContentLoaded', function() {
         if (modalSubmitBtn) modalSubmitBtn.disabled = true;
     };
 
-
-    // "Add Bus" button click panna
+    /**
+     * Opens the modal in 'Add' mode.
+     */
     if (openBtn) {
         openBtn.addEventListener('click', () => {
             resetModal();
             if (modal) modal.style.display = 'flex';
-            checkFormValidity(); // Photo required-ah nu check pannum
+            checkFormValidity(); 
         });
     }
 
-    // Modal-a moodurathu
+    /**
+     * Closes the main bus modal and resets its form.
+     */
     const closeModal = () => {
         if (modal) modal.style.display = 'none'; 
         resetModal(); 
     }
+    
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
     if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
     if (modal) {
@@ -214,10 +233,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- "Edit" and "Delete" logic ---
+    /**
+     * Handles all click events on the document, delegating to edit and delete buttons.
+     */
     document.addEventListener('click', function(event) {
         
-        // --- Edit Button Check ---
         const editButton = event.target.closest('.js-edit-bus');
         if (editButton) {
             event.preventDefault(); 
@@ -227,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = editButton.getAttribute('data-name');
             const plate = editButton.getAttribute('data-plate');
             const capacity = editButton.getAttribute('data-capacity');
-            const driverId = editButton.getAttribute('data-driver-id'); // <-- PUTHU ATTRIBUTE
+            const driverId = editButton.getAttribute('data-driver-id'); 
             const photoPath = editButton.getAttribute('data-photo');
 
             if (modalTitle) modalTitle.innerText = 'Edit Bus';
@@ -240,11 +260,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (plateInput) plateInput.value = plate;
             if (capacityInput) capacityInput.value = capacity;
             
-            // PUTHU MAATRAM: Driver dropdown update panrom
             if (driverInput) {
-                driverInput.value = driverId || ''; // Current Driver ID select aagum
+                driverInput.value = driverId || ''; 
                 driverInput.disabled = false;
-                driverInput.parentElement.querySelector('label').innerText = 'Assigned Driver';
+                driverInput.parentElement.querySelector('label').innerText = 'Assign Driver (Optional)';
             }
 
             if (photoPreview) {
@@ -261,17 +280,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (modalSubmitBtn) modalSubmitBtn.disabled = false;
         }
 
-        // --- Delete Button Check ---
         const deleteButton = event.target.closest('.js-delete-bus');
         if (deleteButton) {
             event.preventDefault();
-            // MAATRAM: data-delete-id-ah edukkrom
             const deleteId = deleteButton.getAttribute('data-delete-id');
             const deleteUrl = deleteButton.getAttribute('data-delete-url');
 
             if (confirmDeleteBtn) {
-                confirmDeleteBtn.setAttribute('data-id', deleteId); // ID-ah set panrom
-                confirmDeleteBtn.setAttribute('data-url', deleteUrl); // URL-ah set panrom
+                confirmDeleteBtn.setAttribute('data-id', deleteId); 
+                confirmDeleteBtn.setAttribute('data-url', deleteUrl); 
             }
             if (deleteModal) {
                 deleteModal.style.display = 'flex';
@@ -279,7 +296,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // --- Delete Modal Listeners ---
+    /**
+     * Attaches click listener to the 'Cancel Delete' button.
+     */
     if (cancelDeleteBtn) {
         cancelDeleteBtn.addEventListener('click', () => {
             if (deleteModal) deleteModal.style.display = 'none';
@@ -288,17 +307,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // =======================================================
-    // ITHU THAAN ANTHA PUTHU DELETE FIX (AJAX/FETCH)
-    // =======================================================
+    /**
+     * Attaches click listener to the 'Confirm Delete' button for AJAX deletion.
+     */
     if (confirmDeleteBtn) {
         confirmDeleteBtn.addEventListener('click', () => {
             const deleteId = confirmDeleteBtn.getAttribute('data-id');
-            const deleteUrl = confirmDeleteBtn.getAttribute('data-url'); // POST URL
+            const deleteUrl = confirmDeleteBtn.getAttribute('data-url'); 
 
             if (deleteId && deleteUrl) {
                 
-                // Button-ah disable panni, loading spinner kaatrom
                 confirmDeleteBtn.disabled = true;
                 confirmDeleteBtn.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-2" style="animation: spin 1s linear infinite;">
@@ -307,7 +325,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span>Deleting...</span>
                 `;
                 
-                // Style tag add panrom (CSS la animation illana)
                 if (!document.getElementById('animate-spin-style')) {
                     const style = document.createElement('style');
                     style.id = 'animate-spin-style';
@@ -315,36 +332,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.head.appendChild(style);
                 }
 
-                 // MAATRAM: POST request use panrom
                 const formData = new FormData();
                 formData.append('id', deleteId);
-                formData.append('csrf_token', getCsrfToken()); // CSRF Token Add panrom
+                formData.append('csrf_token', getCsrfToken()); 
 
-
-                // Fetch use panni AJAX call panrom
                 fetch(deleteUrl, {
-                    method: 'POST', // MAATRAM: POST method
+                    method: 'POST', 
                     body: formData,
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Response vanthathum, correct-ana alert kaatrom
                     if (data.success) {
                         showAlert(data.message, 'success');
                         if (deleteModal) deleteModal.style.display = 'none';
                         
-                        // Page-ah reload panrom
                         setTimeout(() => {
                            location.reload();
                         }, 1500); 
                     
                     } else {
-                        // Error message (e.g., "Cannot delete bus. It is assigned to route...")
                         showAlert(data.message, 'danger');
                         if (deleteModal) deleteModal.style.display = 'none';
                     }
 
-                    // Button-ah pazhaya nilaikku kondu varom
                     confirmDeleteBtn.disabled = false;
                     confirmDeleteBtn.innerHTML = `
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
@@ -356,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     showAlert('An unknown error occurred.', 'danger');
                     if (deleteModal) deleteModal.style.display = 'none';
                     
-                    // Error aanaalum, Button-ah pazhaya nilaikku kondu varom
                     confirmDeleteBtn.disabled = false;
                     confirmDeleteBtn.innerHTML = `
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
@@ -367,6 +376,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    /**
+     * Attaches click listener to the delete modal overlay to close it.
+     */
     if (deleteModal) {
         deleteModal.addEventListener('click', function(event) {
             if (event.target === deleteModal) {
@@ -377,13 +389,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Photo Upload Logic ---
+    /**
+     * Attaches click listeners for photo upload buttons.
+     */
     if (uploadButton) {
         uploadButton.addEventListener('click', () => photoInput.click());
     }
     if (photoPreview) {
         photoPreview.addEventListener('click', () => photoInput.click());
     }
+    
+    /**
+     * Handles photo file selection, preview, and validation check.
+     */
     if (photoInput) {
         photoInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
@@ -399,22 +417,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // =======================================================
-    // Real-time validation (User type panna panna)
-    // =======================================================
+    /**
+     * Attaches real-time validation listeners to form inputs.
+     */
     if (nameInput) nameInput.addEventListener('input', checkFormValidity);
     if (plateInput) plateInput.addEventListener('input', checkFormValidity);
     if (capacityInput) capacityInput.addEventListener('input', checkFormValidity);
 
 
-    // =======================================================
-    // Form Submit pannum pothu AJAX use panrom
-    // =======================================================
+    /**
+     * Handles the AJAX form submission for both creating and updating buses.
+     */
     if (busForm) {
         busForm.addEventListener('submit', function(event) {
             event.preventDefault(); 
             
-            // Final validation check (ithu thaan error-ah kaattum)
             const isNameValid = validateName();
             const isPlateValid = validatePlate();
             const isCapacityValid = validateCapacity();
@@ -431,11 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearAllErrors();
             
             const formData = new FormData(busForm);
-            
-            // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
             formData.append('csrf_token', getCsrfToken());
-            // *** MAATRAM MUDINJATHU ***
-
             const url = busForm.action;
 
             fetch(url, {
@@ -477,8 +490,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (data.errors.capacity) {
                             showError(capacityInput, capacityError, data.errors.capacity);
                         }
-                        if (data.errors.driver) { // <-- PUTHU SERVER ERROR DISPLAY
-                            showError(driverInput, driverError, data.errors.driver);
+                        if (data.errors.driver_id) { 
+                            showError(driverInput, driverError, data.errors.driver_id);
                         }
                          if (data.errors.photo) {
                             showError(uploadButton, photoError, data.errors.photo);
@@ -490,14 +503,13 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Fetch Error:', error);
-                // If error is an object with success/message, it's a server error response
                 if (error && typeof error === 'object' && 'message' in error) {
                     showAlert(error.message || 'An error occurred. Please try again.', 'danger');
                     if (error.errors) {
                         if (error.errors.name) showError(nameInput, nameError, error.errors.name);
                         if (error.errors.plate) showError(plateInput, plateError, error.errors.plate);
                         if (error.errors.capacity) showError(capacityInput, capacityError, error.errors.capacity);
-                        if (error.errors.driver) showError(driverInput, driverError, error.errors.driver);
+                        if (error.errors.driver_id) showError(driverInput, driverError, error.errors.driver_id);
                         if (error.errors.photo) showError(uploadButton, photoError, error.errors.photo);
                     }
                 } else {
