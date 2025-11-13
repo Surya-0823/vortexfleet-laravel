@@ -202,3 +202,32 @@
 .main-content.collapsed .page-content {
     padding-left: calc(5.5rem + 2rem); 
 }
+
+/* Puthu Snippet (New Snippet) */
+
+/* ===== Bottom Nav Bar (Fix) ===== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 16rem; /* Sidebar width (256px) - exactly matches sidebar */
+    width: calc(100% - 16rem); /* Adjust for sidebar width */
+    padding: 0.18rem 2rem;
+    background-color: hsl(var(--card));
+    border-top: 1px solid hsl(var(--border));
+    color: hsl(var(--muted-foreground));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    flex-shrink: 0; 
+    z-index: 1000;
+    transition: left 0.3s ease, width 0.3s ease;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Sidebar collapse aanalum bottom-nav ah adjust panrom */
+.main-content.collapsed .bottom-nav {
+    left: 5.5rem; /* Collapsed sidebar width (88px) */
+    width: calc(100% - 5.5rem); /* Adjust for collapsed sidebar width */
+}

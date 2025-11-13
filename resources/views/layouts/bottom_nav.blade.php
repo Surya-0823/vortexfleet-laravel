@@ -1,10 +1,4 @@
 <footer class="bottom-nav">
-    <div class="footer-content">
-        <p>&copy; {{ date('Y') }} VortexFleet. All rights reserved.</p>
-        <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact</a>
-        </div>
-    </div>
+    <p>&copy; {{ date('Y') }} VortexFleet. All rights reserved.</p>
+    <p>Made with ❤️ By Dhana Surya @ 2025</p>
 </footer>
