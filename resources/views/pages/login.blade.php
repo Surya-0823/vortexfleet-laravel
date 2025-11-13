@@ -41,7 +41,21 @@
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password">
+                        <button type="button" class="password-toggle-btn" data-password-toggle aria-label="Show password" aria-pressed="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-eye">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-eye-off">
+                                <path d="M3 3l18 18"/>
+                                <path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"/>
+                                <path d="M16.24 16.24A10 10 0 0 1 12 19c-7 0-10-7-10-7a17.73 17.73 0 0 1 5.06-5.94"/>
+                                <path d="M17.94 17.94A17.73 17.73 0 0 0 22 12s-3-7-10-7a9.59 9.59 0 0 0-3.24.56"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-auth">Login</button>
@@ -52,5 +66,23 @@
             </form>
         </div>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleBtn = document.querySelector('[data-password-toggle]');
+        const passwordInput = document.getElementById('password');
+
+        if (!toggleBtn || !passwordInput) {
+            return;
+        }
+
+        toggleBtn.addEventListener('click', function () {
+            const isCurrentlyVisible = passwordInput.type === 'text';
+            passwordInput.type = isCurrentlyVisible ? 'password' : 'text';
+            toggleBtn.classList.toggle('is-visible', !isCurrentlyVisible);
+            toggleBtn.setAttribute('aria-pressed', (!isCurrentlyVisible).toString());
+            toggleBtn.setAttribute('aria-label', isCurrentlyVisible ? 'Show password' : 'Hide password');
+        });
+    });
+</script>
 </body>
 </html>

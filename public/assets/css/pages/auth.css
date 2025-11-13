@@ -105,6 +105,56 @@
     box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
 }
 
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 3rem;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: hsl(var(--muted-foreground));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.4rem;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:focus-visible {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--border));
+    outline: none;
+}
+
+.password-toggle-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.password-toggle-btn .icon-eye-off {
+    display: none;
+}
+
+.password-toggle-btn.is-visible .icon-eye {
+    display: none;
+}
+
+.password-toggle-btn.is-visible .icon-eye-off {
+    display: block;
+}
+
 .btn-auth {
     padding: 1rem;
     background: hsl(var(--primary));

@@ -37,6 +37,8 @@ class Driver extends Model
         'otp_code',
         'otp_expires_at',
         'otp_attempt_count',
+        'otp_sent_count',
+        'otp_last_sent_at',
         'otp_locked_until',
     ];
 
@@ -61,6 +63,7 @@ class Driver extends Model
             'app_password' => 'hashed', // Automatically hash on save
             'is_verified' => 'boolean',
             'otp_expires_at' => 'datetime',
+            'otp_last_sent_at' => 'datetime',
         ];
     }
 

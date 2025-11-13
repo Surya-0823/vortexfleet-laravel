@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelBtn = document.getElementById('cancelAddBusModal');
 
     const deleteModal = document.getElementById('deleteBusModal');
-    const cancelDeleteBtn = document.getElementById('cancelDeleteBusModal');
-    const confirmDeleteBtn = document.getElementById('confirmDeleteBusBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteModal');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     
     const busForm = document.getElementById('busForm');
     const busIdInput = document.getElementById('bus_id');

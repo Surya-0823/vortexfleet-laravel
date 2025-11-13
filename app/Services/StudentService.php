@@ -40,6 +40,19 @@ class StudentService
             return ['success' => false, 'message' => 'Validation failed', 'data' => $validation, 'status_code' => 422];
         }
 
+        // Auto-generate credentials similar to Driver logic
+        $data['app_username'] = $data['email'];
+        $namePart = preg_replace('/[^a-zA-Z0-9]/', '', str_replace(' ', '', $data['name'] ?? ''));
+        if (empty($namePart)) {
+            $namePart = 'Student' . substr(bin2hex(random_bytes(2)), 0, 2);
+        }
+        $phoneDigits = preg_replace('/\D/', '', $data['phone'] ?? '');
+        $phoneLast4 = substr($phoneDigits, -4);
+        if (strlen($phoneLast4) < 4) {
+            $phoneLast4 = str_pad(substr($phoneDigits, -4), 4, (string) random_int(0, 9), STR_PAD_LEFT);
+        }
+        $data['app_password'] = $namePart . '@' . $phoneLast4;
+
         // 1. Handle Photo Upload
         try {
             $uploadResult = $this->handlePhotoUpload($request, 'uploads/students', $data['name']);
@@ -83,6 +96,11 @@ class StudentService
             return ['success' => false, 'message' => 'Validation failed', 'data' => $validation, 'status_code' => 422];
         }
 
+        $emailChanged = array_key_exists('email', $data) && $data['email'] !== $student->email;
+        if ($emailChanged) {
+            $data['app_username'] = $data['email'];
+        }
+
         // 1. Handle Photo Upload (if new photo provided)
         if ($request->hasFile('photo')) {
             try {
@@ -99,12 +117,19 @@ class StudentService
 
         // 2. Update Student
         try {
-            if (array_key_exists('app_password', $data) && $data['app_password'] === '') {
-                unset($data['app_password']);
-            }
+            unset($data['app_password']);
 
-            $student->update($data); // Assumes fields are fillable
-            return ['success' => true, 'message' => 'Student updated successfully.', 'data' => null, 'status_code' => 200];
+            $student->fill($data);
+            $student->is_verified = false;
+            $student->otp_code = null;
+            $student->otp_expires_at = null;
+            $student->otp_attempt_count = 0;
+            $student->otp_sent_count = 0;
+            $student->otp_last_sent_at = null;
+            $student->otp_locked_until = null;
+            $student->save();
+
+            return ['success' => true, 'message' => 'Student updated successfully. Verification required again.', 'data' => null, 'status_code' => 200];
         } catch (\Exception $e) {
             Log::error('Student update failed', ['error' => $e->getMessage()]);
             return ['success' => false, 'message' => 'Database error: Could not update student.', 'data' => null, 'status_code' => 500];
@@ -164,6 +189,12 @@ class StudentService
         $student = Student::find($studentId);
         if ($student) {
             $student->is_verified = 0;
+            $student->otp_code = null;
+            $student->otp_expires_at = null;
+            $student->otp_attempt_count = 0;
+            $student->otp_sent_count = 0;
+            $student->otp_last_sent_at = null;
+            $student->otp_locked_until = null;
             $student->save();
             return ['success' => true, 'message' => 'Student status updated to Not Verified.', 'status_code' => 200];
         }
@@ -184,15 +215,28 @@ class StudentService
             return ['success' => false, 'message' => 'Student not found.', 'status_code' => 404];
         }
 
-        if ($student->otp_locked_until && strtotime($student->otp_locked_until) > time()) {
+        $now = Carbon::now();
+
+        if ($student->otp_locked_until && Carbon::parse($student->otp_locked_until)->isFuture()) {
             return ['success' => false, 'message' => 'Too many attempts. Please try again after 24 hours.', 'status_code' => 429];
         }
 
+        if ($student->otp_last_sent_at && !Carbon::parse($student->otp_last_sent_at)->isSameDay($now)) {
+            $student->otp_sent_count = 0;
+        }
+
+        if ($student->otp_sent_count >= 3) {
+            $student->otp_locked_until = $now->copy()->addDay();
+            $student->save();
+
+            return ['success' => false, 'message' => 'OTP request limit reached. Account locked for 24 hours.', 'status_code' => 429];
+        }
+
         $otp_code = rand(100000, 999999);
-        $otp_expires = now()->addMinutes(3)->toDateTimeString();
+        $otp_expires = $now->copy()->addMinute()->toDateTimeString();
         
         $subject = 'Your Verification Code for VortexFleet Student App';
-        $body    = 'Hi ' . $student->name . ',<br><br>Your OTP for student app verification is: <b>' . $otp_code . '</b><br>This code is valid for 3 minutes.<br><br>Thanks,<br>Team VortexFleet';
+        $body    = 'Hi ' . $student->name . ',<br><br>Your OTP for student app verification is: <b>' . $otp_code . '</b><br>This code is valid for 1 minute.<br><br>Thanks,<br>Team VortexFleet';
         
         try {
             // Use trait method
@@ -201,6 +245,8 @@ class StudentService
             $student->otp_code = $otp_code;
             $student->otp_expires_at = $otp_expires;
             $student->otp_attempt_count = 0;
+            $student->otp_sent_count = $student->otp_sent_count + 1;
+            $student->otp_last_sent_at = $now;
             $student->otp_locked_until = null;
             $student->save();
 
@@ -228,7 +274,7 @@ class StudentService
             return ['success' => false, 'message' => 'Student not found.', 'status_code' => 404];
         }
 
-        if ($student->otp_locked_until && strtotime($student->otp_locked_until) > time()) {
+        if ($student->otp_locked_until && Carbon::parse($student->otp_locked_until)->isFuture()) {
             return ['success' => false, 'message' => 'Account locked. Try again after 24 hours.', 'status_code' => 429];
         }
 
@@ -245,6 +291,8 @@ class StudentService
             $student->otp_code = null;
             $student->otp_expires_at = null;
             $student->otp_attempt_count = 0;
+            $student->otp_sent_count = 0;
+            $student->otp_last_sent_at = null;
             $student->otp_locked_until = null;
             $student->save();
             return ['success' => true, 'message' => 'Verification successful!', 'status_code' => 200];
@@ -252,7 +300,7 @@ class StudentService
             $attempts = $student->otp_attempt_count + 1;
             
             if ($attempts >= 3) {
-                $locked_until = now()->addHours(24)->toDateTimeString();
+                $locked_until = Carbon::now()->addHours(24)->toDateTimeString();
                 $student->otp_attempt_count = $attempts;
                 $student->otp_locked_until = $locked_until;
                 $student->save();
@@ -312,8 +360,6 @@ class StudentService
         
         if (empty($data['name'])) $errors['name'] = 'Name is required';
         if (empty($data['email'])) $errors['email'] = 'Email is required';
-        if (empty($data['app_username'])) $errors['app_username'] = 'App Username is required';
-        if (!$isUpdate && empty($data['app_password'])) $errors['app_password'] = 'App Password is required';
         if (empty($data['route_name'])) $errors['route_name'] = 'Route is required';
 
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
@@ -325,9 +371,7 @@ class StudentService
         if ($isUpdate) $queryEmail->where('id', '!=', $studentId);
         if ($queryEmail->exists()) $errors['email'] = 'Email already taken';
 
-        $queryUsername = Student::where('app_username', $data['app_username']);
-        if ($isUpdate) $queryUsername->where('id', '!=', $studentId);
-        if ($queryUsername->exists()) $errors['app_username'] = 'App Username already taken';
+        // app_username is now derived from email, so no separate validation needed
 
         // Check if route exists
         if (!Route::where('name', $data['route_name'])->exists()) {

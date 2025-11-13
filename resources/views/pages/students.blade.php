@@ -72,36 +72,40 @@
                         @endif
                     </td>
                     <td style="width: 150px;"> 
+                        @php
+                            $isStudentVerified = (bool) $student->is_verified;
+                            $studentStatusLabel = $isStudentVerified ? 'Verified' : 'Not Verified';
+                            $studentBadgeClass = $isStudentVerified ? 'status-badge status-badge-success' : 'status-badge status-badge-danger';
+                            $studentAvatarSource = !empty($student->photo_path)
+                                ? asset($student->photo_path)
+                                : "https://api.dicebear.com/7.x/initials/svg?seed=" . urlencode($student->name) . "&backgroundColor=282c34&fontColor=bbf7d0";
+                        @endphp
                         <div class="status-cell-wrapper">
-                            @php
-                                // PUTHU MAATRAM: Blade @php block
-                                if ($student->is_verified == 1) { 
-                                    $btn_class = 'btn-verify-verified';
-                                    $btn_text = 'Verified';
-                                    $js_class = 'js-status-toggle';
-                                    $email_attr = '';
-                                } else { 
-                                    $btn_class = 'btn-verify-pending';
-                                    $btn_text = 'Verification'; 
-                                    $js_class = 'js-send-otp';
-                                    $email_attr = 'data-user-email="' . htmlspecialchars($student->email) . '"';
-                                }
-                            @endphp
-                            <button class="btn-verify {{ $btn_class }} {{ $js_class }}"
-                                    data-user-id="{{ $student->id }}"
-                                    data-user-name="{{ htmlspecialchars($student->name) }}"
-                                    {!! $email_attr !!}>
-                                
-                                @if ($student->is_verified == 1)
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                                @endif
-                                
-                                <span>{{ $btn_text }}</span>
-
-                                @if ($student->is_verified != 1)
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                                @endif
-                            </button>
+                            @if ($isStudentVerified)
+                                <span class="{{ $studentBadgeClass }}" aria-label="Student verified">
+                                    <span class="status-badge-avatar">
+                                        <img src="{{ $studentAvatarSource }}" alt="{{ e($student->name) }} avatar">
+                                    </span>
+                                    <span class="status-badge-text">{{ $studentStatusLabel }}</span>
+                                    <span class="status-badge-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                                    </span>
+                                </span>
+                            @else
+                                <button type="button"
+                                        class="{{ $studentBadgeClass }} js-send-otp"
+                                        data-user-id="{{ $student->id }}"
+                                        data-user-email="{{ e($student->email) }}"
+                                        data-user-name="{{ e($student->name) }}">
+                                    <span class="status-badge-avatar">
+                                        <img src="{{ $studentAvatarSource }}" alt="{{ e($student->name) }} avatar">
+                                    </span>
+                                    <span class="status-badge-text">{{ $studentStatusLabel }}</span>
+                                    <span class="status-badge-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                                    </span>
+                                </button>
+                            @endif
                         </div>
                     </td>
                     <td>
@@ -200,18 +204,9 @@
                     <small id="route_nameError" class="text-danger-inline"></small>
                 </div>
                 
-                <div id="app-credentials-fields">
-                    <div class="formbold-input-flex">
-                        <div>
-                            <label for="app_username" class="formbold-form-label">App Username</label>
-                            <input type="text" name="app_username" id="app_username" class="formbold-form-input" required />
-                            <small id="app_usernameError" class="text-danger-inline"></small>
-                        </div>
-                        <div>
-                            <label for="app_password" class="formbold-form-label">App Password</label>
-                            <input type="password" name="app_password" id="app_password" class="formbold-form-input" required minlength="6" />
-                            <small id="app_passwordError" class="text-danger-inline"></small>
-                        </div>
+                <div class="formbold-mb-3">
+                    <div class="form-note">
+                        App login credentials will be generated automatically based on the student's email and phone number.
                     </div>
                 </div>
                 
@@ -251,18 +246,130 @@
 </div>
 
 <div id="statusConfirmModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-content-alert">
+        <div class="modal-header-alert">
+            <div class="alert-icon-wrapper" id="statusModalIcon" style="background-color: hsla(var(--warning), 0.15); border-color: hsla(var(--warning), 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--warning))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            </div>
+            <h2 class="modal-title">Confirm Action</h2>
+        </div>
+        <div class="modal-body"><p class="alert-text-primary" id="statusConfirmText">Are you sure you want to update this student's status?</p></div>
+        <div class="modal-footer modal-footer-alert">
+            <button type="button" id="cancelStatusChange" class="btn btn-outline">Cancel</button>
+            <button type="button" id="confirmStatusChange" class="btn" style="background-color: hsl(var(--warning)); color: #000; border-color: hsl(var(--warning));">
+                <span>Confirm</span>
+            </button>
+        </div>
     </div>
+</div>
 
 <div id="otpConfirmModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-content-alert">
+        <div class="modal-header-alert">
+            <div class="alert-icon-wrapper" style="background-color: hsla(var(--warning), 0.15); border-color: hsla(var(--warning), 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--warning))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail-question">
+                    <path d="M22 10.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h12.5"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    <path d="M18 15.28c.2.4.5.7.9.9a2.1 2.1 0 0 1-2.1 3.5c-.6 0-1.2-.2-1.7-.5s-.8-1.3-1-2.3c-.2-1.1.4-2.2 1.3-2.8.5-.3.9-.4 1.3-.4.3 0 .6 0 .9.1Z"/>
+                    <path d="M21.99 18.28a.5.5 0 1 0-.7-.7.5.5 0 1 0 .7.7Z"/>
+                </svg>
+            </div>
+            <h2 class="modal-title">Confirm Verification</h2>
+        </div>
+        <div class="modal-body">
+            <p class="alert-text-primary" id="otpConfirmPrimaryText">Send verification OTP to [email]?</p>
+            <p class="alert-text-secondary">The student will receive a 6-digit code.</p>
+        </div>
+        <div class="modal-footer modal-footer-alert">
+            <button type="button" id="cancelOtpConfirm" class="btn btn-outline">Cancel</button>
+            <button type="button" id="confirmOtpSend" class="btn" style="background-color: hsl(var(--warning)); color: #000; border-color: hsl(var(--warning));">
+                <span>Send OTP</span>
+            </button>
+        </div>
     </div>
+</div>
 
 <div id="otpModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-content-alert" style="max-width: 480px;">
+        <form id="otpForm">
+            @csrf
+            <div class="modal-header-alert">
+                <div class="alert-icon-wrapper" style="background-color: hsla(var(--primary), 0.15); border-color: hsla(var(--primary), 0.2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round">
+                        <path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r="2.5"/>
+                    </svg>
+                </div>
+                <h2 class="modal-title">Enter Verification Code</h2>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="otp_user_id" name="user_id">
+                <p class="alert-text-secondary" id="otpMessage" style="color: hsl(var(--foreground));">An OTP has been sent to the student's email.</p>
+                
+                <div class="form-group" style="margin-top: 1.5rem; text-align: left;">
+                    <label for="otp_code" class="formbold-form-label" style="text-align: left;">Enter 6-Digit OTP</label>
+                    <input type="text" id="otp_code" name="otp_code" class="formbold-form-input" 
+                           style="font-size: 1.5rem; text-align: center; letter-spacing: 0.5rem;" 
+                           maxlength="6" required>
+                    <small id="otpError" class="text-danger-inline" style="text-align: center; margin-top: 10px;"></small>
+                </div>
+                
+                <div style="margin-top: 1rem; font-size: 0.875rem; color: hsl(var(--muted-foreground));">
+                    Didn't receive the code? 
+                    <button type="button" id="otpResendBtn" class="btn-link" disabled style="background: none; border: none; color: hsl(var(--primary)); cursor: pointer; text-decoration: underline; padding: 0;">Resend</button>
+                    <span id="otpTimer" style="margin-left: 0.5rem;"></span>
+                </div>
+            </div>
+            <div class="modal-footer modal-footer-alert">
+                <button type="button" id="closeOtpModal" class="btn btn-outline">Cancel</button>
+                <button type="submit" class="formbold-btn">Verify Student</button>
+            </div>
+        </form>
     </div>
+</div>
 
 <div id="resetPasswordModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-content-alert">
+        <div class="modal-header-alert">
+            <div class="alert-icon-wrapper" style="background-color: hsla(var(--warning), 0.15); border-color: hsla(var(--warning), 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--warning))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round">
+                    <path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r="2.5"/>
+                </svg>
+            </div>
+            <h2 class="modal-title">Confirm Password Reset</h2>
+        </div>
+        <div class="modal-body">
+            <p class="alert-text-primary" id="resetPasswordText">Are you sure you want to reset this student's password?</p>
+            <p class="alert-text-secondary">A new 6-character password will be generated and their account will be unlocked.</p>
+        </div>
+        <div class="modal-footer modal-footer-alert">
+            <button type="button" id="cancelResetPassword" class="btn btn-outline">Cancel</button>
+            <button type="button" id="confirmResetPassword" class="btn" style="background-color: hsl(var(--warning)); color: #000; border-color: hsl(var(--warning));">
+                <span>Reset Password</span>
+            </button>
+        </div>
     </div>
+</div>
 
 <div id="showNewPasswordModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-content-alert">
+        <div class="modal-header-alert">
+            <div class="alert-icon-wrapper" style="background-color: hsla(var(--success), 0.15); border-color: hsla(var(--success), 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--success))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-check"><path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/></svg>
+            </div>
+            <h2 class="modal-title">Password Reset Successful</h2>
+        </div>
+        <div class="modal-body">
+            <p class="alert-text-secondary" style="margin-top: 0;">Please copy the new password and share it with the student.</p>
+            <div class="form-group" style="margin-top: 1.5rem; text-align: left;">
+                <label for="newPasswordText" class="formbold-form-label" style="text-align: left;">New Generated Password:</label>
+                <input type="text" id="newPasswordText" class="formbold-form-input" 
+                       style="font-size: 1.5rem; text-align: center; letter-spacing: 0.5rem; background-color: hsl(var(--background));" 
+                       readonly>
+            </div>
+        </div>
+        <div class="modal-footer modal-footer-alert">
+            <button type="button" id="closeNewPasswordModal" class="btn btn-outline">Close</button>
+        </div>
     </div>
+</div>
 
 @endsection

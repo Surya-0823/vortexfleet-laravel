@@ -104,46 +104,29 @@
     gap: 1rem;
 }
 
-.icon-btn {
-    background: transparent;
-    border: none;
-    color: hsl(var(--muted-foreground));
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.icon-btn:hover {
-    background-color: hsl(var(--muted));
-    color: hsl(var(--foreground));
-}
-
-.icon-btn svg {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-
-.user-profile {
-    display: flex;
+.user-profile-card {
+    display: inline-flex;
     align-items: center;
     gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+    box-shadow: 0 4px 16px hsl(var(--background) / 0.35);
 }
 
-.user-profile img {
+.user-profile-avatar {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    border: 2px solid hsl(var(--border));
+    border: 2px solid hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 0 3px hsl(var(--background));
 }
 
-.user-info {
+.user-profile-info {
     display: flex;
     flex-direction: column;
-    text-align: right;
+    text-align: left;
 }
 
 .user-name {
@@ -155,6 +138,31 @@
 .user-role {
     font-size: 0.75rem;
     color: hsl(var(--muted-foreground));
+}
+
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid hsl(var(--primary) / 0.3);
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.15), hsl(var(--primary) / 0.05));
+    color: hsl(var(--primary));
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.logout-button svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.logout-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px hsl(var(--primary) / 0.25);
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.25), hsl(var(--primary) / 0.12));
 }
 
 /* ===== App Footer ===== */

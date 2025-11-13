@@ -45,9 +45,16 @@ class DriverService
         // We strip spaces/special chars from the name part to keep it simple and URL-safe.
         /** @var string $name_part Sanitized part of the password (driver's name) */
         $name_part = preg_replace('/[^a-zA-Z0-9]/', '', str_replace(' ', '', $data['name']));
+        if (empty($name_part)) {
+            $name_part = 'Driver' . substr(bin2hex(random_bytes(2)), 0, 2);
+        }
         
         /** @var string $phone_last_4 Last 4 digits of the phone number */
-        $phone_last_4 = substr($data['phone'], -4);
+        $phone_digits = preg_replace('/\D/', '', $data['phone'] ?? '');
+        $phone_last_4 = substr($phone_digits, -4);
+        if (strlen($phone_last_4) < 4) {
+            $phone_last_4 = str_pad($phone_last_4, 4, (string) random_int(0, 9), STR_PAD_LEFT);
+        }
 
         /** @var string $app_password Automatically generated and plain text password */
         $data['app_password'] = $name_part . '@' . $phone_last_4;
@@ -97,6 +104,11 @@ class DriverService
             return ['success' => false, 'message' => 'Validation failed', 'data' => $validation, 'status_code' => 422];
         }
 
+        $emailChanged = array_key_exists('email', $data) && $data['email'] !== $driver->email;
+        if ($emailChanged) {
+            $data['app_username'] = $data['email'];
+        }
+
         // 1. Handle Photo Upload (if new photo provided)
         if ($request->hasFile('photo')) {
             try {
@@ -113,12 +125,19 @@ class DriverService
 
         // 2. Update Driver
         try {
-            if (array_key_exists('app_password', $data) && $data['app_password'] === '') {
-                unset($data['app_password']);
-            }
+            unset($data['app_password']);
 
-            $driver->update($data); // Assumes fields are fillable
-            return ['success' => true, 'message' => 'Driver updated successfully.', 'data' => null, 'status_code' => 200];
+            $driver->fill($data);
+            $driver->is_verified = false;
+            $driver->otp_code = null;
+            $driver->otp_expires_at = null;
+            $driver->otp_attempt_count = 0;
+            $driver->otp_sent_count = 0;
+            $driver->otp_last_sent_at = null;
+            $driver->otp_locked_until = null;
+            $driver->save();
+
+            return ['success' => true, 'message' => 'Driver updated successfully. Verification required again.', 'data' => null, 'status_code' => 200];
         } catch (\Exception $e) {
             Log::error('Driver update failed', ['error' => $e->getMessage()]);
             return ['success' => false, 'message' => 'Database error: Could not update driver.', 'data' => null, 'status_code' => 500];

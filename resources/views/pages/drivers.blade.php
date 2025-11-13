@@ -64,36 +64,40 @@
                         </div>
                     </td>
                     <td style="width: 150px;"> 
+                        @php
+                            $isVerified = (bool) $driver->is_verified;
+                            $statusLabel = $isVerified ? 'Verified' : 'Not Verified';
+                            $statusBadgeClass = $isVerified ? 'status-badge status-badge-success' : 'status-badge status-badge-danger';
+                            $avatarSource = !empty($driver->photo_path)
+                                ? asset($driver->photo_path)
+                                : "https://api.dicebear.com/7.x/initials/svg?seed=" . urlencode($driver->name) . "&backgroundColor=282c34&fontColor=86efac";
+                        @endphp
                         <div class="status-cell-wrapper">
-                            @php
-                                // PUTHU MAATRAM: Blade @php block
-                                if ($driver->is_verified == 1) { 
-                                    $btn_class = 'btn-verify-verified';
-                                    $btn_text = 'Verified';
-                                    $js_class = 'js-status-toggle';
-                                    $email_attr = '';
-                                } else { 
-                                    $btn_class = 'btn-verify-pending';
-                                    $btn_text = 'Verification'; 
-                                    $js_class = 'js-send-otp';
-                                    $email_attr = 'data-user-email="' . htmlspecialchars($driver->email) . '"';
-                                }
-                            @endphp
-                            <button class="btn-verify {{ $btn_class }} {{ $js_class }}"
-                                    data-user-id="{{ $driver->id }}"
-                                    data-user-name="{{ htmlspecialchars($driver->name) }}"
-                                    {!! $email_attr !!}>
-                                
-                                @if ($driver->is_verified == 1)
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                                @endif
-                                
-                                <span>{{ $btn_text }}</span>
-
-                                @if ($driver->is_verified != 1)
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                                @endif
-                            </button>
+                            @if ($isVerified)
+                                <span class="{{ $statusBadgeClass }}" aria-label="Driver verified">
+                                    <span class="status-badge-avatar">
+                                        <img src="{{ $avatarSource }}" alt="{{ e($driver->name) }} avatar">
+                                    </span>
+                                    <span class="status-badge-text">{{ $statusLabel }}</span>
+                                    <span class="status-badge-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                                    </span>
+                                </span>
+                            @else
+                                <button type="button"
+                                        class="{{ $statusBadgeClass }} js-send-otp"
+                                        data-user-id="{{ $driver->id }}"
+                                        data-user-email="{{ e($driver->email) }}"
+                                        data-user-name="{{ e($driver->name) }}">
+                                    <span class="status-badge-avatar">
+                                        <img src="{{ $avatarSource }}" alt="{{ e($driver->name) }} avatar">
+                                    </span>
+                                    <span class="status-badge-text">{{ $statusLabel }}</span>
+                                    <span class="status-badge-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                                    </span>
+                                </button>
+                            @endif
                         </div>
                     </td>
                     <td>

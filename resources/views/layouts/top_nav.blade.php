@@ -6,21 +6,16 @@
     </div>
 
     <div class="user-actions">
-        <button class="icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-        </button>
-        <button class="icon-btn">
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-        </button>
-        <button class="icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        </button>
-        <div class="user-profile">
-            <img src="https://api.dicebear.com/7.x/initials/svg?seed={{ Session::get('user_name', 'Admin') }}" alt="User Avatar">
-            <div class="user-info">
+        <div class="user-profile-card">
+            <img src="https://api.dicebear.com/7.x/initials/svg?seed={{ Session::get('user_name', 'Admin') }}" alt="Admin Avatar" class="user-profile-avatar">
+            <div class="user-profile-info">
                 <span class="user-name">{{ Session::get('user_name', 'Admin User') }}</span>
-                <span class="user-role">admin</span>
+                <span class="user-role">Administrator</span>
             </div>
         </div>
+        <a href="{{ url('/logout') }}" class="logout-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+            <span>Logout</span>
+        </a>
     </div>
 </header>

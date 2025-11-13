@@ -164,6 +164,12 @@ class DriversController extends Controller
             $driver = Driver::find($driverId);
             if ($driver) {
                 $driver->is_verified = 0;
+                $driver->otp_code = null;
+                $driver->otp_expires_at = null;
+                $driver->otp_attempt_count = 0;
+                $driver->otp_sent_count = 0;
+                $driver->otp_last_sent_at = null;
+                $driver->otp_locked_until = null;
                 $driver->save();
 
                 return response()->json(['success' => true, 'message' => 'Driver status updated to Not Verified.']);
@@ -189,16 +195,30 @@ class DriversController extends Controller
             return response()->json(['success' => false, 'message' => 'Driver not found.'], 404);
         }
 
+        $now = Carbon::now();
+
         // Check for lock-out
-        if ($driver->otp_locked_until && strtotime($driver->otp_locked_until) > time()) {
+        if ($driver->otp_locked_until && Carbon::parse($driver->otp_locked_until)->isFuture()) {
             return response()->json(['success' => false, 'message' => 'Too many attempts. Please try again after 24 hours.'], 429);
         }
 
+        // Reset daily counter if a new day has started
+        if ($driver->otp_last_sent_at && !Carbon::parse($driver->otp_last_sent_at)->isSameDay($now)) {
+            $driver->otp_sent_count = 0;
+        }
+
+        if ($driver->otp_sent_count >= 3) {
+            $driver->otp_locked_until = $now->copy()->addDay();
+            $driver->save();
+
+            return response()->json(['success' => false, 'message' => 'OTP request limit reached. Account locked for 24 hours.'], 429);
+        }
+
         $otp_code = rand(100000, 999999);
-        $otp_expires = now()->addMinutes(3)->toDateTimeString(); // Use Laravel helper
+        $otp_expires = $now->copy()->addMinute()->toDateTimeString();
         
         $subject = 'Your Verification Code for VortexFleet Driver App';
-        $body    = 'Hi ' . $driver->name . ',<br><br>Your OTP for driver app verification is: <b>' . $otp_code . '</b><br>This code is valid for 3 minutes.<br><br>Thanks,<br>Team VortexFleet';
+        $body    = 'Hi ' . $driver->name . ',<br><br>Your OTP for driver app verification is: <b>' . $otp_code . '</b><br>This code is valid for 1 minute.<br><br>Thanks,<br>Team VortexFleet';
         
         try {
             // Call the method from EmailDispatchTrait
@@ -207,6 +227,8 @@ class DriversController extends Controller
             $driver->otp_code = $otp_code;
             $driver->otp_expires_at = $otp_expires;
             $driver->otp_attempt_count = 0;
+            $driver->otp_sent_count = $driver->otp_sent_count + 1;
+            $driver->otp_last_sent_at = $now;
             $driver->otp_locked_until = null;
             $driver->save();
 
@@ -237,7 +259,7 @@ class DriversController extends Controller
             return response()->json(['success' => false, 'message' => 'Driver not found.'], 404);
         }
 
-        if ($driver->otp_locked_until && strtotime($driver->otp_locked_until) > time()) {
+        if ($driver->otp_locked_until && Carbon::parse($driver->otp_locked_until)->isFuture()) {
             return response()->json(['success' => false, 'message' => 'Account locked. Try again after 24 hours.'], 429);
         }
 
@@ -254,6 +276,8 @@ class DriversController extends Controller
             $driver->otp_code = null;
             $driver->otp_expires_at = null;
             $driver->otp_attempt_count = 0;
+            $driver->otp_sent_count = 0;
+            $driver->otp_last_sent_at = null;
             $driver->otp_locked_until = null;
             $driver->save();
 
@@ -263,7 +287,7 @@ class DriversController extends Controller
             $attempts = $driver->otp_attempt_count + 1;
             
             if ($attempts >= 3) {
-                $locked_until = now()->addHours(24)->toDateTimeString(); // Use Laravel helper
+                $locked_until = Carbon::now()->addHours(24)->toDateTimeString();
                 $driver->otp_attempt_count = $attempts;
                 $driver->otp_locked_until = $locked_until;
                 $driver->save();
