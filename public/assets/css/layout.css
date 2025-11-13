@@ -211,7 +211,7 @@
     bottom: 0;
     left: 16rem; /* Sidebar width (256px) - exactly matches sidebar */
     width: calc(100% - 16rem); /* Adjust for sidebar width */
-    padding: 0.18rem 2rem;
+    padding: 0.15rem 2rem;
     background-color: hsl(var(--card));
     border-top: 1px solid hsl(var(--border));
     color: hsl(var(--muted-foreground));

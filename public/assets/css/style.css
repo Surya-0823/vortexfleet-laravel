@@ -35,6 +35,10 @@
   --shadow-glow: 0 0 20px hsl(205 75% 58% / .3);
 }
 
+html {
+  font-size: 75%; /* Ithu thaan global size (14px). Ippo 100% zoom correct ah irukkum */
+}
+
 /* ===== BASE STYLES ===== */
 * {
   box-sizing: border-box;
@@ -312,4 +316,4 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}    
+}
