@@ -35,7 +35,23 @@ class DriverService
         if (!empty($validation['errors'])) {
             return ['success' => false, 'message' => 'Validation failed', 'data' => $validation, 'status_code' => 422];
         }
+        
+        // PUTHU MAATRAM: Generate App Username and Password automatically.
+        // App Username will be the driver's email.
+        /** @var string $app_username Automatically generated App Username (email address) */
+        $data['app_username'] = $data['email'];
+        
+        // App Password will be Name@Last4DigitsOfPhone (e.g., 'JohnDoe@1234').
+        // We strip spaces/special chars from the name part to keep it simple and URL-safe.
+        /** @var string $name_part Sanitized part of the password (driver's name) */
+        $name_part = preg_replace('/[^a-zA-Z0-9]/', '', str_replace(' ', '', $data['name']));
+        
+        /** @var string $phone_last_4 Last 4 digits of the phone number */
+        $phone_last_4 = substr($data['phone'], -4);
 
+        /** @var string $app_password Automatically generated and plain text password */
+        $data['app_password'] = $name_part . '@' . $phone_last_4;
+        
         // 1. Handle Photo Upload
         try {
             $uploadResult = $this->handlePhotoUpload($request, 'uploads/drivers', $data['name']);
@@ -50,8 +66,10 @@ class DriverService
 
         // 2. Create Driver
         try {
+            // NOTE: The 'app_password' field is assumed to be handled by the Driver Model's mutator 
+            // (e.g., setAppPasswordAttribute) to be hashed before saving to the database.
             Driver::create($data); // Assumes 'photo_path' is fillable in Model
-            return ['success' => true, 'message' => 'Driver created successfully.', 'data' => null, 'status_code' => 201];
+            return ['success' => true, 'message' => 'Driver created successfully. App credentials auto-generated.', 'data' => null, 'status_code' => 201];
         } catch (\Exception $e) {
             Log::error('Driver creation failed', ['error' => $e->getMessage()]);
             return ['success' => false, 'message' => 'Database error: Could not create driver.', 'data' => null, 'status_code' => 500];
@@ -161,8 +179,13 @@ class DriverService
         
         if (empty($data['name'])) $errors['name'] = 'Name is required';
         if (empty($data['email'])) $errors['email'] = 'Email is required';
+        
+        // PUTHU MAATRAM: App Username and App Password required validation are removed
+        // because they are now auto-generated in createDriver().
+        /*
         if (empty($data['app_username'])) $errors['app_username'] = 'App Username is required';
         if (!$isUpdate && empty($data['app_password'])) $errors['app_password'] = 'App Password is required';
+        */
 
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Invalid email format';
@@ -173,9 +196,13 @@ class DriverService
         if ($isUpdate) $queryEmail->where('id', '!=', $driverId);
         if ($queryEmail->exists()) $errors['email'] = 'Email already taken';
 
+        // PUTHU MAATRAM: app_username is now the email, so a separate unique check
+        // for app_username is not needed, as email unique check handles it.
+        /*
         $queryUsername = Driver::where('app_username', $data['app_username']);
         if ($isUpdate) $queryUsername->where('id', '!=', $driverId);
         if ($queryUsername->exists()) $errors['app_username'] = 'App Username already taken';
+        */
         
         return ['errors' => $errors];
     }

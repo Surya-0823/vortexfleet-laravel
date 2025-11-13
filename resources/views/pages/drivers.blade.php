@@ -178,20 +178,7 @@
                     </div>
                 </div>
                 
-                <div id="app-credentials-fields">
-                    <div class="formbold-input-flex">
-                        <div>
-                            <label for="app_username" class="formbold-form-label">App Username</label>
-                            <input type="text" name="app_username" id="app_username" class="formbold-form-input" required />
-                            <small id="app_usernameError" class="text-danger-inline"></small>
-                        </div>
-                        <div>
-                            <label for="app_password" class="formbold-form-label">App Password</label>
-                            <input type="password" name="app_password" id="app_password" class="formbold-form-input" required minlength="6" />
-                            <small id="app_passwordError" class="text-danger-inline"></small>
-                        </div>
-                    </div>
-                </div>
+                {{-- PUTHU MAATRAM: The app credentials fields are removed as they are now auto-generated in the backend. --}}
                 
             </div>
             <div class="modal-footer">
