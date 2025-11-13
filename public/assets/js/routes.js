@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalSubmitBtn = document.getElementById('routeModalSubmitBtn');
     const startInput = document.getElementById('start');
     const endInput = document.getElementById('end');
-    const busInput = document.getElementById('bus'); // Ithu ippo <select>
+    // MAATRAM: Correct ID 'bus_plate' ah use panrom
+    const busInput = document.getElementById('bus_plate'); 
     
     // --- Delete Modal Elements ---
     const deleteModal = document.getElementById('deleteRouteModal');
@@ -25,7 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // =======================================================
     const startError = document.getElementById('startError');
     const endError = document.getElementById('endError');
-    const busError = document.getElementById('busError');
+    // MAATRAM: Correct ID 'bus_plateError' ah use panrom
+    const busError = document.getElementById('bus_plateError');
     
     // Validation patterns (Regex)
     const pointRegex = /.{2,}/; // Minimum 2 characters
@@ -40,15 +42,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (input.classList) {
             input.classList.add('is-invalid');
         }
-        errorElement.innerText = message;
-        setTimeout(() => clearError(input, errorElement), 3000);
+        // Error element null ah illanu check panrom
+        if (errorElement) {
+            errorElement.innerText = message;
+            setTimeout(() => clearError(input, errorElement), 3000);
+        }
     }
 
     function clearError(input, errorElement) {
         if (input.classList) {
             input.classList.remove('is-invalid');
         }
-        errorElement.innerText = '';
+        // Error element null ah illanu check panrom
+        if (errorElement) {
+            errorElement.innerText = '';
+        }
     }
 
     function clearAllErrors() {
@@ -87,7 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // PUTHU MAATRAM: Bus validation function (Dropdown kaga)
     // =======================================================
     function validateBus() {
-        if (busInput.value.trim() === '') {
+        // busInput null illanu check panrom
+        if (!busInput || busInput.value.trim() === '') {
             // Message ah maathirukkom
             showError(busInput, busError, 'Please select a bus.');
             return false;
@@ -105,7 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const isStartValid = pointRegex.test(startInput.value.trim());
         const isEndValid = pointRegex.test(endInput.value.trim());
         // Regex-ku pathila, selection irukkaanu mattum check panrom
-        const isBusValid = busInput.value.trim() !== '';
+        // busInput null check
+        const isBusValid = busInput && busInput.value.trim() !== '';
 
         if (isStartValid && isEndValid && isBusValid) {
             modalSubmitBtn.disabled = false;
@@ -165,7 +175,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = editButton.getAttribute('data-id');
             const start = editButton.getAttribute('data-start');
             const end = editButton.getAttribute('data-end');
-            const bus = editButton.getAttribute('data-bus'); // Ithu bus plate number
+            // MAATRAM: Correct data attribute 'data-bus-plate' ah use panrom
+            const bus = editButton.getAttribute('data-bus-plate'); // Ithu bus plate number
             
             if (modalTitle) modalTitle.innerText = 'Edit Route';
             if (modalSubmitBtn) modalSubmitBtn.innerText = 'Update Route';
@@ -372,8 +383,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (data.errors.end) {
                             showError(endInput, endError, data.errors.end);
                         }
-                         if (data.errors.bus) {
-                            showError(busInput, busError, data.errors.bus);
+                        // MAATRAM: Server validation key 'bus_plate' ah use panrom
+                        if (data.errors.bus_plate) {
+                            showError(busInput, busError, data.errors.bus_plate);
                         }
                     }
                     modalSubmitBtn.disabled = false;
@@ -388,7 +400,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (error.errors) {
                         if (error.errors.start) showError(startInput, startError, error.errors.start);
                         if (error.errors.end) showError(endInput, endError, error.errors.end);
-                        if (error.errors.bus) showError(busInput, busError, error.errors.bus);
+                        // MAATRAM: Server validation key 'bus_plate' ah use panrom
+                        if (error.errors.bus_plate) showError(busInput, busError, error.errors.bus_plate);
                     }
                 } else {
                     showAlert('An unknown error occurred. Please try again.', 'danger');
