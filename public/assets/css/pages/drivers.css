@@ -1,44 +1,30 @@
-/* ===== DRIVERS PAGE ===== */
-
-/* ======================================================= */
-/* PUDHU HEADER STYLE (MAIN LAYOUT-ODA ATTACH AANA MAARI) */
-/* ======================================================= */
 .drivers-page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-  /* === PUTHU MAATRANGAL (NEW CHANGES) === */
   position: fixed;
-  top: 4rem; /* 4rem = top-nav-oda uyaram */
-  left: 16rem; /* sidebar-oda uyaram (width) - matches sidebar width */
-  width: calc(100% - 16rem); /* Meethi idathukku width */
-  z-index: 998; /* Content-ku mela, top-nav-ku kela */
-  margin: 0; /* Pazhaya negative margin-ah remove panrom */
-  transition: left 0.3s ease, width 0.3s ease; /* Sidebar close/open animation-kaga */
-  
-  /* === PAZHAYA STYLES (OLD STYLES) === */
+  top: 4rem; 
+  left: 16rem; 
+  width: calc(100% - 16rem); 
+  z-index: 998; 
+  margin: 0; 
+  transition: left 0.3s ease, width 0.3s ease; 
   padding: 1.5rem 2.5rem;
   background-color: hsl(var(--card));
   border-bottom: 1px solid hsl(var(--border));
   gap: 2rem;
 }
 
-/* Sidebar close/open aagum bothu ithayum adjust panna intha code-ah add pannunga */
 .main-content.collapsed .drivers-page-header {
-    left: 5.5rem; /* Chinna sidebar-oda width */
+    left: 5.5rem; 
     width: calc(100% - 5.5rem);
 }
 
 .page-container {
     background-color: hsl(var(--card));
-    /* MAATRAM: Side padding-a 2.5rem aaki, matha edathula 1.5rem vechrom */
     padding: 1.5rem 2.5rem 2.5rem 2.5rem; 
     border: 1px solid hsl(var(--border));
     border-radius: var(--radius);
-
-    /* === PUTHU MAATRAM (NEW CHANGE) === */
-    /* Header-oda uyaram (~7.5rem) + gap (2rem) = 9.5rem */
     margin-top: 14rem; 
 }
 
@@ -72,12 +58,9 @@
   flex-shrink: 0;
 }
 
-/* ================================================================ */
-/* PUDHU "SURPRISE ME" BUTTON STYLE (PUDHU MAATHANGALODA)        */
-/* ================================================================ */
 .drivers-page-header .add-button {
   background: linear-gradient(145deg, #a396f8, #8273f5);
-  color: #1c192acc; /* PUDHU CHANGE: Text color ah dark aakirukom */
+  color: #1c192acc; 
   border-radius: 9999px;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -91,20 +74,12 @@
 }
 
 .drivers-page-header .add-button:hover {
-  /* PUDHU CHANGE: Mela pogura effect ah remove pannitom */
-  /* transform: translateY(-2px); */ 
   box-shadow: 0 6px 20px rgba(130, 115, 245, 0.4);
 }
 
-/* Button-kulla irukura '+' icon-oda color ah yum maathrom */
 .drivers-page-header .add-button svg {
-  stroke: #1c192acc; /* PUDHU CHANGE: Icon color ah dark aakirukom */
+  stroke: #1c192acc; 
 }
-
-
-/* ======================================================= */
-/* ===== DATA TABLE CUSTOM STYLES ===== */
-/* ======================================================= */
 
 .page-container {
     background-color: hsl(var(--card));
@@ -120,11 +95,11 @@
 }
 
 .table th, .table td { 
-    padding: 1.25rem 1rem; /* Row height-ah adhigamaaka, padding-ah increase panrom */
+    padding: 1.25rem 1rem; 
     text-align: left; 
     border-bottom: 1px solid hsl(var(--border)); 
-    vertical-align: middle; /* Content-ah naduvula vekka idhu mukkiyam */
-    font-size: 1rem; /* Font size-ah konjam perusaakurom */
+    vertical-align: middle; 
+    font-size: 1rem; 
 }
 
 .table th { 
@@ -134,17 +109,17 @@
     color: hsl(var(--muted-foreground));
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    text-align: center; /* <-- Intha PUTHU line-ah add pannungga */
+    text-align: center; 
 }
-/* Center align specific columns */
-.table th:first-child, .table td:first-child, /* Profile */
-.table th:nth-child(6), .table td:nth-child(6), /* Verification */
-.table th:last-child,  .table td:last-child { /* Actions */
+
+.table th:first-child, .table td:first-child, 
+.table th:nth-child(6), .table td:nth-child(6), 
+.table th:last-child,  .table td:last-child { 
     text-align: center;
 }
 .avatar { 
-    width: 60px;  /* Size-ah increase panrom */
-    height: 60px; /* Size-ah increase panrom */
+    width: 60px;  
+    height: 60px; 
     border-radius: 50%; 
     object-fit: cover; 
 }
@@ -185,11 +160,10 @@
 
 .btn-action:hover {
     color: hsl(var(--foreground));
-    background-color: hsl(var(--brand-orange) / 0.15); /* Hover-la light background */
-    border-color: hsl(var(--brand-orange)); /* Border color-um bright aagum */
+    background-color: hsl(var(--brand-orange) / 0.15); 
+    border-color: hsl(var(--brand-orange)); 
 }
 
-/* Simple-DataTables Library-oda Styles-ah override panrom */
 .dataTable-selector, .dataTable-input {
     background-color: hsl(var(--input));
     border: 1px solid hsl(var(--border));
@@ -218,9 +192,7 @@
   color: hsl(var(--secondary));
   border-color: hsla(var(--secondary), 0.3);
 }
-/* ======================================================= */
-/* ===== TOGGLE SWITCH STYLES ===== */
-/* ======================================================= */
+
 .toggle-switch {
   position: relative;
   display: inline-block;
@@ -266,10 +238,6 @@ input:checked + .slider:before {
   transform: translateX(22px);
 }
 
-/* ================================== */
-/* ===== PUDHU ACTION BUTTON STYLES ===== */
-/* ================================== */
-
 .action-buttons-wrapper {
     display: flex;
     align-items: center;
@@ -277,7 +245,6 @@ input:checked + .slider:before {
     gap: 0.75rem;
 }
 
-/* --- PUTHU MAATRAM INGA: .btn-action-reset ah add pannom --- */
 .btn-action-edit,
 .btn-action-delete,
 .btn-action-reset {
@@ -293,7 +260,6 @@ input:checked + .slider:before {
     font-size: 0.875rem; 
 }
 
-/* --- PUTHU MAATRAM INGA: .btn-action-reset svg ah add pannom --- */
 .btn-action-edit svg,
 .btn-action-delete svg,
 .btn-action-reset svg {
@@ -301,7 +267,6 @@ input:checked + .slider:before {
     height: 1rem;
 }
 
-/* Edit Button (Blue/Primary) */
 .btn-action-edit {
     color: hsl(var(--primary));
     border-color: hsl(var(--primary) / 0.5);
@@ -314,7 +279,6 @@ input:checked + .slider:before {
     color: hsl(var(--primary));
 }
 
-/* Delete Button (Red/Destructive) */
 .btn-action-delete {
     color: hsl(var(--destructive));
     border-color: hsl(var(--destructive) / 0.5);
@@ -327,7 +291,6 @@ input:checked + .slider:before {
     color: hsl(var(--destructive));
 }
 
-/* --- PUTHU MAATRAM INGA: Puthu Reset Button (Orange/Warning) Style --- */
 .btn-action-reset {
     color: hsl(var(--warning));
     border-color: hsl(var(--warning) / 0.5);
@@ -339,18 +302,9 @@ input:checked + .slider:before {
     border-color: hsl(var(--warning));
     color: hsl(var(--warning));
 }
-/* --- MAATRAM MUDINJATHU --- */
-
-
-/* ================================== */
-/* ===== PUDHU ADD DRIVER MODAL ===== */
-/* ================================== */
 
 .modal-overlay {
-  /* Default-a marachi vekkanum */
   display: none; 
-  
-  /* Full screen-ku */
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -358,32 +312,25 @@ input:checked + .slider:before {
   width: 100%;
   height: 100%;
   overflow: auto;
-  
-  /* Background blur effect */
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  
-  /* Panel-a center panrathukku */
   align-items: center;
   justify-content: center;
 }
 
 .modal-content {
   margin: auto;
-  max-width: 570px;
+  max-width: 480px;
   width: 90%;
   background: hsl(var(--card));
-  padding: 0; /* Header/Footer-ku thani padding */
+  padding: 0; 
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  
-  /* Chinna animation */
   animation: slide-down 0.3s ease-out;
 }
 
-/* Animation definition */
 @keyframes slide-down {
   from {
     transform: translateY(-30px);
@@ -426,8 +373,8 @@ input:checked + .slider:before {
 
 .modal-body {
   padding: 2rem;
-  max-height: 60vh; /* Screen perusa iruntha, auto-ah height adjust aagum */
-  overflow-y: auto; /* Content adhigama pona, scroll varum */
+  max-height: 60vh; 
+  overflow-y: auto; 
 }
 
 .modal-footer {
@@ -441,41 +388,41 @@ input:checked + .slider:before {
   border-bottom-right-radius: var(--radius);
 }
 
-/* ===== Form styles (pazhaya add_driver.css-la irunthu) ===== */
-
 .formbold-mb-3 {
   margin-bottom: 15px;
 }
 
 .formbold-input-flex {
   display: flex;
-  flex-direction: column; /* PUTHU CHANGE: Pakkathula iruntha-tha onnu kela onna maathuthu */
-  gap: 15px; /* Vertical gap-kaga 15px vekkrom */
+  flex-direction: column; 
+  gap: 15px; 
   margin-bottom: 15px;
 }
 .formbold-input-flex > div {
-  width: 100%; /* PUTHU CHANGE: 50% width-a 100% (full) width-a maathuthu */
+  width: 100%; 
 }
-.formbold-form-input {
+
+.modal-content .formbold-form-input {
     width: 100%;
-    padding: 13px 22px;
+    padding: 8px 15px;
     border-radius: 5px;
     border: 1px solid hsl(var(--border));
     background: hsl(var(--input));
     font-weight: 500;
-    font-size: 16px;
-    color: #FFFFFF; /* Intha line ah maathiruken */
+    font-size: 13px;
+    color: #FFFFFF; 
     outline: none;
     resize: none;
     transition: all 0.2s ease;
 }
-.formbold-form-input:focus {
+.modal-content .formbold-form-input:focus {
   border-color: hsl(var(--ring));
 }
-.formbold-form-label {
+
+.modal-content .formbold-form-label {
   color: hsl(var(--muted-foreground));
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
   display: block;
   margin-bottom: 10px;
 }
@@ -495,7 +442,6 @@ input:checked + .slider:before {
   box-shadow: 0px 3px 8px hsla(var(--primary), 0.3);
 }
 
-/* Photo Preview Styles */
 #photo-upload-wrapper {
   display: flex;
   align-items: center;
@@ -519,7 +465,6 @@ input:checked + .slider:before {
 .formbold-form-input:-webkit-autofill:hover,
 .formbold-form-input:-webkit-autofill:focus,
 .formbold-form-input:-webkit-autofill:active {
-  
   -webkit-text-fill-color: hsl(var(--foreground)) !important;
   box-shadow: 0 0 0 1000px hsl(var(--input)) inset !important;
   transition: background-color 5000s ease-in-out 0s;
@@ -528,32 +473,22 @@ input:checked + .slider:before {
     border-color: hsl(var(--ring));
 }
 
-/* ================================== */
-/* ===== PUDHU ENHANCED ALERT MODAL ===== */
-/* ================================== */
-
-/* Alert modal ku chinna width */
 .modal-content-alert {
   max-width: 420px;
-  /* Animation apram text center aakrom */
   animation: slide-down 0.3s ease-out;
   text-align: center;
 }
 
-/* PUTHU CHANGE: Body padding ah override panrom (height koraka) */
 .modal-content-alert .modal-body {
   padding: 1.25rem 2rem; 
 }
 
-/* Header kooda icon */
 .modal-header-alert {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 1.5rem 2rem 1rem 2rem;
-  /* PUTHU CHANGE: Border remove pannitom */
-  /* border-bottom: 1px solid hsl(var(--border)); */
 }
 
 .alert-icon-wrapper {
@@ -563,8 +498,6 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  /* Red background */
   background-color: hsla(var(--destructive), 0.15);
   border: 1px solid hsla(var(--destructive), 0.2);
   margin-bottom: 1rem;
@@ -576,7 +509,6 @@ input:checked + .slider:before {
   color: hsl(var(--destructive));
 }
 
-/* PUTHU CHANGE: Title ah perusu aaki, short line add panrom */
 .modal-header-alert .modal-title {
   font-size: 1.375rem; 
   position: relative;
@@ -584,7 +516,6 @@ input:checked + .slider:before {
   margin-bottom: 0.5rem;
 }
 
-/* PUTHU CHANGE: Short line kaga */
 .modal-header-alert .modal-title::after {
   content: '';
   display: block;
@@ -598,26 +529,23 @@ input:checked + .slider:before {
   transform: translateX(-50%); 
 }
 
-/* Body la text alignment */
 .modal-body .alert-text-primary {
-  font-size: 1.25rem; /* PUTHU CHANGE: Perusu aakirukom */
+  font-size: 1.25rem; 
   color: hsl(var(--foreground));
   margin: 0;
 }
 
 .modal-body .alert-text-secondary {
-  font-size: 1.125rem; /* PUTHU CHANGE: Perusu aakirukom */
+  font-size: 1.125rem; 
   color: hsl(var(--muted-foreground));
   margin-top: 0.5rem;
 }
 
-/* Footer la spacing */
 .modal-footer-alert {
-  justify-content: center; /* Buttons ah center panrom */
-  gap: 1rem; /* Buttons kulla gap */
+  justify-content: center; 
+  gap: 1rem; 
 }
 
-/* Solid destructive button (pazhaya btn-action-delete ku pathila) */
 .btn-destructive {
   display: inline-flex;
   align-items: center;
@@ -631,8 +559,6 @@ input:checked + .slider:before {
   transition: all 0.2s ease;
   line-height: 1;
   text-decoration: none;
-  
-  /* Red color */
   background-color: hsl(var(--destructive));
   color: hsl(var(--destructive-foreground));
   border: 1px solid hsl(var(--destructive));
@@ -646,79 +572,65 @@ input:checked + .slider:before {
     width: 1rem;
     height: 1rem;
 }
-/* Palaya design ah remove panrom */
+
 .route-point, .route-start, .route-end {
-    all: unset; /* Ellathayum reset panrom */
+    all: unset; 
 }
 
-/* Puthu Design */
 .route-display {
   display: flex;
   align-items: center;
-  justify-content: center; /* Center la vekka */
-  gap: 0.75rem; /* Konjam gap add panrom */
+  justify-content: center; 
+  gap: 0.75rem; 
   width: 100%; 
 }
 
-/* From / To item kaga podhuvaana style */
 .route-item {
   display: flex;
   align-items: center;
-  gap: 0.35rem; /* Icon kkum text kkum gap */
+  gap: 0.35rem; 
   font-weight: 500;
   font-size: 0.9rem;
-  
-  /* Periya name vantha, cut panni ... kaatum */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px; /* Name romba neelama ponaalum control pannum */
+  max-width: 150px; 
 }
 
-/* Icon kaga chinna style */
 .route-item svg {
-  width: 14px; /* Icon size */
+  width: 14px; 
   height: 14px;
-  flex-shrink: 0; /* Icon ennaikkum chinnathaga aagathu */
+  flex-shrink: 0; 
 }
 
-/* "From" kaga nalla Blue color */
 .route-from {
-  color: hsl(var(--primary)); /* Theme oda main blue color */
+  color: hsl(var(--primary)); 
 }
 .route-from svg {
-  stroke: hsl(var(--primary)); /* Icon color um athe maari */
+  stroke: hsl(var(--primary)); 
 }
 
-/* "To" kaga nalla Cyan color */
 .route-to {
-  color: hsl(var(--secondary)); /* Theme oda secondary cyan color */
+  color: hsl(var(--secondary)); 
 }
 .route-to svg {
-  stroke: hsl(var(--secondary)); /* Icon color um athe maari */
+  stroke: hsl(var(--secondary)); 
 }
 
-/* Arrow kaga */
 .route-arrow {
-  color: hsl(var(--muted-foreground)); /* Grey color la arrow */
+  color: hsl(var(--muted-foreground)); 
   flex-shrink: 0; 
   min-width: 16px;
 }
 
-/* ================================== */
-/* ===== PUDHU VALIDATION STYLES ===== */
-/* ================================== */
-
-/* Input-ku keela varra chinna error message */
 .text-danger-inline {
   color: hsl(var(--destructive) / 0.9);
   font-size: 0.875rem;
   font-weight: 500;
-  display: block; /* Ithu error vanthaa mattum JS moolama block aagum */
-  margin-top: 6px; /* Input-kum error-kum chinna gap */
+  display: block; 
+  margin-top: 6px; 
 }
 
-/* Input error state-la iruntha (JS moolama add panrathu) */
 .formbold-form-input.is-invalid {
   border-color: hsl(var(--destructive) / 0.7);
   background-color: hsla(var(--destructive), 0.05);
@@ -728,22 +640,15 @@ input:checked + .slider:before {
    box-shadow: 0 0 0 3px hsla(var(--destructive), 0.2);
 }
 
-
-/* ================================== */
-/* ===== PUDHU GLOBAL ALERT STYLES ===== */
-/* ================================== */
-
-/* Top-right corner-la varra alert kaga container */
 .alert-container-global {
   position: fixed;
-  top: 1.5rem; /* 24px */
-  right: 1.5rem; /* 24px */
+  top: 1.5rem; 
+  right: 1.5rem; 
   z-index: 9999;
   width: 350px;
   max-width: 90%;
 }
 
-/* Alert-oda design (Success, Error) */
 .alert-global {
   width: 100%;
   padding: 1rem 1.5rem;
@@ -754,26 +659,23 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   gap: 1rem;
-  opacity: 0; /* JS moolama fade in aagum */
-  transform: translateX(30px); /* JS moolama slide in aagum */
+  opacity: 0; 
+  transform: translateX(30px); 
   animation: alert-slide-in 0.3s ease-out forwards;
 }
 
-/* Alert-kulla irukura text */
 .alert-global-text {
   flex-grow: 1;
   font-weight: 500;
   color: hsl(var(--foreground));
 }
 
-/* Alert-kulla irukura icon */
 .alert-global-icon {
   flex-shrink: 0;
   width: 20px;
   height: 20px;
 }
 
-/* Success (Green) alert */
 .alert-global-success {
   background-color: hsl(var(--card));
   border-color: hsl(var(--success) / 0.5);
@@ -782,7 +684,6 @@ input:checked + .slider:before {
   color: hsl(var(--success));
 }
 
-/* Error (Red) alert */
 .alert-global-danger {
   background-color: hsl(var(--card));
   border-color: hsl(var(--destructive) / 0.5);
@@ -791,7 +692,6 @@ input:checked + .slider:before {
   color: hsl(var(--destructive));
 }
 
-/* Alert varra animation */
 @keyframes alert-slide-in {
   from {
     opacity: 0;
@@ -803,37 +703,28 @@ input:checked + .slider:before {
   }
 }
 
-/* Alert pora animation (JS moolama add panrathu) */
 .alert-global-fade-out {
   opacity: 0;
   transform: translateY(-20px);
   transition: all 0.3s ease-in;
 }
 
-/* ================================== */
-/* ===== PUDHU STUDENT VERIFY BUTTON ===== */
-/* ================================== */
-
 .status-cell-wrapper {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 38px; /* Button height-ku match panrom */
+  height: 38px; 
 }
 .btn-verify {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  
-  /* --- PUTHU MAATRAM (Screenshot style) --- */
   border: 1px solid transparent;
-  border-radius: 9999px; /* ITHA MAATHUNGA (PILL SHAPE) */
-  font-size: 0.875rem; /* Konjam perusu */
+  border-radius: 9999px; 
+  font-size: 0.875rem; 
   font-weight: 600;
-  padding: 0.6rem 1rem; /* Konjam perusu */
-  /* --- MAATRAM MUDINJATHU --- */
-
+  padding: 0.6rem 1rem; 
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
@@ -843,20 +734,15 @@ input:checked + .slider:before {
   flex-shrink: 0;
 }
 
-/* PURPLE Button (Pending) - Left side-la */
 .btn-verify-pending {
-  /* --- PUTHU MAATRAM (Purple Gradient) --- */
   background: linear-gradient(145deg, #a396f8, #8273f5);
-  color: #1c192acc; /* Dark text */
-  border: none; /* Gradient kaga border theva illa */
+  color: #1c192acc; 
+  border: none; 
   box-shadow: 0 4px 15px rgba(130, 115, 245, 0.3);
-  /* --- MAATRAM MUDINJATHU --- */
-  
-  margin-right: auto; /* Ithu thaan left-la vekkum */
+  margin-right: auto; 
 }
 
 .btn-verify-pending:hover {
-  /* --- PUTHU MAATRAM (Darker Red) --- */
   background-color: hsl(var(--destructive) / 0.8);
   border-color: hsl(var(--destructive) / 0.8);
   box-shadow: 0 4px 10px hsla(var(--destructive), 0.2);
@@ -872,18 +758,15 @@ input:checked + .slider:before {
 }
 
 .btn-verify-verified:hover {
-  /* --- PUTHU MAATRAM (Darker Green) --- */
   background-color: hsl(var(--success) / 0.8);
   border-color: hsl(var(--success) / 0.8);
   box-shadow: 0 4px 10px hsla(var(--success), 0.2);
 }
 
-/* Admin 'Verified' button-ah click panna (pending-ku maatha) */
 .js-status-toggle.btn-verify-verified:hover {
-    /* --- PUTHU MAATRAM (Solid Yellow) --- */
     background-color: hsl(var(--warning));
     border-color: hsl(var(--warning));
-    color: #333; /* Dark text */
+    color: #333; 
     cursor: pointer;
 }
  
@@ -892,15 +775,13 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  max-width: 150px; /* Cell romba perusa pogama irukka */
+  max-width: 150px; 
 }
 .password-text {
   font-family: monospace;
   font-size: 1.1rem;
   color: hsl(var(--muted-foreground));
-  /* Password-ah select panna mudiyama panrathu */
   user-select: none; 
-  /* Text perusa pona, atha hide pannu */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -908,7 +789,7 @@ input:checked + .slider:before {
 .password-text.visible {
   color: hsl(var(--foreground));
   user-select: all;
-  overflow: visible; /* Password-ah kaattum pothu full-ah kaattu */
+  overflow: visible; 
   white-space: normal;
 }
 .btn-action-icon {
@@ -922,7 +803,7 @@ input:checked + .slider:before {
   padding: 0.25rem;
   border-radius: 50%;
   transition: all 0.2s ease;
-  flex-shrink: 0; /* Icon ennaikkum chinnathaga aagathu */
+  flex-shrink: 0; 
 }
 .btn-action-icon:hover {
   background-color: hsl(var(--muted));

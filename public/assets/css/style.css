@@ -36,7 +36,7 @@
 }
 
 html {
-  font-size: 75%; /* Ithu thaan global size (14px). Ippo 100% zoom correct ah irukkum */
+  font-size: 75%; /* Innum chinna size (12px base) */
 }
 
 /* ===== BASE STYLES ===== */
@@ -239,6 +239,16 @@ body {
     width: 100%;
     justify-content: flex-start;
     gap: 0.75rem;
+}
+
+/* Form Card Wrapper */
+.form-card {
+    max-width: 650px; /* Form oda maximum width */
+    margin: 2rem auto; /* Form ah center la kondu varum */
+    padding: 2rem;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
 }
 
 /* Badge Component */
