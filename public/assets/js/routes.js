@@ -249,13 +249,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // MAATRAM: POST request use panrom
                 const formData = new FormData();
                 formData.append('id', deleteId);
-                formData.append('csrf_token', getCsrfToken()); // CSRF Token Add panrom
+                appendCsrf(formData); // Laravel _token
 
 
                 // Fetch use panni AJAX call panrom
                 fetch(deleteUrl, {
                     method: 'POST', // MAATRAM: POST method
                     body: formData,
+                    headers: buildAjaxHeaders()
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -340,19 +341,14 @@ document.addEventListener('DOMContentLoaded', function() {
             clearAllErrors();
             
             const formData = new FormData(routeForm);
-            
-            // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-            formData.append('csrf_token', getCsrfToken());
-            // *** MAATRAM MUDINJATHU ***
+            appendCsrf(formData);
 
             const url = routeForm.action;
 
             fetch(url, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: buildAjaxHeaders()
             })
             .then(async response => {
                 const contentType = response.headers.get('content-type');

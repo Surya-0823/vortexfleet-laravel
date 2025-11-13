@@ -176,13 +176,19 @@ class BusService
             return ['success' => false, 'message' => 'Bus not found', 'status_code' => 404];
         }
 
-        // Check if bus is assigned to routes or drivers
-        if (Route::where('bus_plate', $bus->plate)->exists() || Driver::where('bus_plate', $bus->plate)->exists()) {
-             return ['success' => false, 'message' => 'Cannot delete: Bus is still assigned to a route or driver.', 'status_code' => 409]; // 409 Conflict
-        }
-
         try {
             DB::beginTransaction();
+            
+            $hadRouteAssignments = Route::where('bus_plate', $bus->plate)->exists();
+            $hadDriverAssignments = Driver::where('bus_plate', $bus->plate)->exists();
+            
+            if ($hadRouteAssignments) {
+                Route::where('bus_plate', $bus->plate)->update(['bus_plate' => null]);
+            }
+            
+            if ($hadDriverAssignments) {
+                Driver::where('bus_plate', $bus->plate)->update(['bus_plate' => null]);
+            }
             
             // Delete photo file
             if ($bus->photo_path) {
@@ -197,7 +203,13 @@ class BusService
             $bus->delete();
 
             DB::commit();
-            return ['success' => true, 'message' => 'Bus deleted successfully.', 'status_code' => 200];
+            
+            $message = 'Bus deleted successfully.';
+            if ($hadRouteAssignments || $hadDriverAssignments) {
+                $message .= ' Existing route/driver assignments were cleared automatically.';
+            }
+            
+            return ['success' => true, 'message' => $message, 'status_code' => 200];
         
         } catch (\Exception $e) {
             DB::rollBack();

@@ -334,11 +334,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const formData = new FormData();
                 formData.append('id', deleteId);
-                formData.append('csrf_token', getCsrfToken()); 
+                appendCsrf(formData);
 
                 fetch(deleteUrl, {
                     method: 'POST', 
                     body: formData,
+                    headers: buildAjaxHeaders()
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -448,15 +449,13 @@ document.addEventListener('DOMContentLoaded', function() {
             clearAllErrors();
             
             const formData = new FormData(busForm);
-            formData.append('csrf_token', getCsrfToken());
+            appendCsrf(formData);
             const url = busForm.action;
 
             fetch(url, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: buildAjaxHeaders()
             })
             .then(async response => {
                 const contentType = response.headers.get('content-type');

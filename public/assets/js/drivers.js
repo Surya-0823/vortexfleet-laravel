@@ -1,4 +1,17 @@
 // =======================================================
+// --- PUTHU MAATRAM: CSRF Token Helper Function ---
+// =======================================================
+function getCsrfToken() {
+    const token = document.querySelector('meta[name="csrf-token"]');
+    if (token) {
+        return token.getAttribute('content');
+    }
+    console.error('CSRF token meta tag not found!');
+    return '';
+}
+// --- MAATRAM MUDINJATHU ---
+
+// =======================================================
 // PUTHUSA: OTP Modal kaga elements
 // =======================================================
 // Modal 1: Confirmation ("Anuppattuma?")
@@ -399,12 +412,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // MAATRAM: POST request use panrom
                 const formData = new FormData();
                 formData.append('id', deleteId);
-                formData.append('csrf_token', getCsrfToken()); // CSRF Token Add panrom
+                appendCsrf(formData);
 
                 fetch(deleteUrl, {
                     method: 'POST', // MAATRAM: POST method
                     body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: buildAjaxHeaders()
                 })
                 .then(async response => {
                     const data = await response.json();
@@ -501,19 +514,14 @@ document.addEventListener('DOMContentLoaded', function() {
             clearAllErrors();
             
             const formData = new FormData(driverForm);
-            
-            // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-            formData.append('csrf_token', getCsrfToken());
-            // *** MAATRAM MUDINJATHU ***
+            appendCsrf(formData);
 
             const url = driverForm.action;
 
             fetch(url, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: buildAjaxHeaders()
             })
             .then(async response => {
                 const contentType = response.headers.get('content-type');
@@ -586,15 +594,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const formData = new FormData();
                 formData.append('id', driverId);
                 formData.append('is_verified', newStatus); // Namma 'is_verified' ah 0 aakkurom
-
-                // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-                formData.append('csrf_token', getCsrfToken());
-                // *** MAATRAM MUDINJATHU ***
+                appendCsrf(formData);
 
                 fetch('/drivers/update-status', { // Intha URL-ah namma create pannanum
                     method: 'POST', 
                     body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: buildAjaxHeaders()
                 })
                 .then(res => res.json())
                 .then(data => {
@@ -688,10 +693,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function sendOtpRequest(userId) {
         const formData = new FormData();
         formData.append('driver_id', userId); // 'driver_id' ah anuppurom
-        
-        // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-        formData.append('csrf_token', getCsrfToken());
-        // *** MAATRAM MUDINJATHU ***
+        appendCsrf(formData);
 
         startOtpTimer(60); // Timer 60s kaga start panrom
         if (otpMessage) {
@@ -703,7 +705,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/drivers/send-otp', { // Puthu URL
             method: 'POST', 
             body: formData,
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            headers: buildAjaxHeaders()
         })
         .then(res => res.json())
         .then(data => {
@@ -777,15 +779,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData();
             formData.append('driver_id', userId); // 'driver_id'
             formData.append('otp_code', otp);
-
-            // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-            formData.append('csrf_token', getCsrfToken());
-            // *** MAATRAM MUDINJATHU ***
+            appendCsrf(formData);
 
             fetch('/drivers/verify-otp', { // Puthu URL
                 method: 'POST',
                 body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                headers: buildAjaxHeaders()
             })
             .then(res => res.json())
             .then(data => {
@@ -841,12 +840,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const formData = new FormData();
             formData.append('id', currentResetDriverId);
-            formData.append('csrf_token', getCsrfToken());
+            appendCsrf(formData);
 
             fetch('/drivers/reset-password', { // Namma puthu route
                 method: 'POST',
                 body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                headers: buildAjaxHeaders({ Accept: 'application/json' })
             })
             .then(res => res.json())
             .then(data => {

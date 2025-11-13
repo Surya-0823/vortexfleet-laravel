@@ -42,3 +42,42 @@ function getCsrfToken() {
     const meta = document.querySelector('meta[name="csrf-token"]');
     return meta ? meta.getAttribute('content') : '';
 }
+
+function appendCsrf(formData) {
+    if (!(formData instanceof FormData)) {
+        return formData;
+    }
+
+    const token = getCsrfToken();
+    if (!token) {
+        return formData;
+    }
+
+    if (typeof formData.set === 'function') {
+        formData.set('_token', token);
+    } else {
+        formData.append('_token', token);
+    }
+
+    return formData;
+}
+
+function buildAjaxHeaders(extraHeaders = {}) {
+    const token = getCsrfToken();
+    const headers = {
+        'X-Requested-With': 'XMLHttpRequest',
+        ...extraHeaders,
+    };
+
+    if (token) {
+        headers['X-CSRF-TOKEN'] = token;
+    }
+
+    return headers;
+}
+
+if (typeof window !== 'undefined') {
+    window.getCsrfToken = getCsrfToken;
+    window.appendCsrf = appendCsrf;
+    window.buildAjaxHeaders = buildAjaxHeaders;
+}

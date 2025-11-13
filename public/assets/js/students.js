@@ -57,7 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailInput = document.getElementById('email');
     const phoneInput = document.getElementById('phone');
     const gradeInput = document.getElementById('grade'); 
-    const routeInput = document.getElementById('route'); 
+    const routeInput = document.getElementById('route_name'); 
+    const appUsernameInput = document.getElementById('app_username');
+    const appPasswordInput = document.getElementById('app_password');
     
     // --- Photo Upload Elements ---
     const photoInput = document.getElementById('photo');
@@ -81,8 +83,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailError = document.getElementById('emailError');
     const phoneError = document.getElementById('phoneError');
     const gradeError = document.getElementById('gradeError');
-    const routeError = document.getElementById('routeError');
+    const routeError = document.getElementById('route_nameError');
     const photoError = document.getElementById('photoError');
+    const appUsernameError = document.getElementById('app_usernameError');
+    const appPasswordError = document.getElementById('app_passwordError');
     
     // Validation patterns (Regex)
     const nameRegex = /^[a-zA-Z\s\.]{3,}$/; // Min 3 chars
@@ -119,6 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
         clearError(gradeInput, gradeError);
         clearError(routeInput, routeError);
         clearError(uploadButton, photoError);
+        clearError(appUsernameInput, appUsernameError);
+        clearError(appPasswordInput, appPasswordError);
     }
 
     // --- Ovvoru input-kum thani validation function ---
@@ -163,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function validateGrade() {
-        if (!gradeInput) return false;
+        if (!gradeInput) return true;
         if (gradeInput.value.trim() === '') {
             showError(gradeInput, gradeError, 'Grade is required.');
             return false;
@@ -182,6 +188,53 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    function generateDefaultUsername(emailValue) {
+        const value = (emailValue || '').trim();
+        return value ? value.toLowerCase() : '';
+    }
+
+    function generateDefaultPassword(nameValue, phoneValue) {
+        const sanitizedName = (nameValue || '').trim().toLowerCase().replace(/\s+/g, '');
+        const digits = String(phoneValue || '').replace(/\D/g, '');
+        if (!sanitizedName || digits.length < 4) {
+            return '';
+        }
+        return `${sanitizedName}@${digits.slice(-4)}`;
+    }
+
+    function ensureAppCredentialDefaults(options = {}) {
+        const { force = false } = options;
+        const emailValue = emailInput ? emailInput.value : '';
+        const nameValue = nameInput ? nameInput.value : '';
+        const phoneValue = phoneInput ? phoneInput.value : '';
+
+        if (appUsernameInput) {
+            const shouldUpdateUsername = force || !appUsernameInput.value.trim() || appUsernameInput.dataset.userEdited !== 'true';
+            if (shouldUpdateUsername) {
+                const generatedUsername = generateDefaultUsername(emailValue);
+                if (generatedUsername) {
+                    appUsernameInput.value = generatedUsername;
+                    delete appUsernameInput.dataset.userEdited;
+                } else if (force) {
+                    appUsernameInput.value = '';
+                }
+            }
+        }
+
+        if (appPasswordInput) {
+            const shouldUpdatePassword = force || !appPasswordInput.value.trim() || appPasswordInput.dataset.userEdited !== 'true';
+            if (shouldUpdatePassword) {
+                const generatedPassword = generateDefaultPassword(nameValue, phoneValue);
+                if (generatedPassword) {
+                    appPasswordInput.value = generatedPassword;
+                    delete appPasswordInput.dataset.userEdited;
+                } else if (force) {
+                    appPasswordInput.value = '';
+                }
+            }
+        }
+    }
+
     function validatePhoto() {
         if (!photoInput) return true; // Photo input illana, valid nu sollidalam
         const file = photoInput.files[0];
@@ -196,6 +249,26 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    function validateAppUsername() {
+        if (!appUsernameInput) return true;
+        if (appUsernameInput.value.trim() === '') {
+            showError(appUsernameInput, appUsernameError, 'App username is required.');
+            return false;
+        }
+        clearError(appUsernameInput, appUsernameError);
+        return true;
+    }
+
+    function validateAppPassword() {
+        if (!appPasswordInput) return true;
+        if (appPasswordInput.value.trim().length < 6) {
+            showError(appPasswordInput, appPasswordError, 'App password must be at least 6 characters.');
+            return false;
+        }
+        clearError(appPasswordInput, appPasswordError);
+        return true;
+    }
+
     function checkFormValidity() {
         if (!nameInput) return; // Add/Edit modal illatha page-la run aana
         
@@ -206,15 +279,21 @@ document.addEventListener('DOMContentLoaded', function() {
         clearError(gradeInput, gradeError);
         clearError(routeInput, routeError);
         clearError(uploadButton, photoError);
+        clearError(appUsernameInput, appUsernameError);
+        clearError(appPasswordInput, appPasswordError);
+
+        ensureAppCredentialDefaults();
 
         const isNameValid = nameRegex.test(nameInput.value.trim());
         const isEmailValid = emailRegex.test(emailInput.value.trim());
         const isPhoneValid = phoneRegex.test(phoneInput.value.trim());
-        const isGradeValid = gradeInput.value.trim() !== '';
-        const isRouteValid = routeInput.value.trim() !== '';
+        const isGradeValid = gradeInput ? gradeInput.value.trim() !== '' : true;
+        const isRouteValid = routeInput ? routeInput.value.trim() !== '' : true;
         const isPhotoValid = validatePhoto(); // Size mattum check pannum
+        const isAppUsernameValid = appUsernameInput ? appUsernameInput.value.trim() !== '' : true;
+        const isAppPasswordValid = appPasswordInput ? appPasswordInput.value.trim().length >= 6 : true;
 
-        if (isNameValid && isEmailValid && isPhoneValid && isGradeValid && isRouteValid && isPhotoValid) {
+        if (isNameValid && isEmailValid && isPhoneValid && isGradeValid && isRouteValid && isPhotoValid && isAppUsernameValid && isAppPasswordValid) {
             if (modalSubmitBtn) modalSubmitBtn.disabled = false;
         } else {
             if (modalSubmitBtn) modalSubmitBtn.disabled = true;
@@ -230,6 +309,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (studentForm) studentForm.reset();
         if (studentForm) studentForm.action = '/students/create';
         if (studentIdInput) studentIdInput.value = '';
+
+        if (appUsernameInput) {
+            delete appUsernameInput.dataset.userEdited;
+            appUsernameInput.value = '';
+        }
+        if (appPasswordInput) {
+            delete appPasswordInput.dataset.userEdited;
+            appPasswordInput.value = '';
+        }
 
         if (photoPreview) {
             photoPreview.style.backgroundImage = 'none';
@@ -312,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = editButton.getAttribute('data-email');
             const phone = editButton.getAttribute('data-phone');
             const grade = editButton.getAttribute('data-grade'); 
-            const route = editButton.getAttribute('data-route'); 
+            const route = editButton.getAttribute('data-route-name'); 
             const photoPath = editButton.getAttribute('data-photo');
             
             if (modalTitle) modalTitle.innerText = 'Edit Student';
@@ -411,13 +499,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 // MAATRAM: POST request use panrom
                 const formData = new FormData();
                 formData.append('id', deleteId);
-                formData.append('csrf_token', getCsrfToken()); // CSRF Token Add panrom
+                appendCsrf(formData);
 
                 // PUTHU MAATRAM: Fetch use panni AJAX call panrom (Consistency fix)
                 fetch(deleteUrl, {
                     method: 'POST', // MAATRAM: POST method
                     body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                    headers: buildAjaxHeaders({ Accept: 'application/json' })
                 })
                 .then(async response => {
                     const data = await response.json();
@@ -487,6 +575,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    [nameInput, emailInput, phoneInput].forEach(input => {
+        if (input) {
+            input.addEventListener('input', () => ensureAppCredentialDefaults());
+            input.addEventListener('blur', () => ensureAppCredentialDefaults());
+        }
+    });
+
+    if (appUsernameInput) {
+        appUsernameInput.addEventListener('input', () => {
+            appUsernameInput.dataset.userEdited = 'true';
+        });
+    }
+
+    if (appPasswordInput) {
+        appPasswordInput.addEventListener('input', () => {
+            appPasswordInput.dataset.userEdited = 'true';
+        });
+    }
+
     // --- Real-time validation ---
     if (nameInput) nameInput.addEventListener('input', checkFormValidity);
     if (emailInput) emailInput.addEventListener('input', checkFormValidity);
@@ -499,6 +606,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (studentForm) {
         studentForm.addEventListener('submit', function(event) {
             event.preventDefault(); 
+
+            ensureAppCredentialDefaults({ force: true });
             
             // Final validation check
             const isNameValid = validateName();
@@ -507,8 +616,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const isGradeValid = validateGrade();
             const isRouteValid = validateRoute();
             const isPhotoValid = validatePhoto();
+            const isAppUsernameValid = validateAppUsername();
+            const isAppPasswordValid = validateAppPassword();
 
-            if (!isNameValid || !isEmailValid || !isPhoneValid || !isGradeValid || !isRouteValid || !isPhotoValid) {
+            if (!isNameValid || !isEmailValid || !isPhoneValid || !isGradeValid || !isRouteValid || !isPhotoValid || !isAppUsernameValid || !isAppPasswordValid) {
                 showAlert('Please fix the errors in the form.', 'danger');
                 return;
             }
@@ -519,19 +630,14 @@ document.addEventListener('DOMContentLoaded', function() {
             clearAllErrors();
             
             const formData = new FormData(studentForm);
-            
-            // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-            formData.append('csrf_token', getCsrfToken());
-            // *** MAATRAM MUDINJATHU ***
+            appendCsrf(formData);
 
             const url = studentForm.action;
 
             fetch(url, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: buildAjaxHeaders()
             })
             .then(async response => {
                 const contentType = response.headers.get('content-type');
@@ -560,8 +666,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (data.errors.email) showError(emailInput, emailError, data.errors.email);
                         if (data.errors.phone) showError(phoneInput, phoneError, data.errors.phone);
                         if (data.errors.grade) showError(gradeInput, gradeError, data.errors.grade);
-                        if (data.errors.route) showError(routeInput, routeError, data.errors.route);
+                        if (data.errors.route_name || data.errors.route) {
+                            showError(routeInput, routeError, data.errors.route_name || data.errors.route);
+                        }
                         if (data.errors.photo) showError(uploadButton, photoError, data.errors.photo);
+                        if (data.errors.app_username) showError(appUsernameInput, appUsernameError, data.errors.app_username);
+                        if (data.errors.app_password) showError(appPasswordInput, appPasswordError, data.errors.app_password);
                     }
                     modalSubmitBtn.disabled = false;
                     modalSubmitBtn.innerText = modalTitle.innerText.includes('Edit') ? 'Update Student' : 'Submit Student';
@@ -577,8 +687,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (error.errors.email) showError(emailInput, emailError, error.errors.email);
                         if (error.errors.phone) showError(phoneInput, phoneError, error.errors.phone);
                         if (error.errors.grade) showError(gradeInput, gradeError, error.errors.grade);
-                        if (error.errors.route) showError(routeInput, routeError, error.errors.route);
+                        if (error.errors.route_name || error.errors.route) {
+                            showError(routeInput, routeError, error.errors.route_name || error.errors.route);
+                        }
                         if (error.errors.photo) showError(uploadButton, photoError, error.errors.photo);
+                        if (error.errors.app_username) showError(appUsernameInput, appUsernameError, error.errors.app_username);
+                        if (error.errors.app_password) showError(appPasswordInput, appPasswordError, error.errors.app_password);
                     }
                 } else {
                     showAlert('An unknown error occurred. Please try again.', 'danger');
@@ -601,21 +715,17 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmStatusChangeBtn.addEventListener('click', () => {
             if (currentToggleSwitch) {
                 const studentId = currentToggleSwitch.getAttribute('data-user-id');
-                const newStatus = 'pending'; // Toggle panna 'pending' aagum
                 
                 // REAL FETCH CALL to update status
                 const formData = new FormData();
                 formData.append('id', studentId);
-                formData.append('status', newStatus); 
-
-                // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-                formData.append('csrf_token', getCsrfToken());
-                // *** MAATRAM MUDINJATHU ***
+                formData.append('is_verified', '0');
+                appendCsrf(formData);
 
                 fetch('/students/update-status', { 
                     method: 'POST', 
                     body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: buildAjaxHeaders()
                 })
                 .then(res => res.json())
                 .then(data => {
@@ -710,10 +820,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function sendOtpRequest(userId) {
         const formData = new FormData();
         formData.append('student_id', userId);
-        
-        // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-        formData.append('csrf_token', getCsrfToken());
-        // *** MAATRAM MUDINJATHU ***
+        appendCsrf(formData);
         
         startOtpTimer(60); // Timer 60s kaga start panrom
         if (otpMessage) {
@@ -725,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/students/send-otp', { 
             method: 'POST', 
             body: formData,
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            headers: buildAjaxHeaders()
         })
         .then(res => res.json())
         .then(data => {
@@ -801,15 +908,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData();
             formData.append('student_id', userId);
             formData.append('otp_code', otp);
-
-            // *** PUTHU MAATRAM: CSRF Token-ah add panrom ***
-            formData.append('csrf_token', getCsrfToken());
-            // *** MAATRAM MUDINJATHU ***
+            appendCsrf(formData);
 
             fetch('/students/verify-otp', {
                 method: 'POST',
                 body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                headers: buildAjaxHeaders()
             })
             .then(res => res.json())
             .then(data => {
@@ -866,12 +970,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const formData = new FormData();
             formData.append('id', currentResetStudentId);
-            formData.append('csrf_token', getCsrfToken());
+            appendCsrf(formData);
 
             fetch('/students/reset-password', { // Namma puthu route
                 method: 'POST',
                 body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                headers: buildAjaxHeaders({ Accept: 'application/json' })
             })
             .then(res => res.json())
             .then(data => {
