@@ -36,7 +36,7 @@
     <script src="{{ asset('assets/js/sidebar.js') }}"></script>
 
     @if (isset($page_js))
-        {{-- PUTHU MAATRAM: type="module" add pannirukom --}}
+        {{-- PUTHU MAATRAM INGA --}}
         <script src="{{ asset($page_js) }}" type="module"></script>
     @endif
 </body>
