@@ -1,0 +1,48 @@
+/* ===== TABLE STYLES ===== */
+.table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    border-spacing: 0;
+}
+
+.table th, .table td { 
+    padding: 1.25rem 1rem; 
+    text-align: left; 
+    border-bottom: 1px solid hsl(var(--border)); 
+    vertical-align: middle; 
+    font-size: 1rem; 
+}
+
+.table th { 
+    background-color: hsla(var(--muted), 0.2); 
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: hsl(var(--muted-foreground));
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center; 
+}
+
+.table th:first-child, .table td:first-child, 
+.table th:nth-child(6), .table td:nth-child(6), 
+.table th:last-child,  .table td:last-child { 
+    text-align: center;
+}
+
+/* ===== DATATABLE PAGINATION/FILTER STYLES ===== */
+.dataTable-selector, .dataTable-input {
+    background-color: hsl(var(--input));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+    border-radius: 0.375rem;
+}
+
+.dataTable-pagination a {
+    color: hsl(var(--muted-foreground));
+}
+
+.dataTable-pagination a:hover,
+.dataTable-pagination .active a {
+    background-color: hsla(var(--primary), 0.2);
+    color: hsl(var(--primary));
+}

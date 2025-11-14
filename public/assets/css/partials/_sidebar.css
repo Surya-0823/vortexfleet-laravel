@@ -1,0 +1,109 @@
+/* ===== SIDEBAR STYLES ===== */
+.sidebar {
+  width: 16rem; /* 256px */
+  background-color: rgb(7, 27, 43);
+  border-right: 1px solid hsl(var(--border));
+  position: fixed; /* Fixed position */
+  top: 0;
+  left: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width 0.3s ease;
+}
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.sidebar-subtitle {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar .nav-button .nav-label,
+.sidebar .sidebar-title-wrapper {
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    white-space: nowrap;
+}
+
+/* Sidebar Footer & Toggle Button */
+.sidebar-footer {
+    height: 3.5rem; /* Main footer oda height */
+    border-top: 1px solid hsl(var(--border));
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Button'ah right side'la veka */
+    padding: 0 0.75rem;
+    transition: justify-content 0.3s ease;
+}
+
+.sidebar-toggle-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: hsl(var(--muted-foreground));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: hsla(var(--brand-orange), 0.15);
+    border-color: hsla(var(--brand-orange), 0.2);
+    color: hsl(var(--brand-orange));
+}
+
+.sidebar-toggle-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+/* Collapsed State */
+.sidebar.collapsed {
+    width: 5.5rem; /* 88px */
+}
+
+.sidebar.collapsed .sidebar-title-wrapper,
+.sidebar.collapsed .nav-label {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+}
+
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+}
+
+.sidebar.collapsed .nav-button {
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-footer {
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-toggle-btn svg {
+    transform: rotate(180deg);
+}

@@ -564,29 +564,7 @@
     gap: 1.5rem;
 }
 
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 0.875rem 1rem;
-    background: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    border-radius: 0.5rem;
-    color: hsl(var(--foreground));
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: hsl(var(--primary));
-    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 120px;
-}
+/* .form-group input, .form-group textarea moved to partials/_forms.css */
 
 .btn-contact-submit {
     padding: 1rem 2rem;
@@ -706,4 +684,3 @@
         padding: 0 1rem;
     }
 }
-

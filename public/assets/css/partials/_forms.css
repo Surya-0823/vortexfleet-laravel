@@ -1,0 +1,157 @@
+/* ===== FORM STYLES ===== */
+
+/* Form Card Wrapper (from Phase 1) */
+.form-card {
+    max-width: 650px; /* Form oda maximum width */
+    margin: 2rem auto; /* Form ah center la kondu varum */
+    padding: 2rem;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+}
+
+/* ===== FORM GROUP (from auth.css & landing.css) ===== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: hsl(var(--foreground));
+    font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.875rem 1rem;
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    color: hsl(var(--foreground));
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* ===== FORM BOLD STYLES (from buses/drivers/students.css) ===== */
+.formbold-mb-3 {
+  margin-bottom: 15px;
+}
+
+.formbold-input-flex {
+  display: flex;
+  flex-direction: column; 
+  gap: 15px; 
+  margin-bottom: 15px;
+}
+.formbold-input-flex > div {
+  width: 100%; 
+}
+
+.modal-content .formbold-form-input,
+.formbold-form-input {
+    width: 100%;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--input));
+    font-weight: 500;
+    font-size: 13px;
+    color: #FFFFFF; 
+    outline: none;
+    resize: none;
+    transition: all 0.2s ease;
+}
+.modal-content .formbold-form-input:focus,
+.formbold-form-input:focus {
+  border-color: hsl(var(--ring));
+}
+
+.modal-content .formbold-form-label,
+.formbold-form-label {
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+  font-size: 12px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.formbold-btn {
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 14px 25px;
+  border: none;
+  font-weight: 500;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.formbold-btn:hover {
+  box-shadow: 0px 3px 8px hsla(var(--primary), 0.3);
+}
+
+#photo-upload-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+#photo-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: hsl(var(--input));
+  border: 2px dashed hsl(var(--border));
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.formbold-form-input:-webkit-autofill,
+.formbold-form-input:-webkit-autofill:hover,
+.formbold-form-input:-webkit-autofill:focus,
+.formbold-form-input:-webkit-autofill:active {
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  box-shadow: 0 0 0 1000px hsl(var(--input)) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+.formbold-form-input:-webkit-autofill:focus {
+    border-color: hsl(var(--ring));
+}
+
+/* ===== FORM ERROR STYLES (from buses/drivers/students.css) ===== */
+.text-danger-inline {
+  color: hsl(var(--destructive) / 0.9);
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: block; 
+  margin-top: 6px; 
+}
+
+.formbold-form-input.is-invalid,
+.form-group input.is-invalid {
+  border-color: hsl(var(--destructive) / 0.7);
+  background-color: hsla(var(--destructive), 0.05);
+}
+.formbold-form-input.is-invalid:focus,
+.form-group input.is-invalid:focus {
+   border-color: hsl(var(--destructive));
+   box-shadow: 0 0 0 3px hsla(var(--destructive), 0.2);
+}

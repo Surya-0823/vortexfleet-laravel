@@ -1,0 +1,191 @@
+/* ===== ALERTS (from auth.css) ===== */
+.alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.alert-error {
+    background: hsl(var(--destructive) / 0.1);
+    color: hsl(var(--destructive));
+    border: 1px solid hsl(var(--destructive) / 0.3);
+}
+
+.alert-success {
+    background: hsl(var(--success) / 0.1);
+    color: hsl(var(--success));
+    border: 1px solid hsl(var(--success) / 0.3);
+}
+
+/* ===== MODAL ALERTS (from buses/drivers/students.css) ===== */
+.modal-content-alert {
+  max-width: 420px;
+  animation: slide-down 0.3s ease-out;
+  text-align: center;
+}
+
+.modal-content-alert .modal-body {
+  padding: 1.25rem 2rem; 
+}
+
+.modal-header-alert {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 2rem 1rem 2rem;
+}
+
+.alert-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: hsla(var(--destructive), 0.15);
+  border: 1px solid hsla(var(--destructive), 0.2);
+  margin-bottom: 1rem;
+}
+
+.alert-icon-wrapper svg {
+  width: 24px;
+  height: 24px;
+  color: hsl(var(--destructive));
+}
+
+.modal-header-alert .modal-title {
+  font-size: 1.375rem; 
+  position: relative;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-header-alert .modal-title::after {
+  content: '';
+  display: block;
+  width: 50px; 
+  height: 3px;
+  background-color: hsl(var(--border));
+  border-radius: 3px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%); 
+}
+
+.modal-body .alert-text-primary {
+  font-size: 1.25rem; 
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.modal-body .alert-text-secondary {
+  font-size: 1.125rem; 
+  color: hsl(var(--muted-foreground));
+  margin-top: 0.5rem;
+}
+
+.modal-footer-alert {
+  justify-content: center; 
+  gap: 1rem; 
+}
+
+/* ===== GLOBAL ALERTS (from buses/drivers/students.css) ===== */
+.alert-container-global {
+  position: fixed;
+  top: 1.5rem; 
+  right: 1.5rem; 
+  z-index: 9999;
+  width: 350px;
+  max-width: 90%;
+}
+
+.alert-global {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0; 
+  transform: translateX(30px); 
+  animation: alert-slide-in 0.3s ease-out forwards;
+}
+
+.alert-global-text {
+  flex-grow: 1;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
+.alert-global-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.alert-global-success {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--success) / 0.5);
+}
+.alert-global-success .alert-global-icon {
+  color: hsl(var(--success));
+}
+
+.alert-global-danger {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--destructive) / 0.5);
+}
+.alert-global-danger .alert-global-icon {
+  color: hsl(var(--destructive));
+}
+
+@keyframes alert-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.alert-global-fade-out {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s ease-in;
+}
+
+/* ===== DESTRUCTIVE BUTTON (often used with alerts) ===== */
+.btn-destructive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+  text-decoration: none;
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+  border: 1px solid hsl(var(--destructive));
+}
+
+.btn-destructive:hover {
+  background-color: hsla(var(--destructive), 0.85);
+}
+
+.btn-destructive svg {
+    width: 1rem;
+    height: 1rem;
+}

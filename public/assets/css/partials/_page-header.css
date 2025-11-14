@@ -1,0 +1,83 @@
+/* ===== COMMON PAGE HEADER STYLES ===== */
+/* Namma selectors group pannrom (e.g., .buses-page-header .header-left-content, ...) */
+
+.buses-page-header,
+.drivers-page-header,
+.students-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2.5rem;
+  background-color: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+  gap: 2rem;
+}
+
+.buses-page-header .header-left-content,
+.drivers-page-header .header-left-content,
+.students-page-header .header-left-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 70%;
+}
+
+.buses-page-header .page-title,
+.drivers-page-header .page-title,
+.students-page-header .page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0;
+}
+
+.buses-page-header .page-subtitle,
+.drivers-page-header .page-subtitle,
+.students-page-header .page-subtitle {
+  font-size: 1rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}
+
+.buses-page-header .page-header-note,
+.drivers-page-header .page-header-note,
+.students-page-header .page-header-note {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground) / 0.8);
+  margin-top: 0.5rem;
+}
+
+.buses-page-header .header-right-actions,
+.drivers-page-header .header-right-actions,
+.students-page-header .header-right-actions {
+  flex-shrink: 0;
+}
+
+.buses-page-header .add-button,
+.drivers-page-header .add-button,
+.students-page-header .add-button {
+  background: linear-gradient(145deg, #a396f8, #8273f5);
+  color: #1c192acc;
+  border-radius: 9999px;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(130, 115, 245, 0.3);
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.buses-page-header .add-button:hover,
+.drivers-page-header .add-button:hover,
+.students-page-header .add-button:hover {
+  box-shadow: 0 6px 20px rgba(130, 115, 245, 0.4);
+}
+
+.buses-page-header .add-button svg,
+.drivers-page-header .add-button svg,
+.students-page-header .add-button svg {
+  stroke: #1c192acc;
+}
