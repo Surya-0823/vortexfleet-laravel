@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Driver; 
 use Illuminate\Http\Request; 
 use PHPMailer\PHPMailer\Exception; // For catching email errors
-use App\Services\DriverService; // We will migrate this service later
+use App\Services\DriverService; // Use the Driver Service
 use App\Http\Traits\EmailDispatchTrait; // Import the email trait
 
 // Import Laravel Facades
@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * Handles all logic for the Drivers Management page (CRUD, OTP, Status).
+ * GNU Standard Comments
  */
 class DriversController extends Controller 
 {
@@ -29,15 +30,12 @@ class DriversController extends Controller
 
     /**
      * Constructor to initialize the service.
-     * Auth is no longer handled here.
+     * Auth is handled by middleware in routes/web.php.
      */
     public function __construct()
     {
         // We create an instance of the service
         $this->driverService = new DriverService(); 
-
-        // The old 'checkAuth()' logic is REMOVED from here.
-        // We will protect this route in 'routes/web.php' using middleware.
     }
 
     /**
@@ -54,7 +52,8 @@ class DriversController extends Controller
             $page_js = '/assets/js/drivers.js';
             
             try {
-                $drivers = Driver::all();
+                // Get all drivers ordered by creation date
+                $drivers = Driver::orderBy('created_at', 'desc')->get();
                 if (is_null($drivers)) {
                     $drivers = [];
                 }
@@ -80,6 +79,7 @@ class DriversController extends Controller
     
     /**
      * Call the service to create a new driver.
+     * (Called via AJAX)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -103,6 +103,7 @@ class DriversController extends Controller
     
     /**
      * Call the service to update an existing driver.
+     * (Called via AJAX)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -125,6 +126,7 @@ class DriversController extends Controller
     
     /**
      * Call the service to delete a driver.
+     * (Called via AJAX)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -146,6 +148,7 @@ class DriversController extends Controller
 
     /**
      * Update a driver's verification status (set to Not Verified).
+     * (Called via AJAX)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -183,6 +186,7 @@ class DriversController extends Controller
 
     /**
      * Send a verification OTP to the driver's email.
+     * (Called via AJAX)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -245,6 +249,8 @@ class DriversController extends Controller
 
     /**
      * Verify the OTP entered by the user.
+     * On success, send credentials email if a plain-text pass is in session.
+     * (Called via AJAX)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -272,6 +278,7 @@ class DriversController extends Controller
         }
 
         if ($driver->otp_code == $otp_from_user) {
+            // OTP is correct. Verify the driver.
             $driver->is_verified = 1;
             $driver->otp_code = null;
             $driver->otp_expires_at = null;
@@ -281,9 +288,41 @@ class DriversController extends Controller
             $driver->otp_locked_until = null;
             $driver->save();
 
+            // PUTHU MAATRAM: Check session for a plain-text password to email.
+            // This is set by createDriver or resetPassword in DriverService.
+            $plainPassword = session('temp_plain_password_for_' . $driverId);
+
+            if ($plainPassword) {
+                try {
+                    $subject = 'VortexFleet App Credentials';
+                    $body = 'Hi ' . $driver->name . ',<br><br>Your account is verified. You can now log in to the driver app.<br><br>' .
+                            '<b>Username:</b> ' . $driver->app_username . '<br>' .
+                            '<b>Password:</b> ' . $plainPassword . '<br><br>' .
+                            'Thanks,<br>Team VortexFleet';
+                    
+                    // Use the trait function
+                    $this->sendEmail($driver->email, $driver->name, $subject, $body);
+
+                    // Forget the password from session for security
+                    session()->forget('temp_plain_password_for_' . $driverId);
+
+                    return response()->json(['success' => true, 'message' => 'Verification successful! Credentials sent to driver.']);
+
+                } catch (Exception $e) {
+                    Log::error('Failed to send driver credentials email', ['error' => $e->getMessage()]);
+                    // Verification was successful, but email failed.
+                    return response()->json([
+                        'success' => true, 
+                        'message' => 'Verification successful, but failed to send credentials email. Please notify driver manually.'
+                    ]);
+                }
+            }
+            // End PUTHU MAATRAM
+
             return response()->json(['success' => true, 'message' => 'Verification successful!']);
         
         } else {
+            // OTP is incorrect
             $attempts = $driver->otp_attempt_count + 1;
             
             if ($attempts >= 3) {
@@ -305,36 +344,22 @@ class DriversController extends Controller
     
     /**
      * Reset the driver's app password.
+     * (Called via AJAX)
+     *
+     * This method now calls the DriverService to perform the reset logic.
+     * The service generates the new password (Name@1234), saves it,
+     * sets the driver to 'unverified', and stores the plain-text
+     * password in the session to be emailed after OTP verification.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function resetPassword(Request $request)
     {
-        $driverId = $request->input('id');
-        $driver = Driver::find($driverId);
+        // Call the service to handle the logic
+        $response = $this->driverService->resetPassword($request);
         
-        if (!$driver) {
-            return response()->json(['success' => false, 'message' => 'Driver not found.'], 404);
-        }
-
-        try {
-            $new_password_plain = substr(bin2hex(random_bytes(3)), 0, 6);
-            
-            $driver->app_password = $new_password_plain;
-            $driver->otp_locked_until = null;
-            $driver->otp_attempt_count = 0;
-            $driver->save();
-            
-            return response()->json([
-                'success' => true, 
-                'message' => 'Password reset successfully!',
-                'new_password' => $new_password_plain // Send new password back
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Failed to reset driver password', ['error' => $e->getMessage()]);
-            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
-        }
+        // Return the response from the service
+        return response()->json($response, $response['status_code']);
     }
 }

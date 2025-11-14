@@ -38,26 +38,10 @@ class DriverService
         
         // PUTHU MAATRAM: Generate App Username and Password automatically.
         // App Username will be the driver's email.
-        /** @var string $app_username Automatically generated App Username (email address) */
         $data['app_username'] = $data['email'];
         
-        // App Password will be Name@Last4DigitsOfPhone (e.g., 'JohnDoe@1234').
-        // We strip spaces/special chars from the name part to keep it simple and URL-safe.
-        /** @var string $name_part Sanitized part of the password (driver's name) */
-        $name_part = preg_replace('/[^a-zA-Z0-9]/', '', str_replace(' ', '', $data['name']));
-        if (empty($name_part)) {
-            $name_part = 'Driver' . substr(bin2hex(random_bytes(2)), 0, 2);
-        }
-        
-        /** @var string $phone_last_4 Last 4 digits of the phone number */
-        $phone_digits = preg_replace('/\D/', '', $data['phone'] ?? '');
-        $phone_last_4 = substr($phone_digits, -4);
-        if (strlen($phone_last_4) < 4) {
-            $phone_last_4 = str_pad($phone_last_4, 4, (string) random_int(0, 9), STR_PAD_LEFT);
-        }
-
-        /** @var string $app_password Automatically generated and plain text password */
-        $data['app_password'] = $name_part . '@' . $phone_last_4;
+        // Use the new helper function to generate the password
+        $data['app_password'] = $this->generateDriverPassword($data['name']);
         
         // 1. Handle Photo Upload
         try {
@@ -185,6 +169,56 @@ class DriverService
     }
 
     /**
+     * Reset a driver's password and set them as unverified.
+     *
+     * @param Request $request
+     * @return array Service response array
+     */
+    public function resetPassword(Request $request)
+    {
+        $driverId = $request->input('id');
+        $driver = Driver::find($driverId);
+
+        if (!$driver) {
+            return ['success' => false, 'message' => 'Driver not found', 'status_code' => 404];
+        }
+
+        try {
+            // Generate a new random password
+            $newPassword = $this->generateDriverPassword($driver->name);
+            
+            // Save the new password (it will be auto-hashed by the model)
+            $driver->app_password = $newPassword;
+            
+            // Set as unverified and clear all OTP data
+            $driver->is_verified = false;
+            $driver->otp_code = null;
+            $driver->otp_expires_at = null;
+            $driver->otp_attempt_count = 0;
+            $driver->otp_sent_count = 0;
+            $driver->otp_last_sent_at = null;
+            $driver->otp_locked_until = null;
+            
+            $driver->save();
+
+            // Store the plain-text password in the session for the email step.
+            // THIS IS TEMPORARY. We'll use this in the AuthController.
+            // Note: In a real-world queue-based email system, we'd pass this differently.
+            session(['temp_plain_password_for_' . $driver->id => $newPassword]);
+
+            return [
+                'success' => true, 
+                'message' => 'Password reset successfully. Driver is unverified and requires OTP activation.', 
+                'status_code' => 200
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Driver password reset failed', ['error' => $e->getMessage()]);
+            return ['success' => false, 'message' => 'Error resetting password.', 'status_code' => 500];
+        }
+    }
+
+    /**
      * Private helper to validate driver data.
      *
      * @param array $data
@@ -224,5 +258,26 @@ class DriverService
         */
         
         return ['errors' => $errors];
+    }
+
+    /**
+     * Generate a new random password for a driver.
+     * Format: Name (no spaces) + @ + 4 random digits.
+     *
+     * @param string $driverName The driver's full name.
+     * @return string The plain-text generated password.
+     */
+    private function generateDriverPassword(string $driverName): string
+    {
+        // Remove spaces and special characters from name
+        $name_part = preg_replace('/[^a-zA-Z0-9]/', '', str_replace(' ', '', $driverName));
+        if (empty($name_part)) {
+            $name_part = 'Driver';
+        }
+        
+        // Generate 4 random digits
+        $random_digits = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+
+        return $name_part . '@' . $random_digits;
     }
 }

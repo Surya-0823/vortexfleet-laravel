@@ -300,6 +300,7 @@
     </div>
 </div>
 
+{{-- PUTHU MAATRAM: Reset Password Modal text updated --}}
 <div id="resetPasswordModal" class="modal-overlay" style="display: none;">
     <div class="modal-content modal-content-alert">
         <div class="modal-header-alert">
@@ -312,7 +313,9 @@
         </div>
         <div class="modal-body">
             <p class="alert-text-primary" id="resetPasswordText">Are you sure you want to reset the password for [Driver Name]?</p>
-            <p class="alert-text-secondary">A new 6-character password will be generated and their account will be unlocked.</p>
+            <p class="alert-text-secondary">
+                A new password (Format: Name@1234) will be generated. The driver will be marked as 'Not Verified' and must be activated again using OTP.
+            </p>
         </div>
         <div class="modal-footer modal-footer-alert">
             <button type="button" id="cancelResetPassword" class="btn btn-outline">Cancel</button>
@@ -323,6 +326,8 @@
     </div>
 </div>
 
+{{-- This modal is no longer needed as we email the password --}}
+{{-- <div id="showNewPasswordModal" ... > ... </div> --}}
 <div id="showNewPasswordModal" class="modal-overlay" style="display: none;">
     <div class="modal-content modal-content-alert">
         <div class="modal-header-alert">
