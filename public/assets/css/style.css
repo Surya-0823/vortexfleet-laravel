@@ -2,12 +2,21 @@
 /* Partials kulla irundhu ellathayum import pannurom */
 
 @import "partials/_base.css";
+
+/* Layout Partials (Pudhusa Add Pannrom) */
+@import "partials/_layout.css";
 @import "partials/_sidebar.css";
+@import "partials/_top-nav.css";
+@import "partials/_footer.css";
+
+/* Component Partials */
 @import "partials/_components.css"; /* Buttons, Badges */
 @import "partials/_forms.css";
-@import "partials/_alerts.css"; /* Pudhusa add pannrom */
-@import "partials/_modals.css"; /* Pudhusa add pannrom */
-@import "partials/_tables.css"; /* Pudhusa add pannrom */
-@import "partials/_page-header.css"; /* Pudhusa add pannrom */
-@import "partials/_cards.css"; /* Pudhusa add pannrom */
+@import "partials/_alerts.css";
+@import "partials/_modals.css";
+@import "partials/_tables.css";
+@import "partials/_page-header.css";
+@import "partials/_cards.css";
+
+/* Utility Partials */
 @import "partials/_utilities.css";

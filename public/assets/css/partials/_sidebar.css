@@ -12,6 +12,21 @@
   flex-shrink: 0;
   transition: width 0.3s ease;
 }
+
+/* PUDHU STYLE (from layout.css) */
+.sidebar-header {
+  display: flex ;
+  flex-direction: row ;
+  justify-content: center ;
+  align-items: center ;
+  gap: 0.75rem ;
+}
+.sidebar-header svg {
+  width: 2.5rem ;
+  height: 2.5rem ;
+}
+/* End PUDHU STYLE */
+
 .sidebar-title {
   font-size: 1.25rem;
   font-weight: 700;
@@ -49,7 +64,7 @@
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* Button'ah right side'la veka */
+    justify-content: flex-end;
     padding: 0 0.75rem;
     transition: justify-content 0.3s ease;
 }

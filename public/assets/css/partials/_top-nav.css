@@ -1,0 +1,108 @@
+/* ===== TOP NAVIGATION ===== */
+.top-nav {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 16rem; /* Sidebar width (256px) - exactly matches sidebar */
+    width: calc(100% - 16rem); /* Adjust for sidebar width */
+    z-index: 1000;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: hsl(var(--card));
+    border-bottom: 1px solid hsl(var(--border));
+    transition: left 0.3s ease, width 0.3s ease;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.breadcrumbs .lucide-home {
+    width: 1rem;
+    height: 1rem;
+}
+
+.breadcrumb-active {
+    color: hsl(var(--foreground));
+    font-weight: 500;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-profile-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+    box-shadow: 0 4px 16px hsl(var(--background) / 0.35);
+}
+
+.user-profile-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 2px solid hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 0 3px hsl(var(--background));
+}
+
+.user-profile-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: hsl(var(--foreground));
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid hsl(var(--primary) / 0.3);
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.15), hsl(var(--primary) / 0.05));
+    color: hsl(var(--primary));
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.logout-button svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.logout-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px hsl(var(--primary) / 0.25);
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.25), hsl(var(--primary) / 0.12));
+}
+
+/* Collapsed state adjustment */
+.main-content.collapsed .top-nav {
+    left: 5.5rem; /* Collapsed sidebar width (88px) */
+    width: calc(100% - 5.5rem); /* Adjust for collapsed sidebar width */
+}
