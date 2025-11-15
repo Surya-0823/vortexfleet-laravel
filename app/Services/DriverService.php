@@ -88,11 +88,6 @@ class DriverService
             return ['success' => false, 'message' => 'Validation failed', 'data' => $validation, 'status_code' => 422];
         }
 
-        $emailChanged = array_key_exists('email', $data) && $data['email'] !== $driver->email;
-        if ($emailChanged) {
-            $data['app_username'] = $data['email'];
-        }
-
         // 1. Handle Photo Upload (if new photo provided)
         if ($request->hasFile('photo')) {
             try {
@@ -109,19 +104,44 @@ class DriverService
 
         // 2. Update Driver
         try {
+            // PUTHU MAATRAM: Logic to handle conditional verification reset
+            
+            // Password update is not done here
             unset($data['app_password']);
 
+            // Fill the model with new data
             $driver->fill($data);
-            $driver->is_verified = false;
-            $driver->otp_code = null;
-            $driver->otp_expires_at = null;
-            $driver->otp_attempt_count = 0;
-            $driver->otp_sent_count = 0;
-            $driver->otp_last_sent_at = null;
-            $driver->otp_locked_until = null;
+            
+            $message = ''; // Message container
+
+            // Check if email was changed
+            if ($driver->isDirty('email')) {
+                // Email changed: Update username and reset verification
+                $driver->app_username = $driver->email;
+                $driver->is_verified = false;
+                $driver->otp_code = null;
+                $driver->otp_expires_at = null;
+                $driver->otp_attempt_count = 0;
+                $driver->otp_sent_count = 0;
+                $driver->otp_last_sent_at = null;
+                $driver->otp_locked_until = null;
+                
+                $message = 'Driver updated. Email changed, verification is required.';
+            
+            } else if (!$driver->isDirty() && !$driver->isDirty('photo_path')) {
+                // No changes were made at all
+                return ['success' => true, 'message' => 'No changes detected.', 'data' => null, 'status_code' => 200];
+            
+            } else {
+                // Other fields (name, phone, photo) changed, but email did not.
+                // Do NOT reset verification.
+                $message = 'Driver updated successfully.';
+            }
+
             $driver->save();
 
-            return ['success' => true, 'message' => 'Driver updated successfully. Verification required again.', 'data' => null, 'status_code' => 200];
+            return ['success' => true, 'message' => $message, 'data' => null, 'status_code' => 200];
+            
         } catch (\Exception $e) {
             Log::error('Driver update failed', ['error' => $e->getMessage()]);
             return ['success' => false, 'message' => 'Database error: Could not update driver.', 'data' => null, 'status_code' => 500];
@@ -168,45 +188,55 @@ class DriverService
         }
     }
 
+    /**
+     * Reset a driver's password and set them as unverified.
+     *
+     * @param Request $request
+     * @return array Service response array
+     */
     public function resetPassword(Request $request)
-{
-    $driverId = $request->input('id');
-    $driver = Driver::find($driverId);
+    {
+        $driverId = $request->input('id');
+        $driver = Driver::find($driverId);
 
-    if (!$driver) {
-        return ['success' => false, 'message' => 'Driver not found', 'data' => null, 'status_code' => 404];
+        if (!$driver) {
+            return ['success' => false, 'message' => 'Driver not found', 'status_code' => 404];
+        }
+
+        try {
+            // Generate a new random password
+            $newPassword = $this->generateDriverPassword($driver->name);
+            
+            // Save the new password (it will be auto-hashed by the model)
+            $driver->app_password = $newPassword;
+            
+            // Set as unverified and clear all OTP data
+            $driver->is_verified = false;
+            $driver->otp_code = null;
+            $driver->otp_expires_at = null;
+            $driver->otp_attempt_count = 0;
+            $driver->otp_sent_count = 0;
+            $driver->otp_last_sent_at = null;
+            $driver->otp_locked_until = null;
+            
+            $driver->save();
+
+            // Store the plain-text password in the session for the email step.
+            // THIS IS TEMPORARY. We'll use this in the AuthController.
+            // Note: In a real-world queue-based email system, we'd pass this differently.
+            session(['temp_plain_password_for_' . $driver->id => $newPassword]);
+
+            return [
+                'success' => true, 
+                'message' => 'Password reset successfully. Driver is unverified and requires OTP activation.', 
+                'status_code' => 200
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Driver password reset failed', ['error' => $e->getMessage()]);
+            return ['success' => false, 'message' => 'Error resetting password.', 'status_code' => 500];
+        }
     }
-
-    try {
-        $newPassword = $this->generateDriverPassword($driver->name);
-
-        $driver->app_password = $newPassword;
-        $driver->is_verified = false;
-        $driver->otp_code = null;
-        $driver->otp_expires_at = null;
-        $driver->otp_attempt_count = 0;
-        $driver->otp_sent_count = 0;
-        $driver->otp_last_sent_at = null;
-        $driver->otp_locked_until = null;
-
-        $driver->save();
-
-        // PUTHU MAATRAM: Session-la save pannatha remove pannittom
-        // session(['temp_plain_password_for_' . $driver->id => $newPassword]); // REMOVE THIS LINE
-
-        return [
-            'success' => true, 
-            'message' => 'Password reset. Driver unverified. Send OTP to continue.', 
-            // PUTHU MAATRAM: Password-ah response-la anuppurom
-            'data' => ['new_password' => $newPassword],
-            'status_code' => 200
-        ];
-
-    } catch (\Exception $e) {
-        Log::error('Driver password reset failed', ['error' => $e->getMessage()]);
-        return ['success' => false, 'message' => 'Error resetting password.', 'data' => null, 'status_code' => 500];
-    }
-}
 
     /**
      * Private helper to validate driver data.
@@ -260,7 +290,7 @@ class DriverService
     private function generateDriverPassword(string $driverName): string
     {
         // Remove spaces and special characters from name
-        $name_part = preg_replace('/[^a-zA-Z0-9]/', '', str_replace(' ', '', $driverName));
+        $name_part = preg_replace('/[^a-zA-Z0.9]/', '', str_replace(' ', '', $driverName));
         if (empty($name_part)) {
             $name_part = 'Driver';
         }

@@ -113,18 +113,22 @@
                                 <span>Edit</span>
                             </a>
                             
+                            {{-- PUTHU MAATRAM: 'btn-disabled' class-a add panrom --}}
                             <a href="javascript:void(0);" 
-                               class="btn-action-reset js-reset-password"
+                               class="btn-action-reset js-reset-password {{ $driver->is_verified ? 'btn-disabled' : '' }}"
                                data-id="{{ $driver->id }}"
                                data-name="{{ htmlspecialchars($driver->name) }}"
                                title="Reset Password">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r="2.5"/></svg>
                                 <span>Reset</span>
                             </a>
+                            
+                            {{-- PUTHU MAATRAM: 'btn-disabled' class-a add panrom --}}
                             <a href="javascript:void(0);" 
-                               class="btn-action-delete js-delete-driver" 
+                               class="btn-action-delete js-delete-driver {{ $driver->is_verified ? 'btn-disabled' : '' }}" 
                                data-delete-id="{{ $driver->id }}"
-                               data-delete-url="{{ url('/drivers/delete') }}"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                               data-delete-url="{{ url('/drivers/delete') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                                 <span>Delete</span>
                             </a>
                         </div>
