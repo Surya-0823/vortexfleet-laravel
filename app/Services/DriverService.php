@@ -168,55 +168,45 @@ class DriverService
         }
     }
 
-    /**
-     * Reset a driver's password and set them as unverified.
-     *
-     * @param Request $request
-     * @return array Service response array
-     */
     public function resetPassword(Request $request)
-    {
-        $driverId = $request->input('id');
-        $driver = Driver::find($driverId);
+{
+    $driverId = $request->input('id');
+    $driver = Driver::find($driverId);
 
-        if (!$driver) {
-            return ['success' => false, 'message' => 'Driver not found', 'status_code' => 404];
-        }
-
-        try {
-            // Generate a new random password
-            $newPassword = $this->generateDriverPassword($driver->name);
-            
-            // Save the new password (it will be auto-hashed by the model)
-            $driver->app_password = $newPassword;
-            
-            // Set as unverified and clear all OTP data
-            $driver->is_verified = false;
-            $driver->otp_code = null;
-            $driver->otp_expires_at = null;
-            $driver->otp_attempt_count = 0;
-            $driver->otp_sent_count = 0;
-            $driver->otp_last_sent_at = null;
-            $driver->otp_locked_until = null;
-            
-            $driver->save();
-
-            // Store the plain-text password in the session for the email step.
-            // THIS IS TEMPORARY. We'll use this in the AuthController.
-            // Note: In a real-world queue-based email system, we'd pass this differently.
-            session(['temp_plain_password_for_' . $driver->id => $newPassword]);
-
-            return [
-                'success' => true, 
-                'message' => 'Password reset successfully. Driver is unverified and requires OTP activation.', 
-                'status_code' => 200
-            ];
-
-        } catch (\Exception $e) {
-            Log::error('Driver password reset failed', ['error' => $e->getMessage()]);
-            return ['success' => false, 'message' => 'Error resetting password.', 'status_code' => 500];
-        }
+    if (!$driver) {
+        return ['success' => false, 'message' => 'Driver not found', 'data' => null, 'status_code' => 404];
     }
+
+    try {
+        $newPassword = $this->generateDriverPassword($driver->name);
+
+        $driver->app_password = $newPassword;
+        $driver->is_verified = false;
+        $driver->otp_code = null;
+        $driver->otp_expires_at = null;
+        $driver->otp_attempt_count = 0;
+        $driver->otp_sent_count = 0;
+        $driver->otp_last_sent_at = null;
+        $driver->otp_locked_until = null;
+
+        $driver->save();
+
+        // PUTHU MAATRAM: Session-la save pannatha remove pannittom
+        // session(['temp_plain_password_for_' . $driver->id => $newPassword]); // REMOVE THIS LINE
+
+        return [
+            'success' => true, 
+            'message' => 'Password reset. Driver unverified. Send OTP to continue.', 
+            // PUTHU MAATRAM: Password-ah response-la anuppurom
+            'data' => ['new_password' => $newPassword],
+            'status_code' => 200
+        ];
+
+    } catch (\Exception $e) {
+        Log::error('Driver password reset failed', ['error' => $e->getMessage()]);
+        return ['success' => false, 'message' => 'Error resetting password.', 'data' => null, 'status_code' => 500];
+    }
+}
 
     /**
      * Private helper to validate driver data.

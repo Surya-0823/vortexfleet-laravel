@@ -259,6 +259,9 @@ class DriversController extends Controller
     {
         $driverId = $request->input('driver_id');
         $otp_from_user = $request->input('otp_code');
+        
+        // PUTHU MAATRAM: Password-ah session-ku bathila request-la irunthu vaangurom
+        $plainPassword = $request->input('plain_password');
 
         $driver = Driver::find($driverId);
         if (!$driver) {
@@ -288,23 +291,20 @@ class DriversController extends Controller
             $driver->otp_locked_until = null;
             $driver->save();
 
-            // PUTHU MAATRAM: Check session for a plain-text password to email.
-            // This is set by createDriver or resetPassword in DriverService.
-            $plainPassword = session('temp_plain_password_for_' . $driverId);
-
+            // PUTHU MAATRAM: Check if a plain-text password was passed from JS
             if ($plainPassword) {
                 try {
                     $subject = 'VortexFleet App Credentials';
                     $body = 'Hi ' . $driver->name . ',<br><br>Your account is verified. You can now log in to the driver app.<br><br>' .
                             '<b>Username:</b> ' . $driver->app_username . '<br>' .
-                            '<b>Password:</b> ' . $plainPassword . '<br><br>' .
+                            '<b>Password:</b> ' . $plainPassword . '<br><br>' . // Use the password from request
                             'Thanks,<br>Team VortexFleet';
                     
                     // Use the trait function
                     $this->sendEmail($driver->email, $driver->name, $subject, $body);
 
-                    // Forget the password from session for security
-                    session()->forget('temp_plain_password_for_' . $driverId);
+                    // PUTHU MAATRAM: Session logic removed
+                    // session()->forget('temp_plain_password_for_'G . $driverId);
 
                     return response()->json(['success' => true, 'message' => 'Verification successful! Credentials sent to driver.']);
 

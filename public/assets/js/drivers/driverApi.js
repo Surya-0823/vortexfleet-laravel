@@ -101,12 +101,20 @@ export async function sendOtp(userId) {
  * Sends an AJAX request to verify the entered OTP.
  * @param {string} userId - The ID of the driver.
  * @param {string} otpCode - The 6-digit OTP code.
+ * @param {string|null} plainPassword - The new plain-text password (if available from reset)
  * @returns {Promise<object>} - The JSON response from the server.
  */
-export async function verifyOtp(userId, otpCode) {
+export async function verifyOtp(userId, otpCode, plainPassword) { // PUTHU MAATRAM: plainPassword add pannirukkom
     const formData = new FormData();
     formData.append('driver_id', userId);
     formData.append('otp_code', otpCode);
+    
+    // PUTHU MAATRAM: Password irunthaa, athaayum form data-la seru
+    if (plainPassword) {
+        formData.append('plain_password', plainPassword);
+    }
+    // END PUTHU MAATRAM
+    
     appendCsrf(formData);
 
     const response = await fetch('/drivers/verify-otp', {

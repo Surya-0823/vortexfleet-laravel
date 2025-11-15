@@ -27,6 +27,9 @@ export function init() {
     let currentResetDriverName = null;
     let currentToggleSwitch = null; 
     let otpTimerInterval = null;
+    
+    // PUTHU MAATRAM: tempDriverPassword variable theva illa, namma sessionStorage use panrom
+    // let tempDriverPassword = null; // Intha line-ah remove pannidalam.
 
     // =======================================================
     // --- Add/Edit Driver Modal Functions ---
@@ -428,15 +431,28 @@ export function init() {
             if (ui.otpError) ui.otpError.innerText = '';
 
             try {
-                const data = await driverApi.verifyOtp(userId, otp);
+                // PUTHU MAATRAM: sessionStorage-la irunthu password-ah eduthu anuppurom
+                const plainPassword = sessionStorage.getItem('temp_driver_pass_for_' + userId);
+                
+                // API call-la antha password-ayum serthu anuppurom
+                const data = await driverApi.verifyOtp(userId, otp, plainPassword);
+                // END PUTHU MAATRAM
 
                 if (data.success) {
+                    
+                    // PUTHU MAATRAM: Password-ah use pannathukku appuram, atha clear pannidrom
+                    if (plainPassword) {
+                        sessionStorage.removeItem('temp_driver_pass_for_' + userId);
+                    }
+                    // END PUTHU MAATRAM
+                
                     showAlert(data.message, 'success');
                     resetOtpEntryState();
                     setTimeout(() => location.reload(), 1500);
                 } else {
                     if (ui.otpError) ui.otpError.innerText = data.message;
                     if (data.message.includes('locked')) {
+                        // Lock aana, password-ah clear pannida koodathu, retry panna mudiyathu
                         setTimeout(() => resetOtpEntryState(), 2000);
                     }
                 }
@@ -477,10 +493,17 @@ export function init() {
                 const data = await driverApi.resetPassword(currentResetDriverId);
 
                 if (data.success) {
+                    
+                    // PUTHU MAATRAM: Server-la irunthu vanda puthu password-ah sessionStorage-la save panrom
+                    if (data.data && data.data.new_password) {
+                        sessionStorage.setItem('temp_driver_pass_for_' + currentResetDriverId, data.data.new_password);
+                    }
+                    // END PUTHU MAATRAM
+                
                     resetResetPasswordState();
                     showAlert(data.message, 'success');
                     setTimeout(() => {
-                        location.reload();
+                        location.reload(); // Page-ah reload panrom
                     }, 1500);
                 } else {
                     showAlert(data.message || 'An error occurred.', 'danger');

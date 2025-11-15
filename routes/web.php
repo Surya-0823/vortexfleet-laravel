@@ -28,7 +28,8 @@ Route::get('/pricing', [LandingPageController::class, 'pricing']);
 Route::post('/submit-contact', [LandingPageController::class, 'submitContact']);
 
 // Auth Routes
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+// FIX: showLoginForm -> showLogin
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
@@ -49,10 +50,10 @@ Route::middleware([AdminAuthMiddleware::class])->group(function () {
     Route::post('/drivers/update-status', [DriversController::class, 'updateStatus']);
     Route::post('/drivers/send-otp', [DriversController::class, 'sendOtp']);
     Route::post('/drivers/verify-otp', [DriversController::class, 'verifyOtp']);
-    
+
     // PUTHU MAATRAM: Puthu route for resetting password
     Route::post('/drivers/reset-password', [DriversController::class, 'resetPassword']);
-    
+
     // Buses
     Route::get('/buses', [BusesController::class, 'index']);
     Route::post('/buses/create', [BusesController::class, 'create']);
