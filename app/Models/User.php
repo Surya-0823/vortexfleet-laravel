@@ -37,6 +37,7 @@ class User extends Authenticatable
         'payment_amount', // Added from old project
         'payment_status', // Added from old project
         'status', // Added from old project
+        'max_buses', // <-- ITHA ADD PANNANUM
     ];
 
     /**
@@ -100,7 +101,7 @@ class User extends Authenticatable
         // Note: Password hashing is now AUTOMATIC
         // The 'password_hash' line is removed
         // because of the 'password' => 'hashed' in casts() method.
-        
+
         $user = self::create($data);
         return $user->id; // Return the new user's ID
     }
