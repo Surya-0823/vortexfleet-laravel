@@ -40,7 +40,6 @@ Route::get('/payment-success', [AuthController::class, 'paymentSuccess']);
 // Authenticated Admin Routes
 Route::middleware([AdminAuthMiddleware::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::get('/tracking', [TrackingController::class, 'index']);
 
     // Drivers
     Route::get('/drivers', [DriversController::class, 'index']);
