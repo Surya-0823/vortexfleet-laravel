@@ -3,525 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VortexFleet - Smart Bus Management</title>
+    <title>VortexFleet - Smart College Bus Management</title>
     
-    <link rel="stylesheet" href="{{ asset('assets/css/pages/landing.css') }}">
+    <link href="{{ asset('assets/css/pages/landing.css') }}" rel="stylesheet">
     
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     </head>
-<body class="landing-page">
-
-    <nav class="landing-nav">
-        <div class="container nav-container">
-            <div class="nav-left">
-                <a href="#hero" class="logo-link">
-                    <img src="{{ asset('assets/icons/bus.svg') }}" alt="Bus" class="logo-icon" />
-                    <h1 class="logo-text">VortexFleet</h1>
-                </a>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-bus"></i>
+                <span>VortexFleet</span>
             </div>
-
-            <input type="checkbox" id="mobile-menu-toggle" class="mobile-menu-checkbox">
-            <label for="mobile-menu-toggle" class="mobile-menu-button">
-                <svg class="icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
-                <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </label>
-
-            <div class="desktop-nav">
-                <a href="#hero" class="nav-link">Home</a>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
                 <a href="#features" class="nav-link">Features</a>
                 <a href="#pricing" class="nav-link">Pricing</a>
                 <a href="#contact" class="nav-link">Contact</a>
-                <div class="nav-buttons">
-                    <a href="{{ url('/dashboard') }}" class="btn btn-outline">Login</a>
-                    <a href="{{ url('/register') }}" class="btn btn-primary btn-glow">Sign Up</a>
-                </div>
+                
+                <a href="{{ route('login') }}" class="nav-link">Login</a>
+                <a href="{{ route('register') }}" class="nav-link">Register</a>
             </div>
-
-            <div class="mobile-nav">
-                <a href="#hero" class="nav-link-mobile">Home</a>
-                <a href="#features" class="nav-link-mobile">Features</a>
-                <a href="#pricing" class="nav-link-mobile">Pricing</a>
-                <a href="#contact" class="nav-link-mobile">Contact</a>
-                <div class="nav-buttons-mobile">
-                    <a href="{{ url('/dashboard') }}" class="btn btn-outline btn-full">Login</a>
-                    <a href="{{ url('/register') }}" class="btn btn-primary btn-glow btn-full">Sign Up</a>
-                </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
     </nav>
 
-    <section id="hero" class="hero-section">
-        <div class="container hero-content">
-            <h1 class="hero-title">
-                Smart Bus Management
-                <span class="hero-subtitle">
-                    Made Simple
-                </span>
-            </h1>
-            <p class="hero-description">
-                Complete school bus tracking and management system with real-time location updates, 
-                route optimization, and secure student verification powered by OpenStreetMap
-            </p>
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="floating-bus">
+                <i class="fas fa-bus"></i>
+            </div>
+            <div class="floating-map">
+                <i class="fas fa-map-marked-alt"></i>
+            </div>
+            <div class="floating-location">
+                <i class="fas fa-location-arrow"></i>
+            </div>
+            <div class="floating-location1">
+                <i class="fas fa-location-arrow"></i>
+            </div>
+            <div class="floating-map1">
+                <i class="fas fa-map-marked-alt"></i>
+            </div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">Smart Campus Mobility<br><span>Made Simple</span></h1>
+            <p class="hero-subtitle">Complete college bus tracking system with real-time location updates, route optimization, and secure student verification</p>
             <div class="hero-buttons">
-                <a href="{{ url('/dashboard') }}" class="btn btn-lg btn-primary btn-glow">
-                    Get Started
-                </a>
-                <a href="{{ url('/dashboard') }}" class="btn btn-lg btn-outline">
-                    View Demo
-                </a>
+                <a href="{{ route('register') }}" class="btn btn-primary">Get Started</a>
+                <a href="{{ route('login') }}" class="btn btn-secondary">Login</a>
             </div>
         </div>
+    </section>
 
-        <div class="hero-visual">
-            <div class="hero-visual-blur"></div>
-            <div class="card card-glow hero-stats-card">
-                <div class="card-content">
-                    <div class="hero-stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-value stat-primary">45+</div>
-                            <div class="stat-label">Active Buses</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value stat-secondary">120+</div>
-                            <div class="stat-label">Drivers</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value stat-primary">2.5K+</div>
-                            <div class="stat-label">Students</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value stat-secondary">85+</div>
-                            <div class="stat-label">Routes</div>
-                        </div>
+    <section class="how-it-works">
+        <div class="container">
+            <h2>Get Started in Three Simple Steps</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-bus"></i>
                     </div>
+                    <h3>Fleet Onboarding & Assignment</h3>
+                    <p>Configure your transportation fleet by registering buses, creating driver profiles, and assigning each vehicle to its designated route through the centralized admin console</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Student Enrollment & Route Mapping</h3>
+                    <p>Enroll students securely, verify parent access, and map each student to the appropriate bus route for streamlined daily operation</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Real-Time Operational Tracking</h3>
+                    <p>Enable drivers to broadcast live GPS updates, providing students and parents with accurate, real-time bus location visibility and arrival insights</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="features" class="features-section">
+    <section id="features" class="features">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Powerful Features</h2>
-                <p class="section-subtitle">
-                    Everything you need to manage your school bus fleet efficiently
-                </p>
-            </div>
+            <h2>Complete Bus Management Solution</h2>
             <div class="features-grid">
-                <div class="card card-glow feature-card">
-                    <div class="card-header">
-                        <div class="feature-icon">
-                            <img src="{{ asset('assets/icons/bus.svg') }}" alt="Bus" class="icon-8" />
-                        </div>
-                        <h3 class="card-title">Real-Time Bus Tracking</h3>
-                        <p class="card-description">Live GPS tracking with instant updates. Students and parents can see the bus location on an interactive map. Reduces waiting time and eliminates guesswork.</p>
+                <div class="feature-card" id="tracking">
+                    <div class="feature-icon">
+                        <i class="fas fa-satellite-dish"></i>
                     </div>
+                    <h3>Real-Time Bus Tracking</h3>
+                    <p>Live GPS tracking with instant updates. Students and parents can see bus location on interactive maps</p>
                 </div>
-                <div class="card card-glow feature-card">
-                    <div class="card-header">
-                        <div class="feature-icon">
-                            <img src="{{ asset('assets/icons/users.svg') }}" alt="Users" class="icon-8" />
-                        </div>
-                        <h3 class="card-title">Student App</h3>
-                        <p class="card-description">Real-time bus location, accurate ETA and route visibility, alerts for delays, arrivals, and changes. Secure login for students/parents.</p>
+                <div class="feature-card" id="student-app">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
                     </div>
+                    <h3>Student & Parent App</h3>
+                    <p>Real-time bus location, accurate ETA, route visibility, and instant alerts for delays and arrivals</p>
                 </div>
-                <div class="card card-glow feature-card">
-                    <div class="card-header">
-                        <div class="feature-icon">
-                            <img src="{{ asset('assets/icons/map-pin.svg') }}" alt="MapPin" class="icon-8" />
-                        </div>
-                        <h3 class="card-title">Driver App</h3>
-                        <p class="card-description">Easy-to-use interface, sends continuous GPS updates, route assignments and trip details. Admin-controlled login credentials.</p>
+                <div class="feature-card" id="driver-app">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-tie"></i>
                     </div>
+                    <h3>Driver App</h3>
+                    <p>Easy-to-use interface with route assignments, trip details, and continuous GPS updates</p>
                 </div>
-                <div class="card card-glow feature-card">
-                    <div class="card-header">
-                        <div class="feature-icon">
-                             <img src="{{ asset('assets/icons/shield.svg') }}" alt="Shield" class="icon-8" />
-                        </div>
-                        <h3 class="card-title">Admin Dashboard</h3>
-                        <p class="card-description">A powerful central system with full control over driver management, student management, bus management, route management, and live map view.</p>
+                <div class="feature-card" id="admin-dashboard">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
                     </div>
+                    <h3>Admin Dashboard</h3>
+                    <p>Centralized control for driver management, student management, and live map monitoring</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="how-it-works-section">
+    <section id="pricing" class="pricing-container">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">How It Works</h2>
-                <p class="section-subtitle">
-                    Get started in three simple steps
-                </p>
-            </div>
-            <div class="how-it-works-grid">
-                <div class="how-it-works-item">
-                    <div class="how-it-works-step">01</div>
-                    <h3 class="how-it-works-title">Add Your Fleet</h3>
-                    <p class="how-it-works-desc">Register buses, drivers, and create routes</p>
-                </div>
-                <div class="how-it-works-item-connector"></div>
-                <div class="how-it-works-item">
-                    <div class="how-it-works-step">02</div>
-                    <h3 class="how-it-works-title">Enroll Students</h3>
-                    <p class="how-it-works-desc">Secure OTP verification for student registration</p>
-                </div>
-                <div class="how-it-works-item-connector"></div>
-                <div class="how-it-works-item">
-                    <div class="how-it-works-step">03</div>
-                    <h3 class="how-it-works-title">Track & Manage</h3>
-                    <p class="how-it-works-desc">Monitor real-time locations and manage operations</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="pricing" class="pricing-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Simple, Transparent Pricing</h2>
-                <p class="section-subtitle">
-                    Choose the perfect plan for your institution
-                </p>
-            </div>
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem; color: white;">Simple, Transparent Pricing</h2>
+            <p style="text-align: center; color: white; margin-bottom: 3rem;">Choose the perfect plan for your educational institution</p>
+            
             <div class="pricing-grid">
-                <div class="card card-glow pricing-card">
-                    <div class="card-header pricing-header">
-                        <h3 class="card-title pricing-title">Starter</h3>
-                        <p class="card-description">Perfect for small schools</p>
-                        <div class="pricing-price">
-                            <span class="price-value">₹4,999</span>
-                            <span class="price-period">/month</span>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <ul class="pricing-features">
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Up to 5 buses</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Up to 200 students</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Basic route management</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Real-time tracking</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Email support</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>OpenStreetMap integration</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Mobile app access</span>
-                            </li>
-                        </ul>
-                        <a href="{{ url('/register') }}" class="btn btn-outline btn-full">Get Started</a>
-                    </div>
+                <div class="pricing-card">
+                    <div class="plan-name">Starter</div>
+                    <div class="plan-description">Perfect for small colleges</div>
+                    <div class="plan-price">₹4,999<span style="font-size: 1rem; color: white;">/month</span></div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Up to 5 buses</li>
+                        <li><i class="fas fa-check"></i> Up to 200 students</li>
+                        <li><i class="fas fa-check"></i> Basic route management</li>
+                        <li><i class="fas fa-check"></i> Real-time tracking</li>
+                        <li><i class="fas fa-check"></i> Email support</li>
+                        <li><i class="fas fa-check"></i> Mobile app access</li>
+                    </ul>
+                    <a href="{{ route('register') }}" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
                 </div>
 
-                <div class="card card-glow pricing-card popular">
-                    <div class="popular-badge">Most Popular</div>
-                    <div class="card-header pricing-header">
-                        <h3 class="card-title pricing-title">Professional</h3>
-                        <p class="card-description">Ideal for medium colleges</p>
-                        <div class="pricing-price">
-                            <span class="price-value">₹9,999</span>
-                            <span class="price-period">/month</span>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <ul class="pricing-features">
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Up to 20 buses</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Up to 1,000 students</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Advanced route optimization</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Real-time tracking & notifications</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Priority support</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>OpenStreetMap integration</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Custom reports & analytics</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Parent mobile app</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Driver mobile app</span>
-                            </li>
-                        </ul>
-                        <a href="{{ url('/register') }}" class="btn btn-primary btn-glow btn-full">Get Started</a>
-                    </div>
+                <div class="pricing-card popular">
+                    <div class="plan-name">Campus</div>
+                    <div class="plan-description">Ideal for medium colleges</div>
+                    <div class="plan-price">₹9,999<span style="font-size: 1rem; color: white">/month</span></div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Up to 20 buses</li>
+                        <li><i class="fas fa-check"></i> Up to 1,000 students</li>
+                        <li><i class="fas fa-check"></i> Advanced route optimization</li>
+                        <li><i class="fas fa-check"></i> Real-time tracking & notifications</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> Custom reports & analytics</li>
+                        <li><i class="fas fa-check"></i> Parent mobile app</li>
+                        <li><i class="fas fa-check"></i> Driver mobile app</li>
+                    </ul>
+                    <a href="{{ route('register') }}" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
                 </div>
 
-                <div class="card card-glow pricing-card">
-                    <div class="card-header pricing-header">
-                        <h3 class="card-title pricing-title">Enterprise</h3>
-                        <p class="card-description">For large universities</p>
-                        <div class="pricing-price">
-                            <span class="price-value">Custom</span>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <ul class="pricing-features">
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Unlimited buses</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Unlimited students</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>AI-powered route optimization</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Real-time tracking & notifications</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>24/7 dedicated support</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>White-label solution</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Custom integrations</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Advanced analytics & reporting</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>Multi-campus support</span>
-                            </li>
-                            <li class="feature-item">
-                                <img src="{{ asset('assets/icons/check.svg') }}" alt="Check" class="icon-5" />
-                                <span>API access</span>
-                            </li>
-                        </ul>
-                        <a href="#contact" class="btn btn-outline btn-full">Contact Sales</a>
-                    </div>
+                <div class="pricing-card">
+                    <div class="plan-name">Enterprise</div>
+                    <div class="plan-description">For large universities</div>
+                    <div class="plan-price">Custom</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Unlimited buses</li>
+                        <li><i class="fas fa-check"></i> Unlimited students</li>
+                        <li><i class="fas fa-check"></i> AI-powered route optimization</li>
+                        <li><i class="fas fa-check"></i> Real-time tracking & notifications</li>
+                        <li><i class="fas fa-check"></i> 24/7 dedicated support</li>
+                        <li><i class="fas fa-check"></i> White-label solution</li>
+                        <li><i class="fas fa-check"></i> Custom integrations</li>
+                        <li><i class="fas fa-check"></i> Multi-campus support</li>
+                        <li><i class="fas fa-check"></i> API access</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-secondary" style="width: 100%; text-align: center;">Contact Sales</a>
                 </div>
-            </div>
-            <div class="pricing-footer">
-                <p>
-                    All plans include OpenStreetMap integration, real-time tracking, and mobile apps.
-                    <br />
-                    Need a custom plan? <a href="#contact" class="link-primary">Contact us</a>
-                </p>
             </div>
         </div>
     </section>
 
     <section id="contact" class="contact-section">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Get In Touch</h2>
-                <p class="section-subtitle">
-                    Have questions? We'd love to hear from you
-                </p>
-            </div>
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: white;">Get In Touch</h2>
+            
             <div class="contact-grid">
-                <div class="card card-glow">
-                    <div class="card-content contact-info-card">
-                        <h3 class="contact-title">Contact Information</h3>
-                        <div class="contact-info-group">
-                            <div class="contact-info-item">
-                                <img src="{{ asset('assets/icons/mail.svg') }}" alt="Email" class="icon-6" />
-                                <div>
-                                    <h4 class="contact-item-title">Email</h4>
-                                    <p class="contact-item-text">support@bustrack.com</p>
-                                    <p class="contact-item-text">sales@bustrack.com</p>
-                                </div>
-                            </div>
-                            <div class="contact-info-item">
-                                <img src="{{ asset('assets/icons/phone.svg') }}" alt="Phone" class="icon-6" />
-                                <div>
-                                    <h4 class="contact-item-title">Phone</h4>
-                                    <p class="contact-item-text">+91 98765 43210</p>
-                                    <p class="contact-item-text">+91 98765 43211</p>
-                                </div>
-                            </div>
-                            <div class="contact-info-item">
-                                <img src="{{ asset('assets/icons/map-pinned.svg') }}" alt="Office" class="icon-6" />
-                                <div>
-                                    <h4 class="contact-item-title">Office</h4>
-                                    <p class="contact-item-text">
-                                        123 Tech Park, Innovation Hub<br />
-                                        Tamil Nadu, India - 600001
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="contact-business-hours">
-                                <h4 class="contact-item-title">Business Hours</h4>
-                                <p class="contact-item-text">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                                <p class="contact-item-text">Saturday: 9:00 AM - 2:00 PM</p>
-                                <p class="contact-item-text">Sunday: Closed</p>
-                            </div>
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>support@vortexfleet.com</p>
+                            <p>sales@vortexfleet.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p>+91 98765 43210</p>
+                            <p>+91 98765 43211</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Office</h4>
+                            <p>123 Tech Park, Innovation Hub</p>
+                            <p>Tamil Nadu, India - 600001</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="card card-glow">
-                    <div class="card-content contact-form-card">
-                        <h3 class="contact-title">Send us a Message</h3>
-                        <form class="contact-form">
-                            <div>
-                                <label class="form-label">Name</label>
-                                <input 
-                                    type="text" 
-                                    class="form-input"
-                                    placeholder="Your name"
-                                />
-                            </div>
-                            <div>
-                                <label class="form-label">Email</label>
-                                <input 
-                                    type="email" 
-                                    class="form-input"
-                                    placeholder="your.email@example.com"
-                                />
-                            </div>
-                            <div>
-                                <label class="form-label">Phone</label>
-                                <input 
-                                    type="tel" 
-                                    class="form-input"
-                                    placeholder="+91 98765 43210"
-                                />
-                            </div>
-                            <div>
-                                <label class="form-label">Institution Name</label>
-                                <input 
-                                    type="text" 
-                                    class="form-input"
-                                    placeholder="Your school/college name"
-                                />
-                            </div>
-                            <div>
-                                <label class="form-label">Message</label>
-                                <textarea 
-                                    rows="4"
-                                    class="form-textarea"
-                                    placeholder="Tell us about your requirements..."
-                                ></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-glow btn-full">
-                                Send Message
-                            </button>
-                        </form>
-                    </div>
+                <div class="contact-form">
+                    <h3>Send us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="cta-section">
+    <section class="cta">
         <div class="container">
-            <div class="card card-glow cta-card">
-                <div class="card-content cta-content">
-                    <h2 class="cta-title">Ready to Transform Your Bus Management?</h2>
-                    <p class="cta-description">
-                        Join schools and colleges using BusTrack to provide safer, smarter transportation 
-                        for their students with real-time tracking and automated management
-                    </p>
-                    <div class="cta-buttons">
-                        <a href="#pricing" class="btn btn-lg btn-primary btn-glow">
-                            View Pricing
-                        </a>
-                        <a href="{{ url('/dashboard') }}" class="btn btn-lg btn-outline">
-                            Try Demo
-                        </a>
-                    </div>
-                </div>
+            <h2>Ready to Transform Your Campus Mobility?</h2>
+            <p>Join hundreds of educational institutions using VortexFleet</p>
+            <div class="cta-buttons">
+                <a href="{{ route('register') }}" class="btn btn-primary">Start Free Trial</a>
+                <a href="#contact" class="btn btn-secondary">Contact Sales</a>
             </div>
         </div>
     </section>
 
     <footer class="footer">
         <div class="container">
-            <div class="footer-grid">
+            <div class="footer-content">
                 <div class="footer-brand">
-                    <div class="logo-link">
-                        <img src="{{ asset('assets/icons/bus.svg') }}" alt="Bus" class="logo-icon-footer" />
-                        <h3 class="logo-text-footer">BusTrack</h3>
+                    <h3><i class="fas fa-bus"></i> VortexFleet</h3>
+                    <p>Smart bus management solution for educational institutions with real-time tracking</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#pricing">Pricing</a>
+                        <a href="#dashboard">Dashboard</a>
+                        <a href="#mobile-app">Mobile App</a>
                     </div>
-                    <p class="footer-description">
-                        Smart bus management solution for educational institutions with real-time tracking powered by OpenStreetMap.
-                    </p>
-                </div>
-
-                <div class="footer-links">
-                    <h4 class="footer-title">Product</h4>
-                    <ul>
-                        <li><a href="#features" class="footer-link">Features</a></li>
-                        <li><a href="#pricing" class="footer-link">Pricing</a></li>
-                        <li><a href="{{ url('/dashboard') }}" class="footer-link">Dashboard</a></li>
-                        <li><a href="#" class="footer-link">Mobile App</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links">
-                    <h4 class="footer-title">Company</h4>
-                    <ul>
-                        <li><a href="#" class="footer-link">About Us</a></li>
-                        <li><a href="#" class="footer-link">Careers</a></li>
-                        <li><a href="#" class="footer-link">Blog</a></li>
-                        <li><a href="#contact" class="footer-link">Contact</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links">
-                    <h4 class="footer-title">Legal</h4>
-                    <ul>
-                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
-                        <li><a href="#" class="footer-link">Terms of Service</a></li>
-                        <li><a href="#" class="footer-link">Security</a></li>
-                        <li><a href="#" class="footer-link">GDPR</a></li>
-                    </ul>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="#about">About Us</a>
+                        <a href="#careers">Careers</a>
+                        <a href="#blog">Blog</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                        <a href="#security">Security</a>
+                        <a href="#gdpr">GDPR</a>
+                    </div>
                 </div>
             </div>
-
             <div class="footer-bottom">
                 <p>&copy; 2025 VortexFleet. All rights reserved.</p>
+                <p>made with ❤️ Dhana Surya</p>
             </div>
         </div>
     </footer>
 
-</body>
+    <script src="{{ asset('assets/js/landing.js') }}"></script>
+
+    </body>
 </html>
