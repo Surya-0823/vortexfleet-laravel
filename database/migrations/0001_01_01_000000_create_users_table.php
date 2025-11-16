@@ -22,6 +22,17 @@ return new class extends Migration
             // --- Namma Custom Columns (Ippo Ithu Kandippa Work Aaganum) ---
             $table->string('phone', 20)->nullable(); 
             $table->string('institution_name')->nullable();
+
+            // --- PUDHU FIELDS (formflow-fleet-la irundhu) ---
+            $table->string('college_type', 50)->nullable();
+            $table->string('address')->nullable();
+            $table->string('city', 100)->nullable();
+            $table->string('state', 100)->nullable();
+            $table->string('pincode', 20)->nullable();
+            $table->integer('student_count')->default(0); // 'students' field-a 'student_count'-a maathrom
+            $table->integer('max_buses')->default(1); // 'buses' field-a 'max_buses'-a maathrom
+            // --- END PUDHU FIELDS ---
+
             $table->string('subscription_plan', 50)->nullable();
             $table->string('subscription_type', 20)->default('monthly');
             $table->decimal('payment_amount', 10, 2)->default(0.00);

@@ -28,7 +28,8 @@ class AuthController extends Controller
     public function showLogin()
     {
         $page_title = "Login - VortexFleet";
-        $page_css = '/assets/css/pages/auth.css';
+        // UPDATED: CSS Path
+        $page_css = '/assets/css/pages/_login.css';
         
         return View::make('pages.login', [
             'page_title' => $page_title,
@@ -38,14 +39,15 @@ class AuthController extends Controller
     
     /**
      * Display the admin registration page.
-     * (Renamed from showRegister to showRegisterForm to match route)
+     * (Renamed to match route from previous fix)
      *
      * @return \Illuminate\View\View
      */
     public function showRegisterForm()
     {
         $page_title = "Register - VortexFleet";
-        $page_css = '/assets/css/pages/auth.css';
+        // UPDATED: CSS Path
+        $page_css = '/assets/css/pages/_register.css';
         
         return View::make('pages.register', [
             'page_title' => $page_title,
@@ -61,6 +63,7 @@ class AuthController extends Controller
     public function showPricing()
     {
         $page_title = "Pricing - VortexFleet";
+        // NO CHANGE: This page was not part of auth split
         $page_css = '/assets/css/pages/pricing.css';
         
         return View::make('pages.pricing', [
@@ -79,8 +82,16 @@ class AuthController extends Controller
     {
         $data = $request->all();
         
-        if (empty($data['name']) || empty($data['email']) || empty($data['password']) || empty($data['subscription_plan'])) {
-            return Redirect::to('/register')->with('error', 'All fields are required');
+        // Basic validation (can be improved with Laravel Validator)
+        $requiredFields = [
+            'name', 'email', 'password', 'subscription_plan', 'college_type', 
+            'address', 'city', 'state', 'pincode', 'student_count'
+        ];
+
+        foreach ($requiredFields as $field) {
+            if (empty($data[$field])) {
+                return Redirect::to('/register')->with('error', 'All fields are required');
+            }
         }
         
         // We assume the User model has this static method
@@ -89,7 +100,8 @@ class AuthController extends Controller
             return Redirect::to('/register')->with('error', 'Email already registered');
         }
         
-        $students = intval($data['students'] ?? 0);
+        // UPDATED: 'students' -> 'student_count'
+        $students = intval($data['student_count'] ?? 0);
         $buses = intval($data['buses'] ?? 1);
         $subscriptionType = $data['subscription_type'] ?? 'monthly';
         
@@ -102,13 +114,24 @@ class AuthController extends Controller
             $paymentAmount = $monthlyAmount;
         }
         
-        // Note: Password will be hashed by the User::createUser method (as per old logic)
+        // UPDATED: Added all new fields to userData array
         $userData = [
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $data['password'], // Hashing should be handled in model
+            'password' => $data['password'], // Hashing handled by model 'casts'
             'phone' => $data['phone'] ?? '',
             'institution_name' => $data['institution_name'] ?? '',
+            
+            // --- PUDHU FIELDS (formflow-fleet-la irundhu) ---
+            'college_type' => $data['college_type'] ?? null,
+            'address' => $data['address'] ?? null,
+            'city' => $data['city'] ?? null,
+            'state' => $data['state'] ?? null,
+            'pincode' => $data['pincode'] ?? null,
+            'student_count' => $students,
+            'max_buses' => $buses, // Save buses count
+            // --- END PUDHU FIELDS ---
+
             'subscription_plan' => $data['subscription_plan'],
             'subscription_type' => $subscriptionType,
             'payment_amount' => $paymentAmount,
@@ -310,7 +333,8 @@ class AuthController extends Controller
         }
         
         $page_title = "Payment - VortexFleet";
-        $page_css = '/assets/css/pages/auth.css';
+        // UPDATED: CSS Path
+        $page_css = '/assets/css/pages/_payment.css';
         
         return View::make('pages.payment', [
             'page_title' => $page_title,

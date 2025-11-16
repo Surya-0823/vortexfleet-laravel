@@ -1,0 +1,165 @@
+/* File: public/assets/css/pages/_register.css */
+
+/* Import common auth styles */
+@import '_auth-common.css';
+
+/* ===== REGISTER PAGE SPECIFIC ===== */
+
+.auth-container {
+    /* UPDATED: Form-a perusakkurom */
+    max-width: 800px; 
+    margin: 4rem 0; /* Long form-ku mela-keezha space */
+}
+
+.form-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    border-bottom: 1px solid hsl(var(--border));
+    padding-bottom: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: -0.5rem;
+}
+
+.form-section-title:first-of-type {
+    margin-top: 0;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    
+    /* Child .form-group gap-a maathrom */
+    & .form-group {
+        gap: 0.5rem;
+        /* Remove default form gap to align with row gap */
+        margin-bottom: 0;
+    }
+}
+
+.auth-form {
+    /* Make sure .form-row and .form-group gaps work together */
+    gap: 1.25rem;
+}
+
+
+.simple-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+}
+
+.simple-radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.9rem;
+}
+
+.simple-radio-group input[type="radio"] {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+/* Plan Selector (Register & Payment) */
+.plan-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.plan-option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: hsl(var(--background));
+    border: 2px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.plan-option input[type="radio"] {
+    margin-right: 1rem;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.plan-option:hover {
+    border-color: hsl(var(--primary));
+}
+
+.plan-option:has(input[type="radio"]:checked) {
+    border-color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.1);
+}
+
+.plan-option-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.plan-option-title {
+    font-weight: 600;
+    color: hsl(var(--foreground));
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+/* Price Summary (Register & Payment) */
+.price-summary {
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.price-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    color: hsl(var(--muted-foreground));
+    border-bottom: 1px solid hsl(var(--border));
+}
+
+.price-item:last-child {
+    border-bottom: none;
+}
+
+.price-item.total {
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: hsl(var(--foreground));
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid hsl(var(--primary));
+}
+
+@media (max-width: 768px) {
+    .auth-container {
+        max-width: 600px; /* Mobile-la konjam perusa irukattum */
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

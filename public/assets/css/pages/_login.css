@@ -1,0 +1,10 @@
+/* File: public/assets/css/pages/_login.css */
+
+/* Import common auth styles */
+@import '_auth-common.css';
+
+/* ===== LOGIN PAGE SPECIFIC ===== */
+
+.auth-container {
+    max-width: 440px; 
+}

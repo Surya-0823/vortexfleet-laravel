@@ -32,12 +32,22 @@ class User extends Authenticatable
         'password',
         'phone', // Added from old project
         'institution_name', // Added from old project
+        
+        // --- PUDHU FIELDS (formflow-fleet-la irundhu) ---
+        'college_type',
+        'address',
+        'city',
+        'state',
+        'pincode',
+        'student_count',
+        // --- END PUDHU FIELDS ---
+        
         'subscription_plan', // Added from old project
         'subscription_type', // Added from old project
         'payment_amount', // Added from old project
         'payment_status', // Added from old project
         'status', // Added from old project
-        'max_buses', // <-- ITHA ADD PANNANUM
+        'max_buses',
     ];
 
     /**
