@@ -38,10 +38,11 @@ class AuthController extends Controller
     
     /**
      * Display the admin registration page.
+     * (Renamed from showRegister to showRegisterForm to match route)
      *
      * @return \Illuminate\View\View
      */
-    public function showRegister()
+    public function showRegisterForm()
     {
         $page_title = "Register - VortexFleet";
         $page_css = '/assets/css/pages/auth.css';
