@@ -1,17 +1,49 @@
+/* File: public/assets/css/pages/auth.css */
+
 /* ===== AUTH PAGES STYLES ===== */
 
 .auth-page {
     min-height: 100vh;
-    background: hsl(var(--background));
+    /* Updated: Background properties */
+    background-color: hsl(var(--background));
+    background-image: url(../../images/bg.jpg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    
+    /* Added: Relative positioning for overlay */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Added: Overlay for readability */
+.auth-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Using background color with opacity for overlay */
+    background: hsl(var(--background) / 0.8);
+    /* Optional: Adds a blur effect to the background */
+    backdrop-filter: blur(8px);
+    z-index: 1;
 }
 
 .auth-container {
     width: 100%;
-    max-width: 500px;
+    /* Updated: Resized the form container */
+    max-width: 440px; 
+    
+    /* Added: z-index to stay above the overlay */
+    position: relative;
+    z-index: 2;
 }
 
 .auth-card {
@@ -57,6 +89,8 @@
     flex-direction: column;
     gap: 1.5rem;
 }
+
+/* Removed: .form-help styles */
 
 /* .form-group and inputs moved to partials/_forms.css */
 
