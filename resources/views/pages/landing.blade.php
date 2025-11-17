@@ -30,7 +30,6 @@
                 <a href="#features" class="nav-link">Features</a>
                 <a href="#how-it-works" class="nav-link">How it Works</a>
                 <a href="#pricing" class="nav-link">Pricing</a>
-                {{-- PUTHU LINK (ORDER MAARIYIRUKU) --}}
                 <a href="#contact" class="nav-link">Contact</a>
                 <a href="#faq" class="nav-link">FAQ</a>
                 <div class="nav-buttons">
@@ -58,7 +57,6 @@
                 <a href="mailto:sales@vortexfleet.com" class="btn btn-secondary">Schedule a Demo</a>
             </div>
 
-            {{-- PUTHU BENTO GRID --}}
             <div class="bento-grid" style="margin-top: 4rem;">
                 <div class="bento-item stagger-item">
                     <h3><i class="fas fa-map-location-dot" style="margin-right: 8px;"></i> Unified Live Map</h3>
@@ -76,6 +74,9 @@
         </div>
     </section>
 
+    {{-- ======================================= --}}
+    {{-- FEATURES SECTION - UPGRADE PANNAPATTATHU --}}
+    {{-- ======================================= --}}
     <section id="features" class="modern-split-section fade-in-section">
         <div class="modern-split-grid container">
             <div class="modern-split-image">
@@ -103,6 +104,38 @@
             </div>
         </div>
     </section>
+
+    {{-- PUTHU FEATURE 1 --}}
+    <section class="modern-split-section fade-in-section">
+        <div class="modern-split-grid container">
+            <div class="modern-split-image">
+                (Route Optimization Mockup)
+            </div>
+            <div class="modern-split-content">
+                <h2>Intelligent Route Optimization.</h2>
+                <p>
+                    Stop wasting fuel and time on inefficient routes. VortexFleet's AI-powered optimizer analyzes your stops, student locations, and traffic patterns to build the fastest, safest, and most cost-effective routes for your entire fleet. Reduce fuel costs and complaints in one click.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    {{-- PUTHU FEATURE 2 --}}
+    <section class="modern-split-section darker fade-in-section">
+        <div class="modern-split-grid reverse container">
+            <div class="modern-split-image">
+                (Driver App Attendance Mockup)
+            </div>
+            <div class="modern-split-content">
+                <h2>Digital Attendance & Security.</h2>
+                <p>
+                    Ensure every student is accounted for. Drivers can mark attendance directly from their app as students board the bus. This sends an instant 'Boarded' notification to parents and logs the data for admins, giving you a complete digital record for safety and compliance.
+                </p>
+            </div>
+        </div>
+    </section>
+    {{-- FEATURES SECTION MUDINTHATHU --}}
+
 
     <section id="how-it-works" class="how-it-works fade-in-section">
         <div class="container">
@@ -133,15 +166,11 @@
         </div>
     </section>
 
-    {{-- ======================================= --}}
-    {{-- PUTHU PRICING SECTION --}}
-    {{-- ======================================= --}}
     <section id="pricing" class="pricing-section fade-in-section">
         <div class="container">
             <h2>Simple, Transparent Pricing</h2>
             <div class="pricing-grid">
                 
-                {{-- Card 1: Basic --}}
                 <div class="pricing-card stagger-item">
                     <h3>Standard</h3>
                     <div class="price">₹7,999</div>
@@ -156,7 +185,6 @@
                     <a href="{{ url('/register') }}" class="btn btn-secondary">Get Started</a>
                 </div>
                 
-                {{-- Card 2: Popular --}}
                 <div class="pricing-card popular stagger-item">
                     <h3>Professional</h3>
                     <div class="price">₹14,999</div>
@@ -171,7 +199,6 @@
                     <a href="{{ url('/register') }}" class="btn btn-primary">Choose Professional</a>
                 </div>
 
-                {{-- Card 3: Enterprise --}}
                 <div class="pricing-card stagger-item">
                     <h3>Enterprise</h3>
                     <div class="price">Custom</div>
@@ -191,7 +218,7 @@
     </section>
 
     {{-- ======================================= --}}
-    {{-- PUTHU CONTACT SECTION (Upgraded Design) --}}
+    {{-- CONTACT SECTION (Upgraded V2) --}}
     {{-- ======================================= --}}
     <section id="contact" class="contact-section fade-in-section">
         <div class="container">
@@ -205,6 +232,7 @@
                         Fill out the form or email us directly. We'll get back to you within 24 hours
                         to schedule a free, no-obligation demo.
                     </p>
+                    {{-- PUTHU BOX STYLE intha UL la apply aagum --}}
                     <ul class="contact-details">
                         <li>
                             <i class="fas fa-envelope"></i>
@@ -223,7 +251,6 @@
 
                 {{-- Right Side: Form --}}
                 <div class="contact-form stagger-item">
-                    {{-- Note: This is a simple mailto form. For a real app, you need a backend endpoint. --}}
                     <form action="mailto:sales@vortexfleet.com" method="post" enctype="text/plain">
                         <div class="form-group">
                             <label for="name">Your Name</label>
@@ -250,7 +277,7 @@
     </section>
 
     {{-- ======================================= --}}
-    {{-- FAQ SECTION (Contact ku apparam) --}}
+    {{-- FAQ SECTION - UPGRADE PANNAPATTATHU --}}
     {{-- ======================================= --}}
     <section id="faq" class="faq-section fade-in-section">
         <div class="container">
@@ -287,6 +314,30 @@
                     <p class="faq-answer">You can contact the VortexFleet team, start a free trial, or ask for a demo. They will show you how the system works and help you set up a small pilot.</p>
                 </details>
 
+                {{-- PUTHU FAQ 1 --}}
+                <details class="faq-item stagger-item">
+                    <summary class="faq-question">Is my data safe and secure?</summary>
+                    <p class="faq-answer">Yes. We use industry-standard encryption for all data. Parent and student information is kept private and secure, accessible only by authorized admin accounts you control.</p>
+                </details>
+
+                {{-- PUTHU FAQ 2 --}}
+                <details class="faq-item stagger-item">
+                    <summary class="faq-question">What happens if a bus breaks down?</summary>
+                    <p class="faq-answer">Admins will see the bus stop moving on the live map. You can immediately send a bulk notification to all parents on that route and dispatch a replacement bus to the location.</p>
+                </details>
+
+                {{-- PUTHU FAQ 3 --}}
+                <details class="faq-item stagger-item">
+                    <summary class="faq-question">Can this work in areas with poor internet?</summary>
+                    <p class="faq-answer">Yes. The driver's app is designed to work offline. It stores the GPS data locally and syncs it to the server as soon as it reconnects to the internet. You won't lose tracking data.</p>
+                </details>
+
+                {{-- PUTHU FAQ 4 --}}
+                <details class="faq-item stagger-item">
+                    <summary class="faq-question">How is pricing calculated?</summary>
+                    <p class="faq-answer">Our pricing is simple. We charge a flat monthly fee based on the number of buses you operate. Please see our pricing section or contact us for a custom quote for large fleets.</p>
+                </details>
+
             </div>
         </div>
     </section>
@@ -315,7 +366,6 @@
                         <a href="#features">Features</a>
                         <a href="#how-it-works">How it Works</a>
                         <a href="#pricing">Pricing</a>
-                        {{-- PUTHU LINK (ORDER MAARIYIRUKU) --}}
                         <a href="#contact">Contact</a>
                         <a href="#faq">FAQ</a>
                     </div>

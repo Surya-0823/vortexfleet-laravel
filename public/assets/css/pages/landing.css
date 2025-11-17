@@ -957,13 +957,12 @@ body {
     width: 20px; /* Icon alignment */
     text-align: center;
 }
-
-/* === PUTHU CONTACT SECTION (Upgraded Design) === */
+/* === PUTHU CONTACT SECTION (Upgraded Design V2) === */
 .contact-section {
     padding: 6rem 0;
     background: #000000; /* Black bg */
     position: relative;
-    border-top: 1px solid var(--border); /* Border add pannu */
+    border-top: 1px solid var(--border);
 }
 
 .contact-section h2 {
@@ -973,7 +972,6 @@ body {
     color: white;
 }
 
-/* Puthu 2-column grid */
 .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -985,7 +983,7 @@ body {
 
 /* Left side info */
 .contact-info {
-    padding-top: 1rem; /* Konjam alignment */
+    padding-top: 1rem;
 }
 
 .contact-info h3 {
@@ -1001,8 +999,13 @@ body {
     margin-bottom: 2rem;
 }
 
+/* ITHU THAAN PUTHU BOX STYLE */
 .contact-details {
     list-style: none;
+    background: var(--card); /* Puthu background */
+    border: 1px solid var(--border); /* Puthu border */
+    border-radius: 20px; /* Puthu radius */
+    padding: 2.5rem 2rem; /* Puthu padding */
 }
 
 .contact-details li {
@@ -1013,10 +1016,14 @@ body {
     color: var(--foreground);
 }
 
+.contact-details li:last-child {
+    margin-bottom: 0; /* Last item ku extra margin venaam */
+}
+
 .contact-details li i {
     font-size: 1.5rem;
     color: var(--accent);
-    width: 40px; /* Icon alignment */
+    width: 40px;
     text-align: center;
     margin-right: 1rem;
 }
@@ -1077,8 +1084,11 @@ textarea.form-control {
         text-align: center;
         margin-bottom: 2rem;
     }
+    .contact-details {
+        text-align: left; /* Box kulla irukara text left la irukatum */
+    }
     .contact-details li {
-        justify-content: center;
+        justify-content: flex-start; /* Box kulla irukara items left la start aagatum */
     }
 }
 
@@ -1088,5 +1098,8 @@ textarea.form-control {
     }
     .contact-form {
         padding: 2rem;
+    }
+    .contact-details {
+        padding: 2rem 1.5rem; /* Mobile la padding adjust */
     }
 }
