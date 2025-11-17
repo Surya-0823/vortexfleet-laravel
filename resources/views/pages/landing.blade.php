@@ -29,6 +29,9 @@
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#features" class="nav-link">Features</a>
                 <a href="#how-it-works" class="nav-link">How it Works</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                {{-- PUTHU LINK (ORDER MAARIYIRUKU) --}}
+                <a href="#contact" class="nav-link">Contact</a>
                 <a href="#faq" class="nav-link">FAQ</a>
                 <div class="nav-buttons">
                     <a href="{{ url('/dashboard') }}" class="btn btn-secondary">Login</a>
@@ -130,6 +133,125 @@
         </div>
     </section>
 
+    {{-- ======================================= --}}
+    {{-- PUTHU PRICING SECTION --}}
+    {{-- ======================================= --}}
+    <section id="pricing" class="pricing-section fade-in-section">
+        <div class="container">
+            <h2>Simple, Transparent Pricing</h2>
+            <div class="pricing-grid">
+                
+                {{-- Card 1: Basic --}}
+                <div class="pricing-card stagger-item">
+                    <h3>Standard</h3>
+                    <div class="price">₹7,999</div>
+                    <div class="price-per">/ per month / per campus</div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Up to 10 Buses</li>
+                        <li><i class="fas fa-check-circle"></i> Admin Dashboard</li>
+                        <li><i class="fas fa-check-circle"></i> Parent App (Android & iOS)</li>
+                        <li><i class="fas fa-check-circle"></i> Driver App</li>
+                        <li><i class="fas fa-check-circle"></i> Email Support</li>
+                    </ul>
+                    <a href="{{ url('/register') }}" class="btn btn-secondary">Get Started</a>
+                </div>
+                
+                {{-- Card 2: Popular --}}
+                <div class="pricing-card popular stagger-item">
+                    <h3>Professional</h3>
+                    <div class="price">₹14,999</div>
+                    <div class="price-per">/ per month / per campus</div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Up to 25 Buses</li>
+                        <li><i class="fas fa-check-circle"></i> Everything in Standard</li>
+                        <li><i class="fas fa-check-circle"></i> Route Optimization</li>
+                        <li><i class="fas fa-check-circle"></i> Student Attendance</li>
+                        <li><i class="fas fa-check-circle"></i> Priority Phone Support</li>
+                    </ul>
+                    <a href="{{ url('/register') }}" class="btn btn-primary">Choose Professional</a>
+                </div>
+
+                {{-- Card 3: Enterprise --}}
+                <div class="pricing-card stagger-item">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <div class="price-per">For large institutions</div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Unlimited Buses</li>
+                        <li><i class="fas fa-check-circle"></i> Everything in Professional</li>
+                        <li><i class="fas fa-check-circle"></i> Dedicated Account Manager</li>
+                        <li><i class="fas fa-check-circle"></i> On-site Setup</li>
+                        <li><i class="fas fa-check-circle"></i> Custom Integrations</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-secondary">Contact Sales</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    {{-- ======================================= --}}
+    {{-- PUTHU CONTACT SECTION (Upgraded Design) --}}
+    {{-- ======================================= --}}
+    <section id="contact" class="contact-section fade-in-section">
+        <div class="container">
+            <h2>Get in Touch</h2>
+            <div class="contact-grid">
+                
+                {{-- Left Side: Info --}}
+                <div class="contact-info stagger-item">
+                    <h3>Let's talk about your fleet.</h3>
+                    <p>
+                        Fill out the form or email us directly. We'll get back to you within 24 hours
+                        to schedule a free, no-obligation demo.
+                    </p>
+                    <ul class="contact-details">
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>sales@vortexfleet.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Chennai, Tamil Nadu, India</span>
+                        </li>
+                    </ul>
+                </div>
+
+                {{-- Right Side: Form --}}
+                <div class="contact-form stagger-item">
+                    {{-- Note: This is a simple mailto form. For a real app, you need a backend endpoint. --}}
+                    <form action="mailto:sales@vortexfleet.com" method="post" enctype="text/plain">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="institution">Institution Name</label>
+                            <input type="text" id="institution" name="institution" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    {{-- ======================================= --}}
+    {{-- FAQ SECTION (Contact ku apparam) --}}
+    {{-- ======================================= --}}
     <section id="faq" class="faq-section fade-in-section">
         <div class="container">
             <h2>Frequently Asked Questions</h2>
@@ -192,12 +314,16 @@
                         <h4>Product</h4>
                         <a href="#features">Features</a>
                         <a href="#how-it-works">How it Works</a>
+                        <a href="#pricing">Pricing</a>
+                        {{-- PUTHU LINK (ORDER MAARIYIRUKU) --}}
+                        <a href="#contact">Contact</a>
                         <a href="#faq">FAQ</a>
                     </div>
                     <div class="footer-column">
                         <h4>Company</h4>
                         <a href="#">About Us</a>
                         <a href="#">Support</a>
+                        <a href="#contact">Contact</a>
                         <a href="{{ url('/dashboard') }}">Login</a>
                     </div>
                     <div class="footer-column">

@@ -874,3 +874,219 @@ body {
         padding: 1.5rem 1rem;
     }
 }
+
+/* === PUTHU PRICING SECTION === */
+.pricing-section {
+    padding: 6rem 0;
+    background: #050505; /* Darker bg */
+    position: relative;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.pricing-section h2 {
+    text-align: center;
+    font-size: 2.8rem;
+    margin-bottom: 3rem;
+    color: white;
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pricing-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: var(--transition-bounce);
+}
+
+.pricing-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent);
+}
+
+.pricing-card.popular {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px var(--glow-color);
+}
+
+.pricing-card h3 {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.pricing-card .price {
+    font-size: 2.5rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-card .price-per {
+    color: var(--muted-foreground);
+    margin-bottom: 1.5rem;
+}
+
+.pricing-card ul {
+    list-style: none;
+    margin: 2rem 0;
+    text-align: left;
+    padding-left: 1rem; /* Konjam alignment */
+}
+
+.pricing-card ul li {
+    color: var(--foreground);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.pricing-card ul li i {
+    color: var(--accent);
+    margin-right: 10px;
+    font-size: 1.2rem;
+    width: 20px; /* Icon alignment */
+    text-align: center;
+}
+
+/* === PUTHU CONTACT SECTION (Upgraded Design) === */
+.contact-section {
+    padding: 6rem 0;
+    background: #000000; /* Black bg */
+    position: relative;
+    border-top: 1px solid var(--border); /* Border add pannu */
+}
+
+.contact-section h2 {
+    text-align: center;
+    font-size: 2.8rem;
+    margin-bottom: 3rem;
+    color: white;
+}
+
+/* Puthu 2-column grid */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: flex-start;
+}
+
+/* Left side info */
+.contact-info {
+    padding-top: 1rem; /* Konjam alignment */
+}
+
+.contact-info h3 {
+    font-size: 1.8rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.contact-info p {
+    color: var(--muted-foreground);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.contact-details {
+    list-style: none;
+}
+
+.contact-details li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--foreground);
+}
+
+.contact-details li i {
+    font-size: 1.5rem;
+    color: var(--accent);
+    width: 40px; /* Icon alignment */
+    text-align: center;
+    margin-right: 1rem;
+}
+
+/* Right side form */
+.contact-form {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    color: var(--foreground);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 1rem;
+    background: #050505;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--foreground);
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--glow-color);
+}
+
+textarea.form-control {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.contact-form .btn-primary {
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    .contact-info {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .contact-details li {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-section h2 {
+        font-size: 2rem;
+    }
+    .contact-form {
+        padding: 2rem;
+    }
+}
