@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +12,23 @@
     @endif
 </head>
 <body class="auth-page">
+
+    {{-- PUTHU CURSOR ELEMENTS (Landing Page la irunthu) --}}
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    {{-- PUTHU PARTICLE BACKGROUND (Landing Page la irunthu) --}}
+    <div class="particles"></div>
+
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
                 <div class="auth-logo">
+                    {{-- Logo maathidalam --}}
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s-1-1.5-1.5-2.5S19 14 19 14"/><path d="M6 18H3s1-1.5 1.5-2.5S5 14 5 14"/><rect width="20" height="10" x="2" y="8" rx="2"/>
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
                     </svg>
                     <h1>Welcome Back</h1>
                 </div>
@@ -85,5 +95,7 @@
         });
     });
 </script>
+{{-- PUTHU SCRIPT (Landing Page la irunthu) --}}
+<script src="{{ asset('assets/js/landing.js') }}"></script>
 </body>
 </html>

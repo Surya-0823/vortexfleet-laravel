@@ -3,8 +3,169 @@
 /* Import common auth styles */
 @import '_auth-common.css';
 
-/* ===== LOGIN PAGE SPECIFIC ===== */
-
+/* ===== LOGIN PAGE SPECIFIC (from _login.css) ===== */
 .auth-container {
     max-width: 440px; 
+}
+
+/* * ==========================================
+ * PUTHU LANDING PAGE THEME OVERRIDES
+ * ==========================================
+ */
+
+:root {
+    /* Form inputs kaaga (base.css la irunthu theva padum) */
+    --input-bg: #050505;
+    --input-border: #222222;
+    --input-focus-border: #888888; /* PUTHU FOCUS: White la irunthu Gray */
+    --input-focus-shadow: rgba(255, 255, 255, 0.1); /* PUTHU FOCUS: Glow kammi pannurom */
+}
+
+.auth-page {
+    background-color: #000000; /* Puthu black bg */
+    background-image: none; /* Palaya bg.jpg remove pannu */
+    cursor: default;
+}
+
+.auth-page::before {
+    /* Palaya blur effect remove pannu */
+    display: none;
+}
+
+.auth-card {
+    background: #111111; /* Landing page card color */
+    border: 1px solid #222222; /* Landing page border color */
+    box-shadow: 0 8px 32px rgba(0,0,0, 0.4); /* Darker shadow */
+}
+
+.auth-logo svg {
+    color: #ffffff; /* White icon */
+}
+
+.auth-logo h1 {
+    color: #ffffff; /* White text */
+}
+
+.auth-subtitle {
+    color: #a0a0a0; /* Muted white text */
+}
+
+/* Form styles (style.css/forms.css la irunthu override pannum) */
+.form-group label {
+    color: #f0f0f0;
+}
+
+.form-group input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: #f0f0f0;
+}
+
+.form-group input:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 10px var(--input-focus-shadow);
+}
+
+.password-toggle-btn {
+    color: #a0a0a0;
+}
+.password-toggle-btn:hover,
+.password-toggle-btn:focus-visible {
+    color: #ffffff;
+    background-color: #222222;
+}
+
+/* Button style (Landing page maari) */
+.btn-auth {
+    background: #ffffff; /* White button */
+    color: #000; /* Black text */
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+}
+
+.btn-auth:hover {
+    background: #ccc; /* Light grey */
+    color: #000;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 6px 30px rgba(255, 255, 255, 0.4);
+}
+
+/* Footer links */
+.auth-footer {
+    color: #a0a0a0;
+}
+
+.auth-footer a {
+    color: #ffffff;
+}
+
+/* * ==========================================
+ * PUTHU CURSOR & PARTICLES (Landing Page la irunthu)
+ * ==========================================
+ */
+
+/* Custom cursor effect (White) */
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #ffffff; /* White */
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, opacity 0.2s;
+}
+
+.cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #ffffff; /* White */
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease-out;
+}
+
+@media (max-width: 768px) {
+    .cursor-dot, .cursor-outline {
+        display: none;
+    }
+}
+
+/* Particle Background Effect */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1; /* Auth card munnadi, aana auth container pinnadi */
+}
+
+.particle {
+    position: absolute;
+    background: #ffffff; /* White particles */
+    border-radius: 50%;
+    animation: floatParticle 15s infinite linear;
+    opacity: 0;
+}
+
+@keyframes floatParticle {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.3; /* Thirumba 0.3 ku maathitom */
+    }
+    90% {
+        opacity: 0.3; /* Thirumba 0.3 ku maathitom */
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
 }

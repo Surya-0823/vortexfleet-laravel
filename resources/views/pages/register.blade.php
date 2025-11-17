@@ -12,16 +12,26 @@
     @endif
 </head>
 <body class="auth-page">
+
+    {{-- PUTHU CURSOR ELEMENTS --}}
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    {{-- PUTHU PARTICLE BACKGROUND --}}
+    <div class="particles"></div>
+
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
                 <div class="auth-logo">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s-1-1.5-1.5-2.5S19 14 19 14"/><path d="M6 18H3s1-1.5 1.5-2.5S5 14 5 14"/><rect width="20" height="10" x="2" y="8" rx="2"/>
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
                     </svg>
                     <h1>Create Account</h1>
                 </div>
-                <p class="auth-subtitle">Choose your plan and get started</p>
+                <p class="auth-subtitle">Join VortexFleet to manage your campus mobility</p> {{-- Subtitle Maathiyachu --}}
             </div>
 
             @if (session('error'))
@@ -34,8 +44,10 @@
                 
                 @csrf
 
+                {{-- 2-COLUMN GRID REMOVED. Ippo direct aa form items thaan. --}}
+
                 <h3 class="form-section-title">Admin Details</h3>
-                
+        
                 <div class="form-row">
                     <div class="form-group">
                         <label for="name">Full Name *</label>
@@ -110,62 +122,13 @@
                     <input type="text" id="pincode" name="pincode" required placeholder="Enter pincode" inputmode="numeric">
                 </div>
 
-                <h3 class="form-section-title">Plan Details</h3>
+                {{-- ======================================= --}}
+                {{-- PLAN DETAILS & PRICE SUMMARY REMOVED --}}
+                {{-- ======================================= --}}
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="student_count_display">Number of Students (Default)</label>
-                        <input type="text" id="student_count_display" value="40" disabled>
-                        <input type="hidden" id="student_count" name="student_count" value="40">
-                    </div>
-                    <div class="form-group">
-                        <label for="buses">Number of Buses * (Max 50)</label>
-                        <input type="number" id="buses" name="buses" min="1" max="50" value="1" required placeholder="e.g., 5" oninput="calculatePrice()">
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label>Subscription Plan *</label>
-                    <div class="plan-selector">
-                        <label class="plan-option">
-                            <input type="radio" name="subscription_type" value="monthly" checked onchange="calculatePrice()">
-                            <div class="plan-option-content">
-                                <span class="plan-option-title">Monthly</span>
-                                <span class="plan-option-price" id="monthly-price">₹0/month</span>
-                            </div>
-                        </label>
-                        <label class="plan-option">
-                            <input type="radio" name="subscription_type" value="yearly" onchange="calculatePrice()">
-                            <div class="plan-option-content">
-                                <span class="plan-option-title">Yearly <span class="badge">Save 1 Month</span></span>
-                                <span class="plan-option-price" id="yearly-price">₹0/year</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="price-summary">
-                    <div class="price-item">
-                        <span>Daily Rate (per student):</span>
-                        <span>₹1.75</span>
-                    </div>
-                    <div class="price-item">
-                        <span>Student Total (Monthly):</span>
-                        <span id="summary-student">₹0</span>
-                    </div>
-                    <div class="price-item">
-                        <span>Bus Total (Monthly at ₹2,000/bus):</span>
-                        <span id="summary-bus">₹0</span>
-                    </div>
-                    <div class="price-item total">
-                        <span>Total Amount:</span>
-                        <span id="summary-total">₹0</span>
-                    </div>
-                </div>
-
-                <input type="hidden" name="subscription_plan" value="basic">
-
-                <button type="submit" class="btn-auth">Continue to Payment</button>
+                {{-- Button text ah maathrom --}}
+                <button type="submit" class="btn-auth">Create Account</button>
 
                 <p class="auth-footer">
                     Already have an account? <a href="{{ url('/login') }}">Login here</a>
@@ -174,45 +137,8 @@
         </div>
     </div>
 
+    {{-- PUTHU SCRIPT - calculatePrice() function remove panniyachu --}}
     <script>
-        function calculatePrice() {
-            const students = parseInt(document.getElementById('student_count').value) || 0;
-            
-            // Get bus count
-            let buses = parseInt(document.getElementById('buses').value) || 0;
-            
-            // Check max limit (NEW)
-            const maxBuses = 50;
-            if (buses > maxBuses) {
-                buses = maxBuses;
-                document.getElementById('buses').value = maxBuses; // Auto-correct user input
-            }
-
-            const subscriptionTypeInput = document.querySelector('input[name="subscription_type"]:checked');
-            if (!subscriptionTypeInput) {
-                return; 
-            }
-            const subscriptionType = subscriptionTypeInput.value;
-            
-            const studentDailyRate = students * 1.75;
-            const studentMonthlyCost = studentDailyRate * 30;
-            
-            const busMonthlyCost = buses * 2000; 
-            
-            const monthlyTotal = studentMonthlyCost + busMonthlyCost;
-            
-            let totalAmount = monthlyTotal;
-            if (subscriptionType === 'yearly') {
-                totalAmount = monthlyTotal * 11; 
-            }
-            
-            document.getElementById('monthly-price').textContent = '₹' + monthlyTotal.toLocaleString('en-IN') + '/month';
-            document.getElementById('yearly-price').textContent = '₹' + (monthlyTotal * 11).toLocaleString('en-IN') + '/year';
-            document.getElementById('summary-student').textContent = '₹' + studentMonthlyCost.toLocaleString('en-IN');
-            document.getElementById('summary-bus').textContent = '₹' + busMonthlyCost.toLocaleString('en-IN');
-            document.getElementById('summary-total').textContent = '₹' + totalAmount.toLocaleString('en-IN');
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             
             document.getElementById('registerForm').addEventListener('submit', function(e) {
@@ -226,9 +152,10 @@
                 }
             });
 
-            // Call it once on load
-            calculatePrice();
+            // calculatePrice(); <- Intha line remove panniyachu
         });
-    </script>
+    </SCriPT>
+    {{-- PUTHU SCRIPT (Landing Page la irunthu) --}}
+    <script src="{{ asset('assets/js/landing.js') }}"></script>
 </body>
 </html>

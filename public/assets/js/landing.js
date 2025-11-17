@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < 20; i++) {
             let particle = document.createElement('div');
             particle.classList.add('particle');
-            particle.style.width = `${Math.random() * 3 + 1}px`;
+            particle.style.width = `${Math.random() * 5 + 1}px`;
             particle.style.height = particle.style.width;
             particle.style.left = `${Math.random() * 100}%`;
             particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
