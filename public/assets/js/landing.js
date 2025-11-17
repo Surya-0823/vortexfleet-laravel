@@ -1,6 +1,6 @@
 /*
  * Puthu landing page JS (Advanced Animations)
- * v5 - Custom Cursor, Particles, Scroll Effects
+ * v11 - Bento Grid Layout + Project Theme
  */
 document.addEventListener('DOMContentLoaded', function() {
     
@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
             cursorOutline.style.top = e.clientY + 'px';
         });
 
-        document.querySelectorAll('a, .btn, .step, .feature-card, .faq-item, .hamburger').forEach(el => {
+        // Add all clickable elements here
+        document.querySelectorAll('a, .btn, .step, .bento-item, .faq-question, .hamburger, .form-input, .form-textarea').forEach(el => {
             el.addEventListener('mouseenter', () => {
                 cursorDot.style.opacity = 0;
                 cursorOutline.style.width = '60px';
@@ -72,10 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- 5. Scroll Fade/Slide-in Animations ---
-    const observers = [];
     
-    // General Fade-in
-    const sections = document.querySelectorAll('.fade-in-section, .text-section, .how-it-works, .features, .faq-section, .cta, .footer');
+    // General Fade-in for sections
+    const sections = document.querySelectorAll('.fade-in-section');
     const sectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -85,26 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.1 });
 
     sections.forEach(sec => {
-        sec.classList.add('fade-in-section'); // Ensure class is present
         sectionObserver.observe(sec);
     });
 
-    // Feature Card Stagger (left/right)
-    const featureCards = document.querySelectorAll('.feature-card');
-    const featureObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    featureCards.forEach(card => {
-        featureObserver.observe(card);
-    });
-
-    // Staggered Items (for steps)
-    const staggerItems = document.querySelectorAll('.step, .faq-item');
+    // Staggered Items (for bento, steps, faq)
+    const staggerItems = document.querySelectorAll('.stagger-item');
     const staggerObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -114,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.1 });
 
     staggerItems.forEach((item, index) => {
-        item.classList.add('stagger-item');
         item.style.transitionDelay = `${index * 100}ms`;
         staggerObserver.observe(item);
     });
