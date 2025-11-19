@@ -11,6 +11,7 @@
 .dashboard-header {
   margin-bottom: 1.rem;
   border-bottom: 1px solid var(--border);
+  padding-top: 1.5rem;
   padding-bottom: 1.5rem;
 }
 
