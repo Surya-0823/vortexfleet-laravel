@@ -9,7 +9,7 @@
 }
 
 .dashboard-header {
-  margin-bottom: 1rem;
+  margin-bottom: 1.rem;
   border-bottom: 1px solid var(--border);
   padding-bottom: 1.5rem;
 }
@@ -38,7 +38,7 @@
 .dashboard-main-content {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 /* Sections (Action Items etc) */

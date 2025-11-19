@@ -1,54 +1,75 @@
-/* ===== SIDEBAR STYLES ===== */
+/* ===== SIDEBAR STYLES (Upgraded Theme) ===== */
 .sidebar {
   width: 16rem; /* 256px */
-  background-color: rgb(7, 27, 43);
-  border-right: 1px solid hsl(var(--border));
-  position: fixed; /* Fixed position */
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  transition: width 0.3s ease;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1010; /* Above content */
 }
 
-/* PUDHU STYLE (from layout.css) */
 .sidebar-header {
-  display: flex ;
-  flex-direction: row ;
-  justify-content: center ;
-  align-items: center ;
-  gap: 0.75rem ;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 1rem;
+  border-bottom: 1px solid var(--border);
 }
+
 .sidebar-header svg {
-  width: 2.5rem ;
-  height: 2.5rem ;
+  width: 2rem;
+  height: 2rem;
+  color: var(--accent); /* Brand Color */
 }
-/* End PUDHU STYLE */
 
 .sidebar-title {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  line-height: 1.1;
-  color: hsl(var(--foreground));
+  line-height: 1;
+  color: var(--text-primary);
   margin: 0;
 }
 
+.sidebar-title span {
+  color: var(--accent);
+}
+
 .sidebar-subtitle {
-  font-size: 0.875rem;
-  color: hsl(var(--muted-foreground));
+  font-size: 0.8rem;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .sidebar-nav {
     flex-grow: 1;
-    padding: 0.75rem;
+    padding: 1.5rem 0.75rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+/* Nav Buttons styling update needed via separate components or inline here if specific */
+/* Assuming .nav-button styles are handled in _components.css or similar,
+   but global sidebar text updates: */
+.sidebar .nav-button {
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.sidebar .nav-button:hover, .sidebar .nav-button.active {
+    background: rgba(108, 99, 255, 0.1);
+    color: var(--text-primary);
+    border-left-color: var(--accent);
 }
 
 .sidebar .nav-button .nav-label,
@@ -59,34 +80,35 @@
 
 /* Sidebar Footer & Toggle Button */
 .sidebar-footer {
-    height: 3.5rem; /* Main footer oda height */
-    border-top: 1px solid hsl(var(--border));
+    height: 4rem;
+    border-top: 1px solid var(--border);
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 0 0.75rem;
+    padding: 0 1rem;
     transition: justify-content 0.3s ease;
+    background: var(--bg-sidebar);
 }
 
 .sidebar-toggle-btn {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 0.5rem;
     background-color: transparent;
     border: 1px solid transparent;
-    color: hsl(var(--muted-foreground));
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition);
 }
 
 .sidebar-toggle-btn:hover {
-    background-color: hsla(var(--brand-orange), 0.15);
-    border-color: hsla(var(--brand-orange), 0.2);
-    color: hsl(var(--brand-orange));
+    background-color: rgba(108, 99, 255, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 .sidebar-toggle-btn svg {
@@ -109,10 +131,13 @@
 
 .sidebar.collapsed .sidebar-header {
     justify-content: center;
+    padding: 1.5rem 0.5rem;
 }
 
 .sidebar.collapsed .nav-button {
     justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .sidebar.collapsed .sidebar-footer {

@@ -1,60 +1,32 @@
-/* ===== APP FOOTER (Using .bottom-nav class from HTML) ===== */
+/* ===== APP FOOTER (Bottom Nav) ===== */
 .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 16rem; /* Sidebar width (256px) - exactly matches sidebar */
-    width: calc(100% - 16rem); /* Adjust for sidebar width */
-    padding: 0.15rem 2rem;
-    background-color: hsl(var(--card));
-    border-top: 1px solid hsl(var(--border));
-    color: hsl(var(--muted-foreground));
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.875rem;
-    flex-shrink: 0;
-    z-index: 1000;
-    transition: left 0.3s ease, width 0.3s ease;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-/* Sidebar collapse aanalum bottom-nav ah adjust panrom */
-.main-content.collapsed .bottom-nav {
-    left: 5.5rem; /* Collapsed sidebar width (88px) */
-    width: calc(100% - 5.5rem); /* Adjust for collapsed sidebar width */
-}
-
-/* Palaya .app-footer styles (just in case) */
-.app-footer {
     position: fixed;
     bottom: 0;
     left: 16rem;
     width: calc(100% - 16rem);
     padding: 1rem 2rem;
-    background-color: hsl(var(--card));
-    border-top: 1px solid hsl(var(--border));
-    color: hsl(var(--muted-foreground));
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.875rem;
-    flex-shrink: 0;
+    font-size: 0.85rem;
     z-index: 1000;
-    transition: left 0.3s ease, width 0.3s ease;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bottom-nav p {
     margin: 0;
-    box-sizing: border-box;
 }
 
-.footer-left {
-    font-weight: 500;
-}
-
-.footer-right {
-    font-family: monospace;
-}
-
-.main-content.collapsed .app-footer {
+/* Sidebar collapse adjustment */
+.main-content.collapsed .bottom-nav {
     left: 5.5rem;
     width: calc(100% - 5.5rem);
+}
+
+/* Safe cleanup of old class */
+.app-footer {
+    display: none;
 }
