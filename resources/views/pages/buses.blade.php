@@ -14,94 +14,110 @@
     </div>
     <div class="header-right-actions">
         <a href="javascript:void(0);" id="openAddBusModal" class="add-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
             <span>Add Bus</span>
         </a>
     </div>
 </div>
+
 <div class="page-container">
-    <table id="datatable" class="table">
-        <thead>
-            <tr>
-                <th>Photo</th>
-                <th>Bus Name</th>
-                <th>Plate Number</th>
-                <th>Capacity</th>
-                <th>Assigned Route</th>
-                <th>Assigned Driver</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($buses as $bus)
+    <div class="table-container fade-in">
+        <table id="datatable" class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @if (!empty($bus->photo_path))
-                            <img src="{{ asset(htmlspecialchars($bus->photo_path)) }}" 
-                                 alt="{{ htmlspecialchars($bus->name) }}" 
-                                 class="avatar" style="object-fit: cover;">
-                        @else
-                            <img src="https://api.dicebear.com/7.x/initials/svg?seed={{ htmlspecialchars($bus->plate) }}&backgroundColor=282c34&fontColor=86efac" 
-                                 alt="{{ htmlspecialchars($bus->name) }}" 
-                                 class="avatar">
-                        @endif
-                    </td>
-                    <td>{{ htmlspecialchars($bus->name) }}</td>
-                    <td>
-                        <span class="plate-number">{{ htmlspecialchars($bus->plate) }}</span>
-                    </td>
-                    <td>{{ htmlspecialchars($bus->capacity) }}</td>
-                    <td>
-                        @if (!empty($bus->start) && !empty($bus->end))
-                            {{ htmlspecialchars($bus->start) }} &rarr; {{ htmlspecialchars($bus->end) }}
-                        @else
-                            <span class="text-muted">Not Assigned</span>
-                        @endif
-                    </td>
-                    <td>
-                        @if (!empty($bus->driver_name))
-                            {{ htmlspecialchars($bus->driver_name) }}
-                        @else
-                            <span class="text-muted">Not Assigned</span>
-                        @endif
-                    </td>
-                    <td>
-                        <div class="action-buttons-wrapper">
-                             <a href="javascript:void(0);" 
-                               class="btn-action-edit js-edit-bus"
-                               data-id="{{ $bus->id }}"
-                               data-name="{{ htmlspecialchars($bus->name) }}"
-                               data-plate="{{ htmlspecialchars($bus->plate) }}"
-                               data-capacity="{{ $bus->capacity }}"
-                               data-driver-id="{{ $bus->driver_id ?? '' }}"
-                               data-photo="{{ htmlspecialchars($bus->photo_path ?? '') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
-                                <span>Edit</span>
-                            </a>
-                            <a href="javascript:void(0);" 
-                               class="btn-action-delete js-delete-bus" 
-                               data-delete-id="{{ $bus->id }}"
-                               data-delete-url="{{ url('/buses/delete') }}"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-                                <span>Delete</span>
-                            </a>
-                        </div>
-                    </td>
+                    <th>Bus Details</th>
+                    <th>Capacity</th>
+                    <th>Assigned Route</th>
+                    <th>Assigned Driver</th>
+                    <th>Actions</th>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="7" style="text-align: center; padding: 3rem; color: hsl(var(--muted-foreground));">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;">
-                                <path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s-1-1.5-1.5-2.5S19 14 19 14"/><path d="M6 18H3s1-1.5 1.5-2.5S5 14 5 14"/><rect width="20" height="10" x="2" y="8" rx="2"/>
-                            </svg>
-                            <div style="font-size: 1.125rem; font-weight: 600;">No buses found</div>
-                            <div style="font-size: 0.875rem;">Click "Add Bus" to register your first bus.</div>
-                        </div>
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($buses as $bus)
+                    <tr>
+                        <td>
+                            <div class="table-profile">
+                                <div class="table-avatar">
+                                    @if (!empty($bus->photo_path))
+                                        <img src="{{ asset(htmlspecialchars($bus->photo_path)) }}" alt="{{ htmlspecialchars($bus->name) }}">
+                                    @else
+                                        <img src="https://api.dicebear.com/7.x/initials/svg?seed={{ htmlspecialchars($bus->plate) }}&backgroundColor=282c34&fontColor=86efac" alt="{{ htmlspecialchars($bus->name) }}">
+                                    @endif
+                                </div>
+                                <div class="table-info">
+                                    <h4>{{ htmlspecialchars($bus->name) }}</h4>
+                                    <p>{{ htmlspecialchars($bus->plate) }}</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="info-primary" style="font-weight: 600;">{{ htmlspecialchars($bus->capacity) }} Seats</div>
+                        </td>
+
+                        <td>
+                            @if (!empty($bus->start) && !empty($bus->end))
+                                <div class="info-cell-group">
+                                    <div class="info-primary" style="font-size: 0.85rem;">
+                                        {{ htmlspecialchars($bus->start) }} <span style="color: var(--accent);">→</span> {{ htmlspecialchars($bus->end) }}
+                                    </div>
+                                </div>
+                            @else
+                                <span class="status-badge status-inactive" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border);">Not Assigned</span>
+                            @endif
+                        </td>
+
+                        <td>
+                            @if (!empty($bus->driver_name))
+                                <div class="table-profile" style="gap: 0.5rem;">
+                                    <div class="table-avatar" style="width: 28px; height: 28px; font-size: 0.7rem;">
+                                        {{ strtoupper(substr($bus->driver_name, 0, 2)) }}
+                                    </div>
+                                    <span class="info-primary">{{ htmlspecialchars($bus->driver_name) }}</span>
+                                </div>
+                            @else
+                                <span class="status-badge status-inactive" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border);">No Driver</span>
+                            @endif
+                        </td>
+
+                        <td>
+                            <div class="action-buttons">
+                                <button type="button" 
+                                   class="action-btn js-edit-bus"
+                                   data-id="{{ $bus->id }}"
+                                   data-name="{{ htmlspecialchars($bus->name) }}"
+                                   data-plate="{{ htmlspecialchars($bus->plate) }}"
+                                   data-capacity="{{ $bus->capacity }}"
+                                   data-driver-id="{{ $bus->driver_id ?? '' }}"
+                                   data-photo="{{ htmlspecialchars($bus->photo_path ?? '') }}"
+                                   title="Edit Bus">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                                </button>
+                                
+                                <button type="button" 
+                                   class="action-btn delete-btn js-delete-bus" 
+                                   data-delete-id="{{ $bus->id }}"
+                                   data-delete-url="{{ url('/buses/delete') }}"
+                                   title="Delete Bus">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 4rem 2rem; color: var(--text-secondary);">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.3;"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s-1-1.5-1.5-2.5S19 14 19 14"/><path d="M6 18H3s1-1.5 1.5-2.5S5 14 5 14"/><rect width="20" height="10" x="2" y="8" rx="2"/></svg>
+                                <div style="font-size: 1.1rem; font-weight: 500;">No buses found</div>
+                                <p style="font-size: 0.9rem; opacity: 0.7;">Click "Add Bus" to get started.</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div id="addBusModal" class="modal-overlay" style="display: none;">
@@ -168,17 +184,12 @@
             <h2 class="modal-title">Confirm Deletion</h2>
         </div>
         <div class="modal-body">
-            <p class="alert-text-primary">
-                Are you sure you want to delete this bus?
-            </p>
-            <p class="alert-text-secondary">
-                This action cannot be undone.
-            </p>
+            <p class="alert-text-primary">Are you sure you want to delete this bus?</p>
+            <p class="alert-text-secondary">This action cannot be undone.</p>
         </div>
         <div class="modal-footer modal-footer-alert">
             <button type="button" id="cancelDeleteModal" class="btn btn-outline">Cancel</button>
             <button type="button" id="confirmDeleteBtn" class="btn btn-destructive" data-id="">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                 <span>Delete</span>
             </button>
         </div>
