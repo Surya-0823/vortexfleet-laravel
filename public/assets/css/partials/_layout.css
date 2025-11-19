@@ -10,18 +10,20 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding-top: 0;
+    /* Padding set in _base.css globally now via variables, but refining here for content inner padding */
 }
 
 .page-content {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 3rem; /* T, R, B padding */
-    padding-left: calc(16rem + 1.5rem); /* L padding (accounts for sidebar) */
+    padding: 2rem; /* Inner content padding */
+    padding-left: calc(var(--sidebar-width) + 2rem); /* Push content */
+    padding-top: calc(var(--header-height) + 1rem); /* Push down from fixed header */
+    padding-bottom: calc(var(--footer-height) + 1rem); /* Push up from fixed footer */
     transition: padding-left 0.3s ease;
 }
 
 .main-content.collapsed .page-content {
-    padding-left: calc(5.5rem + 2rem);
+    padding-left: calc(var(--sidebar-width-collapsed) + 2rem);
 }

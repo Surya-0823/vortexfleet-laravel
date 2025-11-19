@@ -1,6 +1,6 @@
-/* ===== SIDEBAR STYLES (Upgraded Theme) ===== */
+/* ===== SIDEBAR STYLES (Perfect Sync Fix) ===== */
 .sidebar {
-  width: 16rem; /* 256px */
+  width: var(--sidebar-width);
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border);
   position: fixed;
@@ -11,23 +11,28 @@
   flex-direction: column;
   flex-shrink: 0;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1010; /* Above content */
+  z-index: 1010;
+  box-sizing: border-box;
 }
 
+/* Header (Matches Top Nav Height) */
 .sidebar-header {
+  height: var(--header-height);
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 0.75rem;
-  padding: 2rem 1rem;
   border-bottom: 1px solid var(--border);
+  padding: 0;
+  flex-shrink: 0; /* Prevent shrinking */
+  box-sizing: border-box;
 }
 
 .sidebar-header svg {
   width: 2rem;
   height: 2rem;
-  color: var(--accent); /* Brand Color */
+  color: var(--accent);
 }
 
 .sidebar-title {
@@ -36,21 +41,20 @@
   line-height: 1;
   color: var(--text-primary);
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .sidebar-title span {
   color: var(--accent);
 }
 
-.sidebar-subtitle {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
+/* Nav Area (Adjusted for Absolute Footer) */
 .sidebar-nav {
     flex-grow: 1;
     padding: 1.5rem 0.75rem;
+    /* Add padding bottom to prevent content hiding behind footer */
+    padding-bottom: calc(var(--footer-height) + 1rem); 
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -58,9 +62,6 @@
     overflow-x: hidden;
 }
 
-/* Nav Buttons styling update needed via separate components or inline here if specific */
-/* Assuming .nav-button styles are handled in _components.css or similar,
-   but global sidebar text updates: */
 .sidebar .nav-button {
     color: var(--text-secondary);
     transition: var(--transition);
@@ -72,76 +73,81 @@
     border-left-color: var(--accent);
 }
 
-.sidebar .nav-button .nav-label,
-.sidebar .sidebar-title-wrapper {
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    white-space: nowrap;
-}
-
-/* Sidebar Footer & Toggle Button */
+/* ===== FOOTER (Absolute Position Fix) ===== */
 .sidebar-footer {
-    height: 4rem;
+    height: var(--footer-height); /* 4rem */
     border-top: 1px solid var(--border);
-    flex-shrink: 0;
+    
+    /* Force alignment to bottom */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 0 1rem;
-    transition: justify-content 0.3s ease;
+    padding: 0 1.25rem;
     background: var(--bg-sidebar);
+    box-sizing: border-box; /* Crucial for border alignment */
+    z-index: 10;
 }
 
+/* Button (Perfect Center) */
 .sidebar-toggle-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 0.5rem;
-    background-color: transparent;
-    border: 1px solid transparent;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
     color: var(--text-secondary);
-    display: flex;
+    
+    display: flex; /* Flex works better for SVG centering sometimes */
     align-items: center;
     justify-content: center;
+    
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.2s ease;
+    margin: 0; /* Remove accidental margins */
 }
 
 .sidebar-toggle-btn:hover {
-    background-color: rgba(108, 99, 255, 0.15);
+    background-color: var(--accent);
     border-color: var(--accent);
-    color: var(--accent);
+    color: white;
+    box-shadow: 0 4px 10px rgba(108, 99, 255, 0.25);
+    transform: translateY(-1px);
 }
 
 .sidebar-toggle-btn svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 18px;
+    height: 18px;
     transition: transform 0.3s ease;
+    display: block;
 }
 
 /* Collapsed State */
 .sidebar.collapsed {
-    width: 5.5rem; /* 88px */
+    width: var(--sidebar-width-collapsed);
 }
 
 .sidebar.collapsed .sidebar-title-wrapper,
-.sidebar.collapsed .nav-label {
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .sidebar-title {
     opacity: 0;
     visibility: hidden;
     width: 0;
+    display: none;
 }
 
 .sidebar.collapsed .sidebar-header {
     justify-content: center;
-    padding: 1.5rem 0.5rem;
-}
-
-.sidebar.collapsed .nav-button {
-    justify-content: center;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
 }
 
 .sidebar.collapsed .sidebar-footer {
-    justify-content: center;
+    justify-content: center; 
+    padding: 0; 
 }
 
 .sidebar.collapsed .sidebar-toggle-btn svg {

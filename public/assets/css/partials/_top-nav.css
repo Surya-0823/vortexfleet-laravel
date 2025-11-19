@@ -1,18 +1,19 @@
-/* ===== TOP NAVIGATION (Upgraded) ===== */
+/* ===== TOP NAVIGATION (Aligned) ===== */
 .top-nav {
     display: flex;
     position: fixed;
     top: 0;
-    left: 16rem; /* Matches Sidebar Width */
-    width: calc(100% - 16rem);
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    height: var(--header-height); /* Fixed Height */
     z-index: 1000;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 0 2rem; /* Horizontal padding only */
     background: var(--bg-card);
     border-bottom: 1px solid var(--border);
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .breadcrumbs {
@@ -44,10 +45,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.4rem 0.75rem;
+    padding: 0.3rem 0.75rem;
     border-radius: 50px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     transition: var(--transition);
 }
 
@@ -57,8 +58,8 @@
 }
 
 .user-profile-avatar {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
     border: 2px solid var(--accent);
 }
@@ -71,12 +72,12 @@
 
 .user-name {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-primary);
 }
 
 .user-role {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
 }
 
@@ -84,7 +85,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
+    padding: 0.5rem 1rem;
     border-radius: var(--radius);
     border: 1px solid var(--border);
     background: transparent;
@@ -92,17 +93,16 @@
     font-weight: 500;
     text-decoration: none;
     transition: var(--transition);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .logout-button:hover {
     background: rgba(244, 67, 54, 0.1);
     border-color: var(--danger);
-    transform: translateY(-2px);
 }
 
-/* Collapsed state adjustment */
+/* Collapsed Adjustment */
 .main-content.collapsed .top-nav {
-    left: 5.5rem;
-    width: calc(100% - 5.5rem);
+    left: var(--sidebar-width-collapsed);
+    width: calc(100% - var(--sidebar-width-collapsed));
 }

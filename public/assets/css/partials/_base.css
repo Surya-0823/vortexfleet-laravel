@@ -22,7 +22,13 @@
   --radius: 12px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Mapping old variable names to new theme for compatibility if needed */
+  /* LAYOUT VARIABLES (For Perfect Alignment) */
+  --header-height: 4.5rem; /* Fixed Height for Top Nav & Sidebar Header */
+  --footer-height: 4rem;   /* Fixed Height for Footer & Sidebar Footer */
+  --sidebar-width: 16rem;
+  --sidebar-width-collapsed: 5.5rem;
+
+  /* Mapping old variables */
   --background: var(--bg-main);
   --foreground: var(--text-primary);
   --card: var(--bg-card);
@@ -36,7 +42,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 html {
-  font-size: 14px; /* Slightly increased base size for Inter */
+  font-size: 14px; 
+  zoom: 95%; /* Requested Zoom Out */
 }
 
 /* ===== BASE STYLES ===== */
@@ -53,7 +60,6 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   min-height: 100vh;
-  /* Removed old bg image to match new clean dark theme */
 }
 
 .main-content {
@@ -61,11 +67,16 @@ body {
   padding: 0;
   overflow-y: auto;
   transition: var(--transition);
+  /* Padding top/bottom adjusted to match fixed header/footer */
+  padding-top: var(--header-height);
+  padding-bottom: var(--footer-height);
+  height: 100vh; /* Full height to allow internal scrolling if needed */
 }
 
-/* Scrollbar Styling for Dark Theme */
+/* Scrollbar Styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
