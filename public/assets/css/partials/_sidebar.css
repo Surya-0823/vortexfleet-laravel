@@ -90,7 +90,6 @@
     padding: 0 1.25rem;
     background: var(--bg-sidebar);
     box-sizing: border-box; /* Crucial for border alignment */
-    z-index: 10;
 }
 
 /* Button (Perfect Center) */

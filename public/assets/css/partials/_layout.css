@@ -19,7 +19,7 @@
     overflow-x: hidden;
     padding: 2rem; /* Inner content padding */
     padding-left: calc(var(--sidebar-width) + 2rem); /* Push content */
-    padding-top: calc(var(--header-height) + 1rem); /* Push down from fixed header */
+    padding-top: calc(var(--header-height) - 5rem); /* Push down from fixed header */
     padding-bottom: calc(var(--footer-height) + 1rem); /* Push up from fixed footer */
     transition: padding-left 0.3s ease;
 }
