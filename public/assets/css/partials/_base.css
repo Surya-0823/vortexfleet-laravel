@@ -1,66 +1,82 @@
 /* ===== CSS VARIABLES & THEME ===== */
 :root {
-  /* Colors */
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
-  --card: 210 70% 10%;
-  --card-foreground: 210 40% 98%;
-  --popover: 217 33% 17%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 205 75% 58%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 189 85% 52%;
-  --secondary-foreground: 222 47% 11%;
-  --muted: 217 33% 25%;
-  --muted-foreground: 215 20% 65%;
-  --accent: 205 75% 58%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217 33% 25%;
-  --input: 217 33% 20%;
-  --ring: 205 75% 58%;
+  /* New VortexFleet Theme Colors */
+  --bg-main: #0E0F18;
+  --bg-sidebar: #121321;
+  --bg-card: #1A1C2C;
+  --bg-hover: #2A2D42;
 
-  /* Brand & Status Colors */
-  --brand-orange: 28 87% 62%;
-  --success: 142 71% 45%;
-  --warning: 38 92% 50%;
-  --neon-cyan: 189 85% 52%;
-  --neon-purple: 205 75% 58%;
-  --neon-pink: 330 85% 60%;
+  --text-primary: #ffffff;
+  --text-secondary: #A8A8B8;
+  --text-disabled: #5F6070;
 
-  /* Effects */
-  --radius: 0.75rem;
-  --shadow-card: 0 8px 32px hsl(222 47% 5% / .4);
-  --shadow-glow: 0 0 20px hsl(205 75% 58% / .3);
+  --accent: #6C63FF;
+  --accent-light: #9C97FF;
+  --accent-muted: #4C4F6A;
+
+  --border: #2B2D3F;
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --danger: #F44336;
+
+  --radius: 12px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Mapping old variable names to new theme for compatibility if needed */
+  --background: var(--bg-main);
+  --foreground: var(--text-primary);
+  --card: var(--bg-card);
+  --card-foreground: var(--text-primary);
+  --border-color: var(--border);
+  --muted-foreground: var(--text-secondary);
+  --primary: var(--accent);
 }
 
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 html {
-  font-size: 75%; /* Innum chinna size (12px base) */
+  font-size: 14px; /* Slightly increased base size for Inter */
 }
 
 /* ===== BASE STYLES ===== */
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-main);
+  font-family: "Inter", sans-serif;
+  color: var(--text-primary);
   line-height: 1.6;
-  margin: 0;
+  overflow-x: hidden;
   min-height: 100vh;
-  background-image: url('../../images/bg.jpg'); /* <-- ITHU THAAN FIX */
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  /* Removed old bg image to match new clean dark theme */
 }
-
 
 .main-content {
   flex-grow: 1;
   padding: 0;
   overflow-y: auto;
+  transition: var(--transition);
+}
+
+/* Scrollbar Styling for Dark Theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-muted);
 }
