@@ -7,7 +7,6 @@ use App\Http\Controllers\DriversController;
 use App\Http\Controllers\BusesController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\RoutesController;
-use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Middleware\AdminAuthMiddleware;
 
@@ -28,14 +27,18 @@ Route::get('/pricing', [LandingPageController::class, 'pricing']);
 Route::post('/submit-contact', [LandingPageController::class, 'submitContact']);
 
 // Auth Routes
-// FIX: showLoginForm -> showLogin
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::post('/payment', [AuthController::class, 'payment']);
-Route::get('/payment-success', [AuthController::class, 'paymentSuccess']);
+
+// --- Payment Routes (Fixed) ---
+Route::get('/payment', [AuthController::class, 'showPayment'])->name('payment');         // Show Payment Page
+Route::post('/payment/process', [AuthController::class, 'processPayment']);             // Process Payment Form
+Route::get('/payment-success', [AuthController::class, 'paymentSuccess']);              // Success Page
 
 // Authenticated Admin Routes
 Route::middleware([AdminAuthMiddleware::class])->group(function () {
@@ -49,8 +52,6 @@ Route::middleware([AdminAuthMiddleware::class])->group(function () {
     Route::post('/drivers/update-status', [DriversController::class, 'updateStatus']);
     Route::post('/drivers/send-otp', [DriversController::class, 'sendOtp']);
     Route::post('/drivers/verify-otp', [DriversController::class, 'verifyOtp']);
-
-    // PUTHU MAATRAM: Puthu route for resetting password
     Route::post('/drivers/reset-password', [DriversController::class, 'resetPassword']);
 
     // Buses

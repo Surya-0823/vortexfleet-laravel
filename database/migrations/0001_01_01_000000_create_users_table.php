@@ -6,48 +6,58 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-    {
-        Schema::create('users', function (Blueprint $table) {
-            // Ithu default Laravel columns
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            
-            // --- Namma Custom Columns (Ippo Ithu Kandippa Work Aaganum) ---
-            $table->string('phone', 20)->nullable(); 
-            $table->string('institution_name')->nullable();
+{
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->timestamp('email_verified_at')->nullable();
+        $table->string('password');
 
-            // --- PUDHU FIELDS (formflow-fleet-la irundhu) ---
-            $table->string('college_type', 50)->nullable();
-            $table->string('address')->nullable();
-            $table->string('city', 100)->nullable();
-            $table->string('state', 100)->nullable();
-            $table->string('pincode', 20)->nullable();
-            $table->integer('student_count')->default(0); // 'students' field-a 'student_count'-a maathrom
-            $table->integer('max_buses')->default(1); // 'buses' field-a 'max_buses'-a maathrom
-            // --- END PUDHU FIELDS ---
+        // --- Profile & Institution Fields ---
+        $table->string('phone')->nullable();
+        $table->string('institution_name')->nullable();
+        $table->string('college_type')->nullable();
+        $table->string('address')->nullable();
+        $table->string('city')->nullable();
+        $table->string('state')->nullable();
+        $table->string('pincode')->nullable();
 
-            $table->string('subscription_plan', 50)->nullable();
-            $table->string('subscription_type', 20)->default('monthly');
-            $table->decimal('payment_amount', 10, 2)->default(0.00);
-            $table->string('payment_status', 20)->default('pending');
-            $table->string('status', 20)->default('pending');
-            // --- End ---
-            
-            $table->rememberToken();
-            $table->timestamps(); // Ithu 'created_at' matrum 'updated_at' create pannum
-        });
+        // --- Fleet Info ---
+        $table->integer('student_count')->nullable();
+        $table->integer('max_buses')->default(0);
 
-        // PUTHU MAATRAM: Intha lines-ah thooki matha files-kku anuppittom (athu already create aagiduchu)
-        // Schema::create('password_reset_tokens', function (Blueprint $table) { ... });
-        // Schema::create('sessions', function (Blueprint $table) { ... });
-    }
+        // --- Subscription & Payment ---
+        $table->string('subscription_plan')->nullable();
+        $table->string('subscription_type')->nullable();
+        $table->decimal('payment_amount', 10, 2)->nullable();
+        $table->string('payment_status')->default('pending');
+        $table->string('status')->default('inactive');
+
+        // --- OTP Fields (Merged from deleted migration) ---
+        $table->string('otp')->nullable();
+        $table->timestamp('otp_expires_at')->nullable();
+
+        $table->rememberToken();
+        $table->timestamps();
+    });
+
+    Schema::create('password_reset_tokens', function (Blueprint $table) {
+        $table->string('email')->primary();
+        $table->string('token');
+        $table->timestamp('created_at')->nullable();
+    });
+
+    Schema::create('sessions', function (Blueprint $table) {
+        $table->string('id')->primary();
+        $table->foreignId('user_id')->nullable()->index();
+        $table->string('ip_address', 45)->nullable();
+        $table->text('user_agent')->nullable();
+        $table->longText('payload');
+        $table->integer('last_activity')->index();
+    });
+}
 
     /**
      * Reverse the migrations.
