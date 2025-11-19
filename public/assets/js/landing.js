@@ -1,106 +1,73 @@
-/*
- * Puthu landing page JS (Advanced Animations)
- * v11 - Bento Grid Layout + Project Theme
- */
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- 1. Custom Cursor ---
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorOutline = document.querySelector('.cursor-outline');
+    // FAQ Toggle
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentNode;
+            item.classList.toggle('active');
+        });
+    });
 
-    if (cursorDot && cursorOutline) {
-        window.addEventListener('mousemove', function(e) {
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
+    // Interactive Steps
+    const steps = document.querySelectorAll('.step');
+    
+    steps.forEach(step => {
+        step.addEventListener('click', () => {
+            // Remove active class from all steps
+            steps.forEach(s => s.classList.remove('active'));
             
-            cursorOutline.style.left = e.clientX + 'px';
-            cursorOutline.style.top = e.clientY + 'px';
+            // Add active class to clicked step
+            step.classList.add('active');
         });
+    });
 
-        // Add all clickable elements here
-        document.querySelectorAll('a, .btn, .step, .bento-item, .faq-question, .hamburger, .form-input, .form-textarea').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorDot.style.opacity = 0;
-                cursorOutline.style.width = '60px';
-                cursorOutline.style.height = '60px';
-                cursorOutline.style.opacity = 0.3;
-            });
-            el.addEventListener('mouseleave', () => {
-                cursorDot.style.opacity = 1;
-                cursorOutline.style.width = '40px';
-                cursorOutline.style.height = '40px';
-                cursorOutline.style.opacity = 1;
-            });
+    // Contact Form Submission
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you within 24 hours.');
+            this.reset();
         });
     }
 
-    // --- 2. Navbar Scroll Effect ---
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-    }
-
-    // --- 3. Mobile Hamburger Menu ---
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', function() {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-    }
-
-    // --- 4. Particle Background Generation ---
-    const particlesContainer = document.querySelector('.particles');
-    if (particlesContainer) {
-        for (let i = 0; i < 20; i++) {
-            let particle = document.createElement('div');
-            particle.classList.add('particle');
-            particle.style.width = `${Math.random() * 5 + 1}px`;
-            particle.style.height = particle.style.width;
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
-            particle.style.animationDelay = `${Math.random() * 5}s`;
-            particlesContainer.appendChild(particle);
-        }
-    }
-
-    // --- 5. Scroll Fade/Slide-in Animations ---
+    // Scroll animations
+    const fadeElements = document.querySelectorAll('.fade-in');
     
-    // General Fade-in for sections
-    const sections = document.querySelectorAll('.fade-in-section');
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
+    const fadeInOnScroll = () => {
+        fadeElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < window.innerHeight - elementVisible) {
+                element.classList.add('visible');
             }
         });
-    }, { threshold: 0.1 });
-
-    sections.forEach(sec => {
-        sectionObserver.observe(sec);
-    });
-
-    // Staggered Items (for bento, steps, faq)
-    const staggerItems = document.querySelectorAll('.stagger-item');
-    const staggerObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
+    };
+    
+    window.addEventListener('scroll', fadeInOnScroll);
+    window.addEventListener('load', fadeInOnScroll);
+    
+    // Initial check on page load
+    fadeInOnScroll();
+    
+    // 3D Card Effect
+    document.querySelectorAll('.feature-card, .pricing-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const cardRect = card.getBoundingClientRect();
+            const x = e.clientX - cardRect.left;
+            const y = e.clientY - cardRect.top;
+            
+            const centerX = cardRect.width / 2;
+            const centerY = cardRect.height / 2;
+            
+            const angleY = (x - centerX) / 20;
+            const angleX = (centerY - y) / 20;
+            
+            card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.03)`;
         });
-    }, { threshold: 0.1 });
-
-    staggerItems.forEach((item, index) => {
-        item.style.transitionDelay = `${index * 100}ms`;
-        staggerObserver.observe(item);
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        });
     });
-
 });
