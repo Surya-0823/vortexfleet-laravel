@@ -3,159 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $page_title ?? 'Register - VortexFleet' }}</title>
+    <title>Create Account - VortexFleet</title>
     
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    {{-- Fonts & Icons --}}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    @if (isset($page_css))
-        <link rel="stylesheet" href="{{ asset($page_css) }}">
-    @endif
+    {{-- Register CSS --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/_register.css') }}">
 </head>
-<body class="auth-page">
+<body>
 
-    {{-- PUTHU CURSOR ELEMENTS --}}
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
-    {{-- PUTHU PARTICLE BACKGROUND --}}
-    <div class="particles"></div>
-
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
-                    <h1>Create Account</h1>
-                </div>
-                <p class="auth-subtitle">Join VortexFleet to manage your campus mobility</p> {{-- Subtitle Maathiyachu --}}
+    <div class="register-container">
+        <div class="register-static-side">
+            <div class="back-home">
+                <a href="{{ url('/') }}">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
             </div>
-
-            @if (session('error'))
-                <div class="alert alert-error">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            <form action="{{ url('/register') }}" method="POST" class="auth-form" id="registerForm">
+            <div class="static-content">
+                <div class="static-logo">Vortex<span>Fleet</span></div>
+                <h1 class="static-title">Join Our Platform</h1>
+                <p class="static-subtitle">Create your account and start managing your campus fleet efficiently</p>
                 
-                @csrf
-
-                {{-- 2-COLUMN GRID REMOVED. Ippo direct aa form items thaan. --}}
-
-                <h3 class="form-section-title">Admin Details</h3>
+                <ul class="features-list">
+                    <li><i class="fas fa-satellite-dish"></i> Real-time GPS tracking</li>
+                    <li><i class="fas fa-route"></i> Intelligent route optimization</li>
+                    <li><i class="fas fa-mobile-alt"></i> Parent & driver mobile apps</li>
+                    <li><i class="fas fa-chart-line"></i> Advanced analytics dashboard</li>
+                    <li><i class="fas fa-shield-alt"></i> Secure and reliable platform</li>
+                </ul>
+            </div>
+        </div>
         
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="name">Full Name *</label>
-                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+        <div class="register-scroll-side">
+            <div class="register-content">
+                <div class="register-card">
+                    <div class="register-header">
+                        <h2 class="register-title">Create Account</h2>
+                        <p class="register-subtitle">Complete all sections to register your institution</p>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email Address *</label>
-                        <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                    
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Admin</div>
+                        </div>
+                        <div class="progress-step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Institution</div>
+                        </div>
+                        <div class="progress-step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Location</div>
+                        </div>
+                        <div class="progress-step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-label">Plan</div>
+                        </div>
                     </div>
+                    
+                    {{-- Error Display --}}
+                    @if ($errors->any())
+                        <div style="background: rgba(255, 99, 99, 0.1); border: 1px solid rgba(255, 99, 99, 0.3); color: #ff6b6b; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                            <ul style="list-style: none;">
+                                @foreach ($errors->all() as $error)
+                                    <li><i class="fas fa-exclamation-circle"></i> {{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ url('/register') }}" method="POST" id="registerForm">
+                        @csrf
+
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-user-cog"></i> Admin Details</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="name">Full Name *</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-user input-icon"></i>
+                                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required value="{{ old('name') }}">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email Address *</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-envelope input-icon"></i>
+                                        <input type="email" id="email" name="email" class="form-control" placeholder="admin@institution.com" required value="{{ old('email') }}">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="phone">Phone Number *</label>
+                                    <div class="phone-input">
+                                        <select class="country-code" name="country_code" id="countryCode">
+                                            <option value="+91" selected>+91 IN</option>
+                                            <option value="+1">+1 US</option>
+                                            <option value="+44">+44 UK</option>
+                                        </select>
+                                        <input type="tel" id="phone" name="phone" class="form-control phone-number" placeholder="9876543210" required value="{{ old('phone') }}">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="password">Password *</label>
+                                    <div class="password-wrapper input-with-icon">
+                                        <i class="fas fa-lock input-icon"></i>
+                                        <input type="password" id="password" name="password" class="form-control" placeholder="Create a strong password" required>
+                                        <button type="button" class="toggle-password" id="togglePassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-university"></i> Institution Details</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="institution_name">Institution Name *</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-school input-icon"></i>
+                                        <input type="text" id="institution_name" name="institution_name" class="form-control" placeholder="Your school/organization name" required value="{{ old('institution_name') }}">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="college_type">Institution Type *</label>
+                                    <select id="college_type" name="college_type" class="form-control" required>
+                                        <option value="">Select type</option>
+                                        <option value="school" {{ old('college_type') == 'school' ? 'selected' : '' }}>School</option>
+                                        <option value="college" {{ old('college_type') == 'college' ? 'selected' : '' }}>College</option>
+                                        <option value="university" {{ old('college_type') == 'university' ? 'selected' : '' }}>University</option>
+                                        <option value="training" {{ old('college_type') == 'training' ? 'selected' : '' }}>Training Institute</option>
+                                        <option value="other" {{ old('college_type') == 'other' ? 'selected' : '' }}>Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="student_count">Estimated Student Count *</label>
+                                    <input type="number" id="student_count" name="student_count" class="form-control" placeholder="Approximate number of students" min="1" required value="{{ old('student_count') }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="max_buses">Required Buses *</label>
+                                    <input type="number" id="max_buses" name="max_buses" class="form-control" placeholder="Number of buses needed" min="1" required value="{{ old('max_buses') }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-map-marker-alt"></i> Location Details</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="address">Street Address *</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-map input-icon"></i>
+                                        <input type="text" id="address" name="address" class="form-control" placeholder="Enter complete street address" required value="{{ old('address') }}">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="city">City *</label>
+                                    <input type="text" id="city" name="city" class="form-control" placeholder="Enter city" required value="{{ old('city') }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="state">State *</label>
+                                    <input type="text" id="state" name="state" class="form-control" placeholder="Enter state" required value="{{ old('state') }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="pincode">ZIP/Pincode *</label>
+                                    <input type="text" id="pincode" name="pincode" class="form-control" placeholder="Enter ZIP code" required value="{{ old('pincode') }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-credit-card"></i> Subscription Plan</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="subscription_plan">Plan Type *</label>
+                                    <select id="subscription_plan" name="subscription_plan" class="form-control" required>
+                                        <option value="">Select plan</option>
+                                        <option value="standard" {{ old('subscription_plan') == 'standard' ? 'selected' : '' }}>Standard (¥7,999/month)</option>
+                                        <option value="professional" {{ old('subscription_plan') == 'professional' ? 'selected' : '' }}>Professional (¥14,999/month)</option>
+                                        <option value="enterprise" {{ old('subscription_plan') == 'enterprise' ? 'selected' : '' }}>Enterprise (Custom)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="subscription_type">Billing Cycle</label>
+                                    <select id="subscription_type" name="subscription_type" class="form-control">
+                                        <option value="monthly" {{ old('subscription_type') == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                                        <option value="quarterly" {{ old('subscription_type') == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
+                                        <option value="yearly" {{ old('subscription_type') == 'yearly' ? 'selected' : '' }}>Yearly</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <div class="form-buttons">
+                                <button type="reset" class="btn btn-secondary">Clear Form</button>
+                                <button type="submit" class="btn glowing">Create Account</button>
+                            </div>
+                        </div>
+                        
+                        <div class="login-link">
+                            <p>Already have an account? <a href="{{ url('/login') }}">Login here</a></p>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="phone">Phone Number *</label>
-                        <input type="tel" id="phone" name="phone" required placeholder="+91 98765 43210">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password *</label>
-                        <input type="password" id="password" name="password" required placeholder="Create a strong password" minlength="6">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="institution_name">Institution Name *</label>
-                        <input type="text" id="institution_name" name="institution_name" required placeholder="Your school/college name">
-                    </div>
-                    <div class="form-group">
-                        <label for="password_confirm">Confirm Password *</label>
-                        <input type="password" id="password_confirm" name="password_confirm" required placeholder="Confirm your password">
-                    </div>
-                </div>
-
-                <h3 class="form-section-title">Institution Details</h3>
-                
-                <div class="form-group">
-                    <label>College Type *</label>
-                    <div class="simple-radio-group">
-                        <label>
-                            <input type="radio" name="college_type" value="engineering" required> Engineering
-                        </label>
-                        <label>
-                            <input type="radio" name="college_type" value="arts"> Arts & Science
-                        </label>
-                        <label>
-                            <input type="radio" name="college_type" value="medical"> Medical
-                        </label>
-                        <label>
-                            <input type="radio" name="college_type" value="other"> Other
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Street Address *</label>
-                    <input type="text" id="address" name="address" required placeholder="Enter street address">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="city">City *</Label>
-                        <input type="text" id="city" name="city" required placeholder="Enter city">
-                    </div>
-                    <div class="form-group">
-                        <label for="state">State *</Label>
-                        <input type="text" id="state" name="state" required placeholder="Enter state">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="pincode">Pincode *</Label>
-                    <input type="text" id="pincode" name="pincode" required placeholder="Enter pincode" inputmode="numeric">
-                </div>
-
-                {{-- ======================================= --}}
-                {{-- PLAN DETAILS & PRICE SUMMARY REMOVED --}}
-                {{-- ======================================= --}}
-
-
-                {{-- Button text ah maathrom --}}
-                <button type="submit" class="btn-auth">Create Account</button>
-
-                <p class="auth-footer">
-                    Already have an account? <a href="{{ url('/login') }}">Login here</a>
-                </p>
-            </form>
+            </div>
         </div>
     </div>
 
-    {{-- PUTHU SCRIPT - calculatePrice() function remove panniyachu --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            document.getElementById('registerForm').addEventListener('submit', function(e) {
-                const password = document.getElementById('password').value;
-                const passwordConfirm = document.getElementById('password_confirm').value;
-                
-                if (password !== passwordConfirm) {
-                    e.preventDefault();
-                    alert('Passwords do not match!');
-                    return false;
-                }
-            });
+    {{-- Scripts --}}
+    <script src="{{ asset('assets/js/register.js') }}"></script>
 
-            // calculatePrice(); <- Intha line remove panniyachu
-        });
-    </SCriPT>
-    {{-- PUTHU SCRIPT (Landing Page la irunthu) --}}
-    <script src="{{ asset('assets/js/landing.js') }}"></script>
 </body>
 </html>
